@@ -19,19 +19,24 @@ export interface BasicInfo {
 export interface MedicalRecord {
   date: string;
   description: string;
-  images: string[];
-  vet: string;
-  type: 'vaccine' | 'consultation' | 'emergency' | 'surgery' | 'other';
+  imageUrl?: string;
+  createdAt?: string;
 }
 
 export interface PreventiveMedicine {
   type: string;
-  product: string;
   date: string;
   nextDose: string;
   lot: string;
-  image: string;
-  notes: string;
+  imageUrl?: string;
+  createdAt?: string;
+}
+
+export interface Appointment {
+  date: string;
+  description: string;
+  status: 'scheduled' | 'completed' | 'cancelled' | 'rescheduled';
+  createdAt?: string;
 }
 
 export interface Pregnancy {
@@ -46,5 +51,6 @@ export interface Patient {
   basicInfo: BasicInfo;
   medicalHistory: { [recordId: string]: MedicalRecord };
   preventiveMedicine: { [medicineId: string]: PreventiveMedicine };
+  appointments: { [appointmentId: string]: Appointment };
   pregnancy: Pregnancy;
 }
