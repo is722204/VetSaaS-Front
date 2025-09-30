@@ -27,6 +27,39 @@
   background: linear-gradient(90deg, #ec4899, #be185d);
 }
 
+/* Estilos para el calendario */
+.calendar-day {
+  transition: all 0.2s ease;
+}
+
+.calendar-day:hover {
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.appointment-item {
+  transition: all 0.2s ease;
+}
+
+.appointment-item:hover {
+  transform: translateX(2px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Animación para el día actual */
+.ring-2.ring-blue-500 {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  }
+}
+
 /* Mejoras responsive */
 @media (max-width: 640px) {
   .grid-cols-1 {
@@ -36,5 +69,14 @@
   .px-6 {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+  
+  /* Ajustar el calendario en móvil */
+  .min-h-\[80px\] {
+    min-height: 60px;
+  }
+  
+  .text-xs {
+    font-size: 0.6rem;
   }
 }

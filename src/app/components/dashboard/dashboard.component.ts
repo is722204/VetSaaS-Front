@@ -27,6 +27,16 @@ interface WeeklyAppointment {
   date: string;
   description: string;
   vet: string;
+  time?: string;
+  status?: string;
+}
+
+interface CalendarDay {
+  date: Date;
+  dayNumber: number;
+  isCurrentMonth: boolean;
+  isToday: boolean;
+  appointments: WeeklyAppointment[];
 }
 
 @Component({
@@ -43,6 +53,8 @@ export class DashboardComponent implements OnInit {
 
   pregnancyList: PregnancyInfo[] = [];
   weeklyAppointments: WeeklyAppointment[] = [];
+  calendarDays: CalendarDay[] = [];
+  currentDate = new Date();
   recentPatients: any[] = [];
   breedStats: any[] = [];
   isLoading = true;
@@ -163,17 +175,119 @@ export class DashboardComponent implements OnInit {
 
   private async loadWeeklyAppointments(): Promise<void> {
     try {
-      const response = await this.apiService.get('/dashboard/weekly-appointments').toPromise() as any[];
-      this.weeklyAppointments = response.map((appointment: any) => ({
-        id: appointment.appointmentId,
-        patientName: appointment.patientName || 'Paciente',
-        date: this.formatDate(appointment.date),
-        description: appointment.description,
-        vet: appointment.assignedVet || 'Veterinario'
-      }));
+      // Obtener todas las citas de los pacientes
+      const response = await this.patientService.getPatients().toPromise() as any;
+      const patients = Object.values(response || {});
+      
+      // Extraer todas las citas
+      const allAppointments: WeeklyAppointment[] = [];
+      patients.forEach((patient: any) => {
+        if (patient.appointments) {
+          Object.values(patient.appointments).forEach((appointment: any) => {
+            allAppointments.push({
+              id: appointment.id || Math.random().toString(36).substr(2, 9),
+              patientName: patient.basicInfo?.name || 'Paciente',
+              date: appointment.date,
+              description: appointment.description,
+              vet: appointment.vet || 'Veterinario',
+              time: appointment.time || '09:00',
+              status: appointment.status || 'scheduled'
+            });
+          });
+        }
+      });
+      
+      this.weeklyAppointments = allAppointments;
+      this.generateCalendar();
     } catch (error) {
       console.error('Error cargando citas de la semana:', error);
       this.weeklyAppointments = [];
+      this.generateCalendar();
+    }
+  }
+
+  private generateCalendar(): void {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    
+    // Obtener el primer día del mes y el último día
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    
+    // Obtener el primer lunes de la semana que contiene el primer día del mes
+    const startDate = new Date(firstDay);
+    const dayOfWeek = firstDay.getDay();
+    const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Lunes = 1
+    startDate.setDate(firstDay.getDate() - daysToSubtract);
+    
+    // Generar 42 días (6 semanas)
+    this.calendarDays = [];
+    for (let i = 0; i < 42; i++) {
+      const date = new Date(startDate);
+      date.setDate(startDate.getDate() + i);
+      
+      const dayNumber = date.getDate();
+      const isCurrentMonth = date.getMonth() === month;
+      const isToday = this.isSameDay(date, today);
+      
+      // Filtrar citas para este día
+      const dayAppointments = this.weeklyAppointments.filter(appointment => {
+        const appointmentDate = new Date(appointment.date);
+        return this.isSameDay(appointmentDate, date);
+      });
+      
+      this.calendarDays.push({
+        date,
+        dayNumber,
+        isCurrentMonth,
+        isToday,
+        appointments: dayAppointments
+      });
+    }
+  }
+
+  private isSameDay(date1: Date, date2: Date): boolean {
+    return date1.getDate() === date2.getDate() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getFullYear() === date2.getFullYear();
+  }
+
+  getMonthName(): string {
+    return this.currentDate.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+  }
+
+  getWeekDays(): string[] {
+    return ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+  }
+
+  getAppointmentStatusClass(status: string): string {
+    switch (status) {
+      case 'scheduled':
+        return 'bg-blue-100 text-blue-800';
+      case 'completed':
+        return 'bg-green-100 text-green-800';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800';
+      case 'rescheduled':
+        return 'bg-yellow-100 text-yellow-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  }
+
+  getAppointmentStatusText(status: string): string {
+    switch (status) {
+      case 'scheduled':
+        return 'Programada';
+      case 'completed':
+        return 'Completada';
+      case 'cancelled':
+        return 'Cancelada';
+      case 'rescheduled':
+        return 'Reprogramada';
+      default:
+        return 'Desconocido';
     }
   }
 
