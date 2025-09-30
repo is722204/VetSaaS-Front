@@ -1,8 +1,8 @@
-<div class="min-h-screen bg-gray-50 flex">
+<div class="h-screen bg-gray-50 flex overflow-hidden">
   <!-- Sidebar para móvil (overlay) -->
   <div *ngIf="sidebarOpen" class="fixed inset-0 z-50 lg:hidden">
     <div class="fixed inset-0 bg-gray-600 bg-opacity-75" (click)="toggleSidebar()"></div>
-    <div class="relative flex-1 flex flex-col max-w-xs w-full bg-white shadow-xl">
+    <div class="relative flex-1 flex flex-col max-w-xs w-full bg-white shadow-xl h-full transform transition-transform duration-300 ease-in-out translate-x-0">
       <div class="absolute top-0 right-0 -mr-12 pt-2">
         <button
           type="button"
@@ -22,7 +22,7 @@
         <nav class="mt-5 px-2 space-y-1">
         <a
           href="#"
-          (click)="navigateTo('/dashboard'); $event.preventDefault()"
+          (click)="navigateTo('/dashboard'); $event.preventDefault(); toggleSidebar()"
           [class]="isActiveRoute('/dashboard') ? 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-900 bg-gray-100' : 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50'"
         >
           <i class="fas fa-tachometer-alt mr-4" [class]="isActiveRoute('/dashboard') ? 'text-gray-500' : 'text-gray-400'"></i>
@@ -30,7 +30,7 @@
         </a>
         <a
           href="#"
-          (click)="navigateTo('/patients'); $event.preventDefault()"
+          (click)="navigateTo('/patients'); $event.preventDefault(); toggleSidebar()"
           [class]="isActiveRoute('/patients') ? 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-900 bg-gray-100' : 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50'"
         >
           <i class="fas fa-horse mr-4" [class]="isActiveRoute('/patients') ? 'text-gray-500' : 'text-gray-400'"></i>
@@ -38,7 +38,7 @@
         </a>
         <a
           href="#"
-          (click)="navigateTo('/billing'); $event.preventDefault()"
+          (click)="navigateTo('/billing'); $event.preventDefault(); toggleSidebar()"
           [class]="isActiveRoute('/billing') ? 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-900 bg-gray-100' : 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50'"
         >
           <i class="fas fa-cash-register mr-4" [class]="isActiveRoute('/billing') ? 'text-gray-500' : 'text-gray-400'"></i>
@@ -70,8 +70,8 @@
   </div>
 
   <!-- Sidebar para desktop -->
-  <div class="hidden lg:flex lg:flex-shrink-0 lg:flex-col">
-    <div class="flex flex-col w-64 h-screen bg-white border-r border-gray-200">
+  <div class="hidden lg:flex lg:flex-shrink-0">
+    <div class="flex flex-col w-64 h-screen bg-white border-r border-gray-200 fixed left-0 top-0 z-10">
       <!-- Logo y título -->
       <div class="flex items-center px-4 py-6 border-b border-gray-200">
         <div class="h-8 w-8 bg-primary-600 rounded-lg flex items-center justify-center">
@@ -81,7 +81,7 @@
       </div>
 
       <!-- Navegación -->
-      <nav class="flex-1 px-4 py-6 space-y-2">
+      <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
         <a
           href="#"
           (click)="navigateTo('/dashboard'); $event.preventDefault()"
@@ -136,7 +136,7 @@
   </div>
 
   <!-- Contenido principal -->
-  <div class="flex-1 flex flex-col min-h-screen">
+  <div class="flex-1 flex flex-col h-screen lg:ml-64">
     <!-- Header superior -->
     <header class="bg-white shadow-sm border-b border-gray-200">
       <div class="px-4 sm:px-6 lg:px-8">
@@ -187,7 +187,7 @@
     </header>
 
     <!-- Contenido de la página -->
-    <main class="flex-1 bg-gray-50">
+    <main class="flex-1 bg-gray-50 overflow-y-auto">
       <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <router-outlet></router-outlet>
