@@ -12,13 +12,23 @@
   }
 }
 
+/* Animaciones suaves para todos los elementos */
+* {
+  transition: all 0.2s ease-in-out;
+}
+
 /* Animaciones para las tabs */
 nav button {
   transition: all 0.2s ease;
+  position: relative;
 }
 
 nav button:hover {
   transform: translateY(-1px);
+}
+
+nav button:active {
+  transform: translateY(0);
 }
 
 /* Estilos para las cards de información */
@@ -27,20 +37,22 @@ nav button:hover {
 }
 
 .border:hover {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
 }
 
 /* Mejoras para las imágenes */
 img {
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 img:hover {
-  transform: scale(1.02);
+  transform: scale(1.05);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 /* Responsive improvements */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .grid-cols-2 {
     grid-template-columns: 1fr;
   }
@@ -51,6 +63,49 @@ img:hover {
   
   .space-x-8 {
     space-x: 0;
+  }
+  
+  .space-y-1 {
+    space-y: 0.25rem;
+  }
+  
+  /* Mejorar el espaciado en móvil */
+  .p-4 {
+    padding: 1rem;
+  }
+  
+  .p-6 {
+    padding: 1.25rem;
+  }
+  
+  /* Ajustar el tamaño de la imagen en móvil */
+  .w-40 {
+    width: 8rem;
+  }
+  
+  .h-40 {
+    height: 8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Ajustes adicionales para pantallas muy pequeñas */
+  .text-xl {
+    font-size: 1.125rem;
+  }
+  
+  .text-2xl {
+    font-size: 1.25rem;
+  }
+  
+  .px-4 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  .py-3 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 }
 
@@ -65,4 +120,88 @@ img:hover {
 
 .bg-pink-500 {
   background-color: #ec4899;
+}
+
+/* Mejoras para los botones */
+button {
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Estilos para los badges */
+.inline-flex {
+  transition: all 0.2s ease;
+}
+
+.inline-flex:hover {
+  transform: scale(1.05);
+}
+
+/* Mejoras para las cards vacías */
+.text-center {
+  transition: all 0.3s ease;
+}
+
+.text-center:hover {
+  transform: translateY(-2px);
+}
+
+/* Animaciones para las imágenes de galería */
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+}
+
+/* Mejoras para el scroll suave */
+.overflow-y-auto {
+  scroll-behavior: smooth;
+}
+
+/* Estilos para el loading spinner mejorado */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Mejoras para los estados de error */
+.bg-red-50 {
+  background-color: #fef2f2;
+}
+
+.text-red-400 {
+  color: #f87171;
+}
+
+/* Estilos para los enlaces clickeables */
+a {
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Mejoras para las transiciones de las tabs */
+.transition-all {
+  transition: all 0.2s ease;
+}
+
+/* Estilos para los iconos */
+i {
+  transition: all 0.2s ease;
+}
+
+/* Mejoras para las sombras */
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
