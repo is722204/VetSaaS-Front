@@ -1,49 +1,74 @@
 <div class="min-h-screen bg-gray-50" *ngIf="!isLoading && patient">
   <!-- Header fijo con navegación -->
-  <div class="top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
-    <div class="px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
+  <div class="sticky top-0 z-20 bg-white border-b border-gray-200 shadow-sm">
+    <div class="px-3 sm:px-4 lg:px-6">
+      <div class="flex items-center justify-between h-16 sm:h-16">
+        <!-- Lado izquierdo: Botón back y título -->
         <div class="flex items-center min-w-0 flex-1">
           <button
             (click)="goBack()"
-            class="mr-3 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 flex-shrink-0"
+            class="mr-2 sm:mr-3 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 flex-shrink-0"
           >
-            <i class="fas fa-arrow-left text-lg"></i>
+            <i class="fas fa-arrow-left text-base sm:text-lg"></i>
           </button>
           <div class="min-w-0 flex-1">
-            <h1 class="text-base sm:text-lg lg:text-xl font-semibold text-gray-900 truncate">{{ patient.basicInfo.name }}</h1>
+            <h1 class="text-sm sm:text-base lg:text-lg xl:text-xl font-semibold text-gray-900 truncate leading-tight">
+              {{ patient.basicInfo.name }}
+            </h1>
             <p class="text-xs text-gray-500 truncate">ID: {{ patient.basicInfo.patientId }}</p>
           </div>
         </div>
-        <div class="flex items-center gap-2 flex-shrink-0">
-          <button
-            (click)="onEditClick()"
-            class="hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200"
-          >
-            <i class="fas fa-edit mr-2"></i>
-            Editar
-          </button>
-          <button
-            (click)="onAddAppointment()"
-            class="hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200"
-          >
-            <i class="fas fa-plus mr-2"></i>
-            Nueva Cita
-          </button>
+        
+        <!-- Lado derecho: Botones de acción -->
+        <div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
           <!-- Botones compactos para móvil -->
           <button
             (click)="onEditClick()"
-            class="sm:hidden p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200"
+            class="sm:hidden p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200 flex items-center justify-center"
             title="Editar"
           >
-            <i class="fas fa-edit text-lg"></i>
+            <i class="fas fa-edit text-sm"></i>
           </button>
           <button
             (click)="onAddAppointment()"
-            class="sm:hidden p-2 text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg transition-all duration-200"
+            class="sm:hidden p-2 text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg transition-all duration-200 flex items-center justify-center"
             title="Nueva Cita"
           >
-            <i class="fas fa-plus text-lg"></i>
+            <i class="fas fa-plus text-sm"></i>
+          </button>
+          
+          <!-- Botones de tablet -->
+          <button
+            (click)="onEditClick()"
+            class="hidden sm:inline-flex lg:hidden items-center px-2 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200"
+            title="Editar"
+          >
+            <i class="fas fa-edit mr-1 text-xs"></i>
+            <span>Editar</span>
+          </button>
+          <button
+            (click)="onAddAppointment()"
+            class="hidden sm:inline-flex lg:hidden items-center px-2 py-1.5 text-xs font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200"
+            title="Nueva Cita"
+          >
+            <i class="fas fa-plus mr-1 text-xs"></i>
+            <span>Cita</span>
+          </button>
+          
+          <!-- Botones de escritorio -->
+          <button
+            (click)="onEditClick()"
+            class="hidden lg:inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200"
+          >
+            <i class="fas fa-edit mr-2"></i>
+            <span>Editar</span>
+          </button>
+          <button
+            (click)="onAddAppointment()"
+            class="hidden lg:inline-flex items-center px-3 py-1.5 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200"
+          >
+            <i class="fas fa-plus mr-2"></i>
+            <span>Nueva Cita</span>
           </button>
         </div>
       </div>
@@ -51,17 +76,17 @@
   </div>
 
   <!-- Contenido principal -->
-  <div class="py-6">
-    <div class="max-w-7xl mx-auto space-y-6">
+  <div class="py-3 sm:py-4 lg:py-6">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 space-y-4 sm:space-y-6">
 
       <!-- Perfil del paciente -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="p-4 sm:p-6">
-          <div class="flex flex-col sm:flex-row sm:items-start sm:space-x-6">
+      <div class="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-3 sm:p-4 lg:p-6">
+          <div class="flex flex-col sm:flex-row sm:items-start sm:space-x-4 lg:space-x-6">
             <!-- Imagen del paciente -->
-            <div class="flex justify-center sm:justify-start mb-4 sm:mb-0">
+            <div class="flex justify-center sm:justify-start mb-3 sm:mb-0">
               <div class="relative">
-                <div class="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 xl:w-32 xl:h-32 rounded-lg sm:rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden shadow-sm">
                   <img
                     [src]="patient.basicInfo.photoUrl || 'https://via.placeholder.com/300x300?text=Caballo'"
                     [alt]="patient.basicInfo.name"
@@ -70,13 +95,13 @@
                   />
                 </div>
                 <!-- Badge de sexo -->
-                <div class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2">
+                <div class="absolute -top-1 -right-1 sm:-top-1.5 sm:-right-1.5 lg:-top-2 lg:-right-2">
                   <span
                     class="inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium shadow-sm"
                     [class]="patient.basicInfo.sex === 'macho' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'"
                   >
-                    <i [class]="patient.basicInfo.sex === 'macho' ? 'fas fa-mars mr-1' : 'fas fa-venus mr-1'"></i>
-                    <span class="hidden sm:inline">{{ patient.basicInfo.sex }}</span>
+                    <i [class]="patient.basicInfo.sex === 'macho' ? 'fas fa-mars mr-0.5 sm:mr-1' : 'fas fa-venus mr-0.5 sm:mr-1'"></i>
+                    <span class="hidden sm:inline text-xs">{{ patient.basicInfo.sex }}</span>
                   </span>
                 </div>
               </div>
@@ -84,27 +109,27 @@
 
             <!-- Información del paciente -->
             <div class="flex-1 min-w-0">
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <div class="grid grid-cols-2 sm:grid-cols-2 gap-2 sm:gap-4 lg:gap-6">
                 <!-- Información básica -->
-                <div class="space-y-3 sm:space-y-4">
+                <div class="space-y-1 sm:space-y-2 lg:space-y-3">
                   <div>
                     <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">Edad</label>
-                    <p class="mt-1 text-base sm:text-lg font-semibold text-gray-900">{{ getPatientAge(patient.basicInfo.birthDate) }}</p>
+                    <p class="mt-1 text-xs sm:text-sm lg:text-base font-semibold text-gray-900 truncate">{{ getPatientAge(patient.basicInfo.birthDate) }}</p>
                   </div>
                   <div>
                     <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">Raza</label>
-                    <p class="mt-1 text-base sm:text-lg font-semibold text-gray-900 truncate">{{ patient.basicInfo.breed }}</p>
+                    <p class="mt-1 text-xs sm:text-sm lg:text-base font-semibold text-gray-900 truncate">{{ patient.basicInfo.breed }}</p>
                   </div>
                 </div>
                 
-                <div class="space-y-3 sm:space-y-4">
+                <div class="space-y-1 sm:space-y-2 lg:space-y-3">
                   <div>
                     <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">Color</label>
-                    <p class="mt-1 text-base sm:text-lg font-semibold text-gray-900 truncate">{{ patient.basicInfo.color }}</p>
+                    <p class="mt-1 text-xs sm:text-sm lg:text-base font-semibold text-gray-900 truncate">{{ patient.basicInfo.color }}</p>
                   </div>
                   <div>
                     <label class="text-xs font-medium text-gray-500 uppercase tracking-wide">ID del Paciente</label>
-                    <p class="mt-1 text-base sm:text-lg font-semibold text-gray-900 font-mono truncate">{{ patient.basicInfo.patientId }}</p>
+                    <p class="mt-1 text-xs font-semibold text-gray-900 font-mono truncate bg-gray-50 px-1 sm:px-2 py-0.5 sm:py-1 rounded">{{ patient.basicInfo.patientId }}</p>
                   </div>
                 </div>
               </div>
@@ -113,25 +138,25 @@
         </div>
 
         <!-- Información del dueño -->
-        <div class="border-t border-gray-200 bg-gray-50 px-4 sm:px-6 py-4">
-          <div class="flex items-center mb-3">
-            <i class="fas fa-user text-gray-600 mr-2"></i>
-            <h3 class="text-sm font-semibold text-gray-900">Información del Dueño</h3>
+        <div class="border-t border-gray-200 bg-gray-50 px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+          <div class="flex items-center mb-2 sm:mb-3">
+            <i class="fas fa-user text-gray-600 mr-2 text-sm"></i>
+            <h3 class="text-xs sm:text-sm font-semibold text-gray-900">Información del Dueño</h3>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
             <div class="flex items-center min-w-0">
-              <i class="fas fa-user text-gray-400 mr-3 w-4 flex-shrink-0"></i>
-              <span class="text-sm text-gray-900 font-medium truncate">{{ patient.basicInfo.owner.name }}</span>
+              <i class="fas fa-user text-gray-400 mr-2 sm:mr-3 w-3 sm:w-4 flex-shrink-0 text-xs sm:text-sm"></i>
+              <span class="text-xs sm:text-sm text-gray-900 font-medium truncate">{{ patient.basicInfo.owner.name }}</span>
             </div>
             <div class="flex items-center min-w-0">
-              <i class="fas fa-phone text-gray-400 mr-3 w-4 flex-shrink-0"></i>
-              <a [href]="'tel:' + patient.basicInfo.owner.phone" class="text-sm text-gray-900 hover:text-primary-600 transition-colors font-medium truncate">
+              <i class="fas fa-phone text-gray-400 mr-2 sm:mr-3 w-3 sm:w-4 flex-shrink-0 text-xs sm:text-sm"></i>
+              <a [href]="'tel:' + patient.basicInfo.owner.phone" class="text-xs sm:text-sm text-gray-900 hover:text-primary-600 transition-colors font-medium truncate">
                 {{ patient.basicInfo.owner.phone }}
               </a>
             </div>
             <div class="flex items-center min-w-0 sm:col-span-2 lg:col-span-1">
-              <i class="fas fa-envelope text-gray-400 mr-3 w-4 flex-shrink-0"></i>
-              <a [href]="'mailto:' + patient.basicInfo.owner.email" class="text-sm text-gray-900 hover:text-primary-600 transition-colors font-medium truncate">
+              <i class="fas fa-envelope text-gray-400 mr-2 sm:mr-3 w-3 sm:w-4 flex-shrink-0 text-xs sm:text-sm"></i>
+              <a [href]="'mailto:' + patient.basicInfo.owner.email" class="text-xs sm:text-sm text-gray-900 hover:text-primary-600 transition-colors font-medium truncate">
                 {{ patient.basicInfo.owner.email }}
               </a>
             </div>
@@ -139,21 +164,21 @@
         </div>
 
         <!-- Estado de gestación -->
-        <div *ngIf="patient.pregnancy?.isPregnant" class="border-t border-gray-200 bg-pink-50 px-6 py-4">
-          <div class="flex items-center justify-between mb-3">
+        <div *ngIf="patient.pregnancy?.isPregnant" class="border-t border-gray-200 bg-pink-50 px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
+          <div class="flex items-center justify-between mb-2 sm:mb-3">
             <div class="flex items-center">
-              <i class="fas fa-baby text-pink-600 mr-2"></i>
-              <h3 class="text-sm font-semibold text-gray-900">Estado de Gestación</h3>
+              <i class="fas fa-baby text-pink-600 mr-2 text-sm"></i>
+              <h3 class="text-xs sm:text-sm font-semibold text-gray-900">Estado de Gestación</h3>
             </div>
-            <span class="text-lg font-bold text-pink-600">{{ patient.pregnancy.pregnancyPercentage }}%</span>
+            <span class="text-sm sm:text-lg font-bold text-pink-600">{{ patient.pregnancy.pregnancyPercentage }}%</span>
           </div>
-          <div class="w-full bg-pink-200 rounded-full h-2 mb-2">
+          <div class="w-full bg-pink-200 rounded-full h-1.5 sm:h-2 mb-2">
             <div 
-              class="bg-pink-500 h-2 rounded-full transition-all duration-500 ease-out"
+              class="bg-pink-500 h-1.5 sm:h-2 rounded-full transition-all duration-500 ease-out"
               [style.width.%]="patient.pregnancy.pregnancyPercentage"
             ></div>
           </div>
-          <p class="text-sm text-pink-700">
+          <p class="text-xs sm:text-sm text-pink-700">
             <i class="fas fa-calendar mr-1"></i>
             Fecha estimada: {{ formatDate(patient.pregnancy.estimatedReliefDate) }}
           </p>
@@ -161,34 +186,34 @@
       </div>
 
       <!-- Panel de información -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div class="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <!-- Navegación por tabs -->
         <div class="border-b border-gray-200">
-          <nav class="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-8 px-4 sm:px-6" aria-label="Tabs">
+          <nav class="flex flex-row space-x-0 px-2 sm:px-4 lg:px-6 overflow-x-auto" aria-label="Tabs">
             <button
               (click)="setActiveTab('medical-history')"
               [class]="activeTab === 'medical-history' ? 'border-primary-500 text-primary-600 bg-primary-50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50'"
-              class="whitespace-nowrap py-3 sm:py-4 px-3 sm:px-1 border-b-2 sm:border-b-2 font-medium text-sm transition-colors duration-200 flex items-center justify-center sm:justify-start rounded-lg sm:rounded-none"
+              class="whitespace-nowrap py-2.5 sm:py-3 lg:py-4 px-2 sm:px-3 lg:px-4 border-b-2 font-medium text-xs sm:text-sm transition-colors duration-200 flex items-center justify-center sm:justify-start rounded-lg sm:rounded-none flex-1 sm:flex-none min-w-0"
             >
-              <i class="fas fa-stethoscope mr-2"></i>
+              <i class="fas fa-stethoscope mr-1 sm:mr-2 text-sm flex-shrink-0"></i>
               <span class="hidden sm:inline">Historial Clínico</span>
               <span class="sm:hidden">Clínico</span>
             </button>
             <button
               (click)="setActiveTab('preventive-medicine')"
               [class]="activeTab === 'preventive-medicine' ? 'border-primary-500 text-primary-600 bg-primary-50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50'"
-              class="whitespace-nowrap py-3 sm:py-4 px-3 sm:px-1 border-b-2 sm:border-b-2 font-medium text-sm transition-colors duration-200 flex items-center justify-center sm:justify-start rounded-lg sm:rounded-none"
+              class="whitespace-nowrap py-2.5 sm:py-3 lg:py-4 px-2 sm:px-3 lg:px-4 border-b-2 font-medium text-xs sm:text-sm transition-colors duration-200 flex items-center justify-center sm:justify-start rounded-lg sm:rounded-none flex-1 sm:flex-none min-w-0"
             >
-              <i class="fas fa-pills mr-2"></i>
+              <i class="fas fa-pills mr-1 sm:mr-2 text-sm flex-shrink-0"></i>
               <span class="hidden sm:inline">Medicina Preventiva</span>
               <span class="sm:hidden">Medicina</span>
             </button>
             <button
               (click)="setActiveTab('appointments')"
               [class]="activeTab === 'appointments' ? 'border-primary-500 text-primary-600 bg-primary-50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50'"
-              class="whitespace-nowrap py-3 sm:py-4 px-3 sm:px-1 border-b-2 sm:border-b-2 font-medium text-sm transition-colors duration-200 flex items-center justify-center sm:justify-start rounded-lg sm:rounded-none"
+              class="whitespace-nowrap py-2.5 sm:py-3 lg:py-4 px-2 sm:px-3 lg:px-4 border-b-2 font-medium text-xs sm:text-sm transition-colors duration-200 flex items-center justify-center sm:justify-start rounded-lg sm:rounded-none flex-1 sm:flex-none min-w-0"
             >
-              <i class="fas fa-calendar-alt mr-2"></i>
+              <i class="fas fa-calendar-alt mr-1 sm:mr-2 text-sm flex-shrink-0"></i>
               <span class="hidden sm:inline">Citas</span>
               <span class="sm:hidden">Citas</span>
             </button>
@@ -196,14 +221,15 @@
         </div>
 
         <!-- Contenido de las tabs -->
-        <div class="p-4 sm:p-6">
+        <div class="p-3 sm:p-4 lg:p-6">
           <!-- Historial Clínico -->
           <div *ngIf="activeTab === 'medical-history'">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-              <h3 class="text-lg font-semibold text-gray-900">Historial Clínico</h3>
-              <button (click)="onAddMedicalRecord()" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
-                <i class="fas fa-plus mr-2"></i>
-                Nuevo Registro
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3 sm:gap-4">
+              <h3 class="text-base sm:text-lg font-semibold text-gray-900">Historial Clínico</h3>
+              <button (click)="onAddMedicalRecord()" class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+                <i class="fas fa-plus mr-1.5 sm:mr-2 text-sm"></i>
+                <span class="hidden sm:inline">Nuevo Registro</span>
+                <span class="sm:hidden">Nuevo</span>
               </button>
             </div>
             
@@ -219,40 +245,42 @@
               </button>
             </div>
 
-            <div *ngIf="getMedicalHistoryArray().length > 0" class="space-y-4">
-              <div *ngFor="let record of getMedicalHistoryArray()" class="bg-white rounded-lg p-6 border border-gray-200 hover:border-gray-300 transition-all duration-200 shadow-sm hover:shadow-md">
-                <div class="flex items-start justify-between mb-4">
-                  <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <i class="fas fa-stethoscope text-blue-600"></i>
+            <div *ngIf="getMedicalHistoryArray().length > 0" class="space-y-3 sm:space-y-4">
+              <div *ngFor="let record of getMedicalHistoryArray()" 
+                   (click)="onMedicalRecordClick(record)"
+                   class="bg-white rounded-lg p-3 sm:p-4 lg:p-6 border border-gray-200 hover:border-gray-300 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer">
+                <div class="flex items-start justify-between mb-3 sm:mb-4">
+                  <div class="flex items-center space-x-2 sm:space-x-3">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <i class="fas fa-stethoscope text-blue-600 text-sm sm:text-base"></i>
                     </div>
-                    <div>
-                      <span class="text-sm text-gray-500 flex items-center">
-                        <i class="fas fa-calendar mr-2"></i>
+                    <div class="min-w-0 flex-1">
+                      <span class="text-xs sm:text-sm text-gray-500 flex items-center">
+                        <i class="fas fa-calendar mr-1.5 sm:mr-2 text-xs"></i>
                         {{ formatDate(record.date) }}
                       </span>
                     </div>
                   </div>
                 </div>
                 
-                <div class="mb-4">
-                  <p class="text-gray-900 text-base leading-relaxed">{{ record.description }}</p>
+                <div class="mb-3 sm:mb-4">
+                  <p class="text-gray-900 text-sm sm:text-base leading-relaxed line-clamp-3">{{ record.description }}</p>
                 </div>
                 
-                <div *ngIf="record.imageUrl" class="mt-4 pt-4 border-t border-gray-100">
-                  <h5 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-                    <i class="fas fa-image mr-2"></i>
+                <div *ngIf="record.imageUrl" class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100">
+                  <h5 class="text-xs sm:text-sm font-medium text-gray-700 mb-2 sm:mb-3 flex items-center">
+                    <i class="fas fa-image mr-1.5 sm:mr-2 text-xs"></i>
                     Imagen adjunta
                   </h5>
                   <div class="relative group">
                     <img 
                       [src]="record.imageUrl" 
                       [alt]="record.description" 
-                      class="w-full max-w-sm h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-200 cursor-pointer border border-gray-200"
+                      class="w-full max-w-xs sm:max-w-sm h-32 sm:h-40 lg:h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-200 cursor-pointer border border-gray-200"
                       (click)="openImageModal(record.imageUrl)"
                     >
                     <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200 rounded-lg flex items-center justify-center">
-                      <i class="fas fa-search-plus text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-2xl"></i>
+                      <i class="fas fa-search-plus text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-lg sm:text-xl lg:text-2xl"></i>
                     </div>
                   </div>
                 </div>
@@ -262,11 +290,12 @@
 
           <!-- Medicina Preventiva -->
           <div *ngIf="activeTab === 'preventive-medicine'">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-              <h3 class="text-lg font-semibold text-gray-900">Medicina Preventiva</h3>
-              <button (click)="onAddPreventiveMedicine()" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
-                <i class="fas fa-plus mr-2"></i>
-                Nuevo Medicamento
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3 sm:gap-4">
+              <h3 class="text-base sm:text-lg font-semibold text-gray-900">Medicina Preventiva</h3>
+              <button (click)="onAddPreventiveMedicine()" class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+                <i class="fas fa-plus mr-1.5 sm:mr-2 text-sm"></i>
+                <span class="hidden sm:inline">Nuevo Medicamento</span>
+                <span class="sm:hidden">Nuevo</span>
               </button>
             </div>
             
@@ -282,51 +311,53 @@
               </button>
             </div>
 
-            <div *ngIf="getPreventiveMedicineArray().length > 0" class="space-y-4">
-              <div *ngFor="let medicine of getPreventiveMedicineArray()" class="bg-white rounded-lg p-6 border border-gray-200 hover:border-gray-300 transition-all duration-200 shadow-sm hover:shadow-md">
-                <div class="flex items-start justify-between mb-4">
-                  <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                      <i class="fas fa-pills text-green-600"></i>
+            <div *ngIf="getPreventiveMedicineArray().length > 0" class="space-y-3 sm:space-y-4">
+              <div *ngFor="let medicine of getPreventiveMedicineArray()" 
+                   (click)="onPreventiveMedicineClick(medicine)"
+                   class="bg-white rounded-lg p-3 sm:p-4 lg:p-6 border border-gray-200 hover:border-gray-300 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer">
+                <div class="flex items-start justify-between mb-3 sm:mb-4">
+                  <div class="flex items-center space-x-2 sm:space-x-3">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <i class="fas fa-pills text-green-600 text-sm sm:text-base"></i>
                     </div>
-                    <div>
-                      <h4 class="text-lg font-semibold text-gray-900 mb-1">{{ medicine.type }}</h4>
-                      <span class="text-sm text-gray-500 flex items-center">
-                        <i class="fas fa-calendar mr-2"></i>
+                    <div class="min-w-0 flex-1">
+                      <h4 class="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 mb-1 truncate">{{ medicine.type }}</h4>
+                      <span class="text-xs sm:text-sm text-gray-500 flex items-center">
+                        <i class="fas fa-calendar mr-1.5 sm:mr-2 text-xs"></i>
                         {{ formatDate(medicine.date) }}
                       </span>
                     </div>
                   </div>
                 </div>
                 
-                <div class="mb-4">
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="flex items-center justify-between py-2">
-                      <span class="text-sm font-medium text-gray-500">Próxima dosis</span>
-                      <span class="text-sm text-gray-900 font-medium">{{ formatDate(medicine.nextDose) }}</span>
+                <div class="mb-3 sm:mb-4">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
+                    <div class="flex items-center justify-between py-1.5 sm:py-2">
+                      <span class="text-xs sm:text-sm font-medium text-gray-500">Próxima dosis</span>
+                      <span class="text-xs sm:text-sm text-gray-900 font-medium truncate">{{ formatDate(medicine.nextDose) }}</span>
                     </div>
                     
-                    <div class="flex items-center justify-between py-2">
-                      <span class="text-sm font-medium text-gray-500">Lote</span>
-                      <span class="text-sm text-gray-900 font-medium font-mono bg-gray-100 px-2 py-1 rounded">{{ medicine.lot }}</span>
+                    <div class="flex items-center justify-between py-1.5 sm:py-2">
+                      <span class="text-xs sm:text-sm font-medium text-gray-500">Lote</span>
+                      <span class="text-xs sm:text-sm text-gray-900 font-medium font-mono bg-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">{{ medicine.lot }}</span>
                     </div>
                   </div>
                 </div>
                 
-                <div *ngIf="medicine.imageUrl" class="mt-4 pt-4 border-t border-gray-100">
-                  <h5 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-                    <i class="fas fa-image mr-2"></i>
+                <div *ngIf="medicine.imageUrl" class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100">
+                  <h5 class="text-xs sm:text-sm font-medium text-gray-700 mb-2 sm:mb-3 flex items-center">
+                    <i class="fas fa-image mr-1.5 sm:mr-2 text-xs"></i>
                     Imagen adjunta
                   </h5>
                   <div class="relative group">
                     <img 
                       [src]="medicine.imageUrl" 
                       [alt]="medicine.type" 
-                      class="w-full max-w-sm h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-200 cursor-pointer border border-gray-200"
+                      class="w-full max-w-xs sm:max-w-sm h-32 sm:h-40 lg:h-48 object-cover rounded-lg hover:scale-105 transition-transform duration-200 cursor-pointer border border-gray-200"
                       (click)="openImageModal(medicine.imageUrl)"
                     >
                     <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200 rounded-lg flex items-center justify-center">
-                      <i class="fas fa-search-plus text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-2xl"></i>
+                      <i class="fas fa-search-plus text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-lg sm:text-xl lg:text-2xl"></i>
                     </div>
                   </div>
                 </div>
@@ -336,11 +367,12 @@
 
           <!-- Citas -->
           <div *ngIf="activeTab === 'appointments'">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-              <h3 class="text-lg font-semibold text-gray-900">Citas Programadas</h3>
-              <button (click)="onAddAppointment()" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
-                <i class="fas fa-plus mr-2"></i>
-                Nueva Cita
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3 sm:gap-4">
+              <h3 class="text-base sm:text-lg font-semibold text-gray-900">Citas Programadas</h3>
+              <button (click)="onAddAppointment()" class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+                <i class="fas fa-plus mr-1.5 sm:mr-2 text-sm"></i>
+                <span class="hidden sm:inline">Nueva Cita</span>
+                <span class="sm:hidden">Nueva</span>
               </button>
             </div>
             
@@ -356,28 +388,30 @@
               </button>
             </div>
 
-            <div *ngIf="getAppointmentsArray().length > 0" class="space-y-4">
-              <div *ngFor="let appointment of getAppointmentsArray()" class="bg-white rounded-lg p-6 border border-gray-200 hover:border-gray-300 transition-all duration-200 shadow-sm hover:shadow-md">
-                <div class="flex items-start justify-between mb-4">
-                  <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <i class="fas fa-calendar-check text-purple-600"></i>
+            <div *ngIf="getAppointmentsArray().length > 0" class="space-y-3 sm:space-y-4">
+              <div *ngFor="let appointment of getAppointmentsArray()" 
+                   (click)="onAppointmentClick(appointment)"
+                   class="bg-white rounded-lg p-3 sm:p-4 lg:p-6 border border-gray-200 hover:border-gray-300 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer">
+                <div class="flex items-start justify-between mb-3 sm:mb-4">
+                  <div class="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <i class="fas fa-calendar-check text-purple-600 text-sm sm:text-base"></i>
                     </div>
-                    <div>
-                      <span class="text-sm text-gray-500 flex items-center">
-                        <i class="fas fa-calendar mr-2"></i>
+                    <div class="min-w-0 flex-1">
+                      <span class="text-xs sm:text-sm text-gray-500 flex items-center">
+                        <i class="fas fa-calendar mr-1.5 sm:mr-2 text-xs"></i>
                         {{ formatDate(appointment.date) }}
                       </span>
                     </div>
                   </div>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" 
+                  <span class="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ml-2" 
                         [class]="getAppointmentStatusClass(appointment.status)">
                     {{ getAppointmentStatusText(appointment.status) }}
                   </span>
                 </div>
                 
-                <div class="mb-4">
-                  <p class="text-gray-900 text-base leading-relaxed">{{ appointment.description }}</p>
+                <div class="mb-3 sm:mb-4">
+                  <p class="text-gray-900 text-sm sm:text-base leading-relaxed line-clamp-3">{{ appointment.description }}</p>
                 </div>
               </div>
             </div>

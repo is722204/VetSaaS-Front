@@ -51,6 +51,14 @@ img:hover {
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
+/* Utilidad para truncar texto con líneas */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 /* Responsive improvements */
 @media (max-width: 640px) {
   .grid-cols-2 {
@@ -86,6 +94,111 @@ img:hover {
   .h-40 {
     height: 8rem;
   }
+  
+  /* Mejorar la legibilidad en móvil */
+  .text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  
+  .text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  
+  /* Ajustar el padding de los botones en móvil */
+  .px-3 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  .py-2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  /* Mejorar el header en móvil */
+  .h-16 {
+    height: 4rem;
+  }
+  
+  /* Asegurar que los botones se mantengan en línea horizontal */
+  .flex.items-center {
+    flex-direction: row !important;
+    align-items: center !important;
+  }
+  
+  /* Asegurar que los botones no se superpongan */
+  .gap-1 > * + * {
+    margin-left: 0.25rem;
+  }
+  
+  /* Mejorar el espaciado del título en móvil */
+  .min-w-0 {
+    min-width: 0;
+    overflow: hidden;
+  }
+  
+  /* Ajustar el tamaño de los iconos en móvil */
+  .text-sm {
+    font-size: 0.8rem;
+  }
+  
+  /* Asegurar que los botones no se desborden del contenedor */
+  .flex-shrink-0 {
+    flex-shrink: 0;
+  }
+  
+  /* Forzar que los botones se mantengan en una línea */
+  .flex.items-center.gap-1 {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+  }
+  
+  /* Forzar que las tabs se mantengan en línea horizontal */
+  nav.flex {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+  }
+  
+  /* Asegurar que las tabs no se rompan */
+  nav.flex button {
+    flex-shrink: 0 !important;
+    min-width: 0 !important;
+  }
+  
+  /* Scroll horizontal para tabs en móvil */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .overflow-x-auto::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Forzar que la información del paciente se mantenga en línea horizontal */
+  .grid.grid-cols-2 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.5rem !important;
+  }
+  
+  /* Asegurar que las columnas no se rompan */
+  .grid.grid-cols-2 > div {
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+  
+  /* Mejorar el espaciado en móvil */
+  .space-y-1 > * + * {
+    margin-top: 0.25rem !important;
+  }
 }
 
 @media (max-width: 480px) {
@@ -106,6 +219,149 @@ img:hover {
   .py-3 {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
+  }
+  
+  /* Reducir aún más el espaciado en pantallas muy pequeñas */
+  .space-y-3 > * + * {
+    margin-top: 0.5rem;
+  }
+  
+  .space-y-4 > * + * {
+    margin-top: 0.75rem;
+  }
+  
+  /* Ajustar el tamaño de los iconos */
+  .text-sm {
+    font-size: 0.8rem;
+  }
+  
+  .text-xs {
+    font-size: 0.7rem;
+  }
+  
+  /* Asegurar que el header se mantenga en una línea en pantallas muy pequeñas */
+  .h-16 {
+    height: 3.5rem;
+    min-height: 3.5rem;
+  }
+  
+  /* Reducir el padding de los botones en pantallas muy pequeñas */
+  .p-2 {
+    padding: 0.375rem;
+  }
+  
+  /* Asegurar que los botones no se desborden */
+  .gap-1 {
+    gap: 0.125rem;
+  }
+  
+  /* Forzar que el contenedor de botones no se rompa */
+  .flex.items-center.gap-1 {
+    min-width: 0;
+    overflow: hidden;
+  }
+  
+  /* Ajustes adicionales para tabs en pantallas muy pequeñas */
+  nav.flex {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  nav.flex button {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    font-size: 0.7rem;
+  }
+  
+  /* Asegurar que las tabs se mantengan en línea */
+  .flex-1 {
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
+  }
+  
+  /* Ajustes adicionales para la información del paciente en pantallas muy pequeñas */
+  .grid.grid-cols-2 {
+    gap: 0.25rem !important;
+  }
+  
+  .grid.grid-cols-2 > div {
+    padding: 0.125rem !important;
+  }
+  
+  /* Reducir aún más el espaciado vertical */
+  .space-y-1 > * + * {
+    margin-top: 0.125rem !important;
+  }
+  
+  /* Ajustar el tamaño de los labels */
+  .text-xs {
+    font-size: 0.6rem !important;
+    line-height: 0.75rem !important;
+  }
+  
+  /* Ajustar el tamaño del texto de los valores */
+  .text-xs.font-semibold {
+    font-size: 0.7rem !important;
+    line-height: 0.875rem !important;
+  }
+}
+
+/* Mejoras para tablets */
+@media (min-width: 640px) and (max-width: 1024px) {
+  /* Optimizar el espaciado para tablets */
+  .space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+  
+  .space-y-6 > * + * {
+    margin-top: 1.5rem;
+  }
+  
+  /* Ajustar el tamaño de los botones para tablets */
+  .px-3 {
+    padding-left: 0.875rem;
+    padding-right: 0.875rem;
+  }
+  
+  .py-2 {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+  }
+}
+
+/* Mejoras para pantallas grandes */
+@media (min-width: 1024px) {
+  /* Aumentar el espaciado en pantallas grandes */
+  .space-y-6 > * + * {
+    margin-top: 2rem;
+  }
+  
+  /* Mejorar la legibilidad en pantallas grandes */
+  .text-sm {
+    font-size: 0.9rem;
+  }
+  
+  .text-xs {
+    font-size: 0.8rem;
+  }
+}
+
+/* Mejoras para pantallas extra grandes */
+@media (min-width: 1280px) {
+  /* Optimizar para pantallas muy grandes */
+  .max-w-7xl {
+    max-width: 80rem;
+  }
+  
+  /* Aumentar el padding en pantallas extra grandes */
+  .px-6 {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  .py-6 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
   }
 }
 

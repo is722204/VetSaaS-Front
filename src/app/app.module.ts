@@ -20,6 +20,9 @@ import { ModalComponent } from './components/shared/modal/modal.component';
 import { MedicalRecordModalComponent } from './components/patients/medical-record-modal/medical-record-modal.component';
 import { PreventiveMedicineModalComponent } from './components/patients/preventive-medicine-modal/preventive-medicine-modal.component';
 import { AppointmentModalComponent } from './components/patients/appointment-modal/appointment-modal.component';
+import { MedicalRecordDetailModalComponent } from './components/patients/medical-record-detail-modal/medical-record-detail-modal.component';
+import { PreventiveMedicineDetailModalComponent } from './components/patients/preventive-medicine-detail-modal/preventive-medicine-detail-modal.component';
+import { AppointmentDetailModalComponent } from './components/patients/appointment-detail-modal/appointment-detail-modal.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +41,10 @@ import { AppointmentModalComponent } from './components/patients/appointment-mod
     ModalComponent,
     MedicalRecordModalComponent,
     PreventiveMedicineModalComponent,
-    AppointmentModalComponent
+    AppointmentModalComponent,
+    MedicalRecordDetailModalComponent,
+    PreventiveMedicineDetailModalComponent,
+    AppointmentDetailModalComponent
   ],
   imports: [
     BrowserModule,

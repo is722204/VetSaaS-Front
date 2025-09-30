@@ -1,0 +1,28 @@
+/* Estilos específicos para el modal de detalles de cita */
+.whitespace-pre-wrap {
+  white-space: pre-wrap;
+}
+
+/* Animación suave para el hover de las imágenes */
+.group:hover .group-hover\:opacity-100 {
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Scrollbar personalizado para el contenido del modal */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

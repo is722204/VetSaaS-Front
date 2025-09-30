@@ -179,4 +179,25 @@ export class PatientDetailComponent implements OnInit {
       });
     }
   }
+
+  onMedicalRecordClick(record: any): void {
+    const patientId = this.route.snapshot.paramMap.get('id');
+    if (patientId && this.patient) {
+      this.modalService.openModal('medical-record-detail', patientId, this.patient.basicInfo.name, record);
+    }
+  }
+
+  onPreventiveMedicineClick(medicine: any): void {
+    const patientId = this.route.snapshot.paramMap.get('id');
+    if (patientId && this.patient) {
+      this.modalService.openModal('preventive-medicine-detail', patientId, this.patient.basicInfo.name, medicine);
+    }
+  }
+
+  onAppointmentClick(appointment: any): void {
+    const patientId = this.route.snapshot.paramMap.get('id');
+    if (patientId && this.patient) {
+      this.modalService.openModal('appointment-detail', patientId, this.patient.basicInfo.name, appointment);
+    }
+  }
 }

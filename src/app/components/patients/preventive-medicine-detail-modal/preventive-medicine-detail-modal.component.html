@@ -1,0 +1,152 @@
+<div class="bg-white rounded-t-xl sm:rounded-t-2xl shadow-xl max-h-[90vh] overflow-hidden">
+  <!-- Header del modal -->
+  <div class="sticky top-0 bg-white border-b border-gray-200 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 z-10">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+        <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center flex-shrink-0" [class]="getMedicineTypeColor(medicine.type)">
+          <i [class]="getMedicineTypeIcon(medicine.type) + ' text-sm sm:text-base'"></i>
+        </div>
+        <div class="min-w-0 flex-1">
+          <h3 class="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 truncate">{{ medicine.type }}</h3>
+          <p class="text-xs sm:text-sm text-gray-500 truncate">{{ formatDate(medicine.date) }}</p>
+        </div>
+      </div>
+      <button 
+        (click)="closeModal()"
+        class="p-1.5 sm:p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200 flex-shrink-0 ml-2"
+      >
+        <i class="fas fa-times text-base sm:text-lg"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Contenido del modal -->
+  <div class="overflow-y-auto max-h-[calc(90vh-80px)]">
+    <div class="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6">
+      <!-- Información principal -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h5 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
+            <i class="fas fa-calendar mr-2"></i>
+            Fecha de Aplicación
+          </h5>
+          <p class="text-gray-900 font-medium">{{ formatDate(medicine.date) }}</p>
+        </div>
+        
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h5 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
+            <i class="fas fa-calendar-check mr-2"></i>
+            Próxima Dosis
+          </h5>
+          <p class="text-gray-900 font-medium">{{ formatDate(medicine.nextDose) }}</p>
+        </div>
+      </div>
+
+      <!-- Información del medicamento -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h5 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
+            <i class="fas fa-barcode mr-2"></i>
+            Lote
+          </h5>
+          <p class="text-gray-900 font-medium font-mono bg-white px-2 py-1 rounded border">{{ medicine.lot }}</p>
+        </div>
+        
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h5 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
+            <i class="fas fa-weight mr-2"></i>
+            Dosis
+          </h5>
+          <p class="text-gray-900 font-medium">{{ medicine.dose || 'No especificada' }}</p>
+        </div>
+      </div>
+
+      <!-- Descripción del medicamento -->
+      <div *ngIf="medicine.description">
+        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
+          <i class="fas fa-file-medical mr-2"></i>
+          Descripción
+        </h4>
+        <div class="bg-gray-50 rounded-lg p-4">
+          <p class="text-gray-900 leading-relaxed whitespace-pre-wrap">{{ medicine.description }}</p>
+        </div>
+      </div>
+
+      <!-- Instrucciones -->
+      <div *ngIf="medicine.instructions">
+        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
+          <i class="fas fa-clipboard-list mr-2"></i>
+          Instrucciones
+        </h4>
+        <div class="bg-blue-50 rounded-lg p-4">
+          <p class="text-gray-900 leading-relaxed whitespace-pre-wrap">{{ medicine.instructions }}</p>
+        </div>
+      </div>
+
+      <!-- Efectos secundarios -->
+      <div *ngIf="medicine.sideEffects">
+        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
+          <i class="fas fa-exclamation-triangle mr-2"></i>
+          Efectos Secundarios
+        </h4>
+        <div class="bg-yellow-50 rounded-lg p-4">
+          <p class="text-gray-900 leading-relaxed whitespace-pre-wrap">{{ medicine.sideEffects }}</p>
+        </div>
+      </div>
+
+      <!-- Veterinario responsable -->
+      <div *ngIf="medicine.veterinarian">
+        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
+          <i class="fas fa-user-md mr-2"></i>
+          Veterinario Responsable
+        </h4>
+        <div class="bg-gray-50 rounded-lg p-4">
+          <p class="text-gray-900 font-medium">{{ medicine.veterinarian }}</p>
+        </div>
+      </div>
+
+      <!-- Imagen adjunta -->
+      <div *ngIf="medicine.imageUrl" class="space-y-3">
+        <h4 class="text-sm font-medium text-gray-700 flex items-center">
+          <i class="fas fa-image mr-2"></i>
+          Imagen Adjunta
+        </h4>
+        <div class="relative group">
+          <img 
+            [src]="medicine.imageUrl" 
+            [alt]="medicine.type" 
+            class="w-full h-64 object-cover rounded-lg hover:scale-105 transition-transform duration-200 cursor-pointer border border-gray-200"
+            (click)="openImageModal(medicine.imageUrl)"
+          >
+          <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200 rounded-lg flex items-center justify-center">
+            <i class="fas fa-search-plus text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-2xl"></i>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 text-center">Haz clic en la imagen para verla en tamaño completo</p>
+      </div>
+
+      <!-- Notas adicionales -->
+      <div *ngIf="medicine.notes">
+        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
+          <i class="fas fa-sticky-note mr-2"></i>
+          Notas Adicionales
+        </h4>
+        <div class="bg-gray-50 rounded-lg p-4">
+          <p class="text-gray-900 leading-relaxed whitespace-pre-wrap">{{ medicine.notes }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer del modal -->
+  <div class="sticky bottom-0 bg-white border-t border-gray-200 px-6 py-4">
+    <div class="flex justify-end space-x-3">
+      <button 
+        (click)="closeModal()"
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200"
+      >
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>
