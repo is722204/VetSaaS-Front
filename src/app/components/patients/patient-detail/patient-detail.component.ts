@@ -88,4 +88,11 @@ export class PatientDetailComponent implements OnInit {
   onImageError(event: any): void {
     event.target.src = 'https://via.placeholder.com/300x300?text=Caballo';
   }
+
+  onEditClick(): void {
+    const patientId = this.route.snapshot.paramMap.get('id');
+    if (patientId) {
+      this.router.navigate(['/patients', patientId, 'edit']);
+    }
+  }
 }

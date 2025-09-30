@@ -6,6 +6,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { PatientsComponent } from './components/patients/patients.component';
 import { PatientDetailComponent } from './components/patients/patient-detail/patient-detail.component';
 import { PatientFormComponent } from './components/patients/patient-form/patient-form.component';
+import { PatientEditComponent } from './components/patients/patient-edit/patient-edit.component';
 import { BillingComponent } from './components/billing/billing.component';
 import { AuthGuard } from './guards/auth.guard';
 
@@ -39,6 +40,10 @@ const routes: Routes = [
       {
         path: 'patients/:id',
         component: PatientDetailComponent
+      },
+      {
+        path: 'patients/:id/edit',
+        component: PatientEditComponent
       },
       {
         path: 'billing',

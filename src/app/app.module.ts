@@ -11,6 +11,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { PatientsComponent } from './components/patients/patients.component';
 import { PatientDetailComponent } from './components/patients/patient-detail/patient-detail.component';
 import { PatientFormComponent } from './components/patients/patient-form/patient-form.component';
+import { PatientEditComponent } from './components/patients/patient-edit/patient-edit.component';
 import { BillingComponent } from './components/billing/billing.component';
 
 @NgModule({
@@ -22,6 +23,7 @@ import { BillingComponent } from './components/billing/billing.component';
     PatientsComponent,
     PatientDetailComponent,
     PatientFormComponent,
+    PatientEditComponent,
     BillingComponent
   ],
   imports: [
