@@ -200,4 +200,79 @@ export class PatientDetailComponent implements OnInit {
       this.modalService.openModal('appointment-detail', patientId, this.patient.basicInfo.name, appointment);
     }
   }
+
+  // Métodos para calcular el progreso de gestación dinámicamente
+  getPregnancyProgress(): number {
+    if (!this.patient?.pregnancy?.isPregnant || !this.patient.pregnancy.conceptionDate) {
+      return 0;
+    }
+
+    const conception = new Date(this.patient.pregnancy.conceptionDate);
+    const today = new Date();
+    
+    // Calcular días de gestación
+    const timeDiff = today.getTime() - conception.getTime();
+    const pregnancyDays = Math.floor(timeDiff / (1000 * 3600 * 24));
+    
+    // Calcular porcentaje (gestación de caballos: ~340 días)
+    const totalPregnancyDays = 340;
+    const percentage = (pregnancyDays / totalPregnancyDays) * 100;
+    
+    return Math.min(Math.max(Math.round(percentage), 0), 100);
+  }
+
+  getPregnancyDays(): number {
+    if (!this.patient?.pregnancy?.isPregnant || !this.patient.pregnancy.conceptionDate) {
+      return 0;
+    }
+
+    const conception = new Date(this.patient.pregnancy.conceptionDate);
+    const today = new Date();
+    
+    const timeDiff = today.getTime() - conception.getTime();
+    return Math.floor(timeDiff / (1000 * 3600 * 24));
+  }
+
+  getEstimatedReliefDate(): string {
+    if (!this.patient?.pregnancy?.isPregnant || !this.patient.pregnancy.conceptionDate) {
+      return '';
+    }
+
+    const conception = new Date(this.patient.pregnancy.conceptionDate);
+    const estimatedRelief = new Date(conception);
+    estimatedRelief.setDate(estimatedRelief.getDate() + 330); // 11 meses = ~330 días
+    
+    return estimatedRelief.toISOString().split('T')[0];
+  }
+
+  getDaysUntilRelief(): number {
+    if (!this.patient?.pregnancy?.isPregnant || !this.patient.pregnancy.conceptionDate) {
+      return 0;
+    }
+
+    const conception = new Date(this.patient.pregnancy.conceptionDate);
+    const estimatedRelief = new Date(conception);
+    estimatedRelief.setDate(estimatedRelief.getDate() + 330);
+    
+    const today = new Date();
+    const reliefTimeDiff = estimatedRelief.getTime() - today.getTime();
+    return Math.ceil(reliefTimeDiff / (1000 * 3600 * 24));
+  }
+
+  getPregnancyStatusText(): string {
+    const progress = this.getPregnancyProgress();
+    const daysUntil = this.getDaysUntilRelief();
+    
+    if (progress >= 100) {
+      return 'Lista para el parto';
+    } else if (progress >= 80) {
+      return 'Último trimestre';
+    } else if (progress >= 50) {
+      return 'Segundo trimestre';
+    } else if (progress >= 20) {
+      return 'Primer trimestre';
+    } else {
+      return 'Inicio de gestación';
+    }
+  }
 }

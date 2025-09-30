@@ -17,6 +17,8 @@ interface PregnancyInfo {
   name: string;
   percentage: number;
   estimatedDate: string;
+  daysUntil: number;
+  pregnancyDays: number;
 }
 
 interface WeeklyAppointment {
@@ -107,16 +109,56 @@ export class DashboardComponent implements OnInit {
 
   private async loadPregnancyInfo(): Promise<void> {
     try {
-      const response = await this.apiService.get('/dashboard/pregnancy').toPromise() as any[];
-      this.pregnancyList = response.map((pregnancy: any) => ({
-        name: pregnancy.name,
-        percentage: pregnancy.percentage,
-        estimatedDate: pregnancy.estimatedDate
-      }));
+      // Obtener todos los pacientes y filtrar los que están preñados
+      const response = await this.patientService.getPatients().toPromise() as any;
+      const patients = Object.values(response || {});
+      
+      this.pregnancyList = patients
+        .filter((patient: any) => patient.pregnancy?.isPregnant && patient.pregnancy?.conceptionDate)
+        .map((patient: any) => {
+          const pregnancyData = this.calculatePregnancyData(patient.pregnancy.conceptionDate);
+          return {
+            name: patient.basicInfo?.name || 'Sin nombre',
+            percentage: pregnancyData.percentage,
+            estimatedDate: pregnancyData.estimatedDate,
+            daysUntil: pregnancyData.daysUntil,
+            pregnancyDays: pregnancyData.pregnancyDays
+          };
+        })
+        .sort((a, b) => b.percentage - a.percentage); // Ordenar por porcentaje descendente
     } catch (error) {
       console.error('Error cargando información de gestación:', error);
       this.pregnancyList = [];
     }
+  }
+
+  private calculatePregnancyData(conceptionDate: string): any {
+    const conception = new Date(conceptionDate);
+    const today = new Date();
+    
+    // Calcular días de gestación
+    const timeDiff = today.getTime() - conception.getTime();
+    const pregnancyDays = Math.floor(timeDiff / (1000 * 3600 * 24));
+    
+    // Calcular porcentaje (gestación de caballos: ~340 días)
+    const totalPregnancyDays = 340;
+    const percentage = Math.min(Math.max(Math.round((pregnancyDays / totalPregnancyDays) * 100), 0), 100);
+    
+    // Calcular fecha estimada de parto (11 meses = ~330 días)
+    const estimatedRelief = new Date(conception);
+    estimatedRelief.setDate(estimatedRelief.getDate() + 330);
+    const estimatedDate = estimatedRelief.toISOString().split('T')[0];
+    
+    // Calcular días restantes
+    const reliefTimeDiff = estimatedRelief.getTime() - today.getTime();
+    const daysUntil = Math.ceil(reliefTimeDiff / (1000 * 3600 * 24));
+    
+    return {
+      percentage,
+      estimatedDate,
+      daysUntil,
+      pregnancyDays
+    };
   }
 
   private async loadWeeklyAppointments(): Promise<void> {

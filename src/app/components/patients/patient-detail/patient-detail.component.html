@@ -170,18 +170,28 @@
               <i class="fas fa-baby text-pink-600 mr-2 text-sm"></i>
               <h3 class="text-xs sm:text-sm font-semibold text-gray-900">Estado de Gestación</h3>
             </div>
-            <span class="text-sm sm:text-lg font-bold text-pink-600">{{ patient.pregnancy.pregnancyPercentage }}%</span>
+            <span class="text-sm sm:text-lg font-bold text-pink-600">{{ getPregnancyProgress() }}%</span>
           </div>
           <div class="w-full bg-pink-200 rounded-full h-1.5 sm:h-2 mb-2">
             <div 
               class="bg-pink-500 h-1.5 sm:h-2 rounded-full transition-all duration-500 ease-out"
-              [style.width.%]="patient.pregnancy.pregnancyPercentage"
+              [style.width.%]="getPregnancyProgress()"
             ></div>
           </div>
-          <p class="text-xs sm:text-sm text-pink-700">
-            <i class="fas fa-calendar mr-1"></i>
-            Fecha estimada: {{ formatDate(patient.pregnancy.estimatedReliefDate) }}
-          </p>
+          <div class="space-y-1">
+            <p class="text-xs sm:text-sm text-pink-700">
+              <i class="fas fa-calendar mr-1"></i>
+              Fecha estimada: {{ formatDate(getEstimatedReliefDate()) }}
+            </p>
+            <p class="text-xs sm:text-sm text-pink-700">
+              <i class="fas fa-clock mr-1"></i>
+              {{ getPregnancyDays() }} días de gestación • {{ getDaysUntilRelief() }} días restantes
+            </p>
+            <p class="text-xs sm:text-sm text-pink-700 font-medium">
+              <i class="fas fa-info-circle mr-1"></i>
+              {{ getPregnancyStatusText() }}
+            </p>
+          </div>
         </div>
       </div>
 

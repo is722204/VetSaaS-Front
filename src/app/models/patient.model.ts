@@ -41,6 +41,7 @@ export interface Appointment {
 
 export interface Pregnancy {
   isPregnant: boolean;
+  conceptionDate: string;
   pregnancyPercentage: number;
   estimatedReliefDate: string;
   ultrasoundDate: string;
