@@ -1,0 +1,68 @@
+/* Estilos específicos para el detalle del paciente */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animaciones para las tabs */
+nav button {
+  transition: all 0.2s ease;
+}
+
+nav button:hover {
+  transform: translateY(-1px);
+}
+
+/* Estilos para las cards de información */
+.border {
+  transition: all 0.3s ease;
+}
+
+.border:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Mejoras para las imágenes */
+img {
+  transition: transform 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.02);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .flex {
+    flex-direction: column;
+  }
+  
+  .space-x-8 {
+    space-x: 0;
+  }
+}
+
+/* Estilos para el estado de gestación */
+.bg-pink-50 {
+  background-color: #fdf2f8;
+}
+
+.bg-pink-200 {
+  background-color: #fce7f3;
+}
+
+.bg-pink-500 {
+  background-color: #ec4899;
+}

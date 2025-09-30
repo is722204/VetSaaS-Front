@@ -1,0 +1,263 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="md:flex md:items-center md:justify-between">
+    <div class="flex-1 min-w-0">
+      <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+        <i class="fas fa-cash-register text-primary-600 mr-2"></i>
+        Cuentas y Facturación
+      </h2>
+      <p class="mt-1 text-sm text-gray-500">
+        Sistema POS y gestión de facturas
+      </p>
+    </div>
+  </div>
+
+  <!-- Tabs de navegación -->
+  <div class="bg-white shadow rounded-lg">
+    <div class="border-b border-gray-200">
+      <nav class="-mb-px flex space-x-8 px-6">
+        <button
+          (click)="setActiveTab('pos')"
+          [class]="activeTab === 'pos' ? 'border-primary-500 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+          class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+        >
+          <i class="fas fa-cash-register mr-2"></i>
+          POS
+        </button>
+        <button
+          (click)="setActiveTab('invoices')"
+          [class]="activeTab === 'invoices' ? 'border-primary-500 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+          class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+        >
+          <i class="fas fa-file-invoice mr-2"></i>
+          Facturas
+        </button>
+        <button
+          (click)="setActiveTab('payment-links')"
+          [class]="activeTab === 'payment-links' ? 'border-primary-500 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+          class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+        >
+          <i class="fas fa-link mr-2"></i>
+          Links de Pago
+        </button>
+      </nav>
+    </div>
+
+    <div class="p-6">
+      <!-- POS Tab -->
+      <div *ngIf="activeTab === 'pos'">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Selección de Paciente -->
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">
+              <i class="fas fa-horse mr-2"></i>
+              Seleccionar Paciente
+            </h3>
+            
+            <div *ngIf="!selectedPatient" class="space-y-2 max-h-64 overflow-y-auto">
+              <div *ngFor="let patient of getPatientsArray()" 
+                   (click)="selectPatient(patient)"
+                   class="flex items-center p-3 bg-white rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                <img [src]="patient.basicInfo.photoUrl || 'https://via.placeholder.com/50x50?text=C'" 
+                     [alt]="patient.basicInfo.name"
+                     class="w-10 h-10 rounded-full object-cover mr-3">
+                <div>
+                  <p class="font-medium text-gray-900">{{ patient.basicInfo.name }}</p>
+                  <p class="text-sm text-gray-500">{{ patient.basicInfo.owner.name }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="selectedPatient" class="bg-white rounded-lg p-4">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <img [src]="selectedPatient.basicInfo.photoUrl || 'https://via.placeholder.com/50x50?text=C'" 
+                       [alt]="selectedPatient.basicInfo.name"
+                       class="w-10 h-10 rounded-full object-cover mr-3">
+                  <div>
+                    <p class="font-medium text-gray-900">{{ selectedPatient.basicInfo.name }}</p>
+                    <p class="text-sm text-gray-500">{{ selectedPatient.basicInfo.owner.name }}</p>
+                  </div>
+                </div>
+                <button (click)="selectedPatient = null" class="text-gray-400 hover:text-gray-600">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Items de la Factura -->
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">
+              <i class="fas fa-shopping-cart mr-2"></i>
+              Items
+            </h3>
+
+            <!-- Agregar nuevo item -->
+            <div class="bg-white rounded-lg p-4 mb-4">
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+                <input
+                  [(ngModel)]="newItem.description"
+                  placeholder="Descripción"
+                  class="col-span-2 px-3 py-2 border border-gray-300 rounded-md text-sm"
+                >
+                <input
+                  type="number"
+                  [(ngModel)]="newItem.quantity"
+                  placeholder="Cantidad"
+                  class="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                >
+                <input
+                  type="number"
+                  [(ngModel)]="newItem.unitPrice"
+                  placeholder="Precio"
+                  class="px-3 py-2 border border-gray-300 rounded-md text-sm"
+                >
+              </div>
+              <button
+                (click)="addItem()"
+                class="mt-2 w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 text-sm"
+              >
+                <i class="fas fa-plus mr-2"></i>
+                Agregar Item
+              </button>
+            </div>
+
+            <!-- Lista de items -->
+            <div class="space-y-2 max-h-48 overflow-y-auto">
+              <div *ngFor="let item of invoiceItems; let i = index" 
+                   class="flex items-center justify-between bg-white rounded-lg p-3">
+                <div class="flex-1">
+                  <p class="font-medium text-gray-900">{{ item.description }}</p>
+                  <p class="text-sm text-gray-500">{{ item.quantity }} x {{ formatCurrency(item.unitPrice) }}</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <span class="font-medium text-gray-900">{{ formatCurrency(item.total) }}</span>
+                  <button (click)="removeItem(i)" class="text-red-500 hover:text-red-700">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Totales -->
+            <div *ngIf="invoiceItems.length > 0" class="bg-white rounded-lg p-4 mt-4">
+              <div class="space-y-2">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Subtotal:</span>
+                  <span class="font-medium">{{ formatCurrency(getSubtotal()) }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">IVA (16%):</span>
+                  <span class="font-medium">{{ formatCurrency(getTax()) }}</span>
+                </div>
+                <div class="flex justify-between text-lg font-bold border-t pt-2">
+                  <span>Total:</span>
+                  <span>{{ formatCurrency(getTotal()) }}</span>
+                </div>
+              </div>
+              
+              <button
+                (click)="createInvoice()"
+                class="w-full mt-4 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 font-medium"
+              >
+                <i class="fas fa-receipt mr-2"></i>
+                Crear Factura
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Facturas Tab -->
+      <div *ngIf="activeTab === 'invoices'">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-medium text-gray-900">Facturas</h3>
+          <button class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700">
+            <i class="fas fa-plus mr-2"></i>
+            Nueva Factura
+          </button>
+        </div>
+
+        <div *ngIf="invoicesList.length === 0" class="text-center py-8">
+          <i class="fas fa-file-invoice text-gray-300 text-4xl mb-4"></i>
+          <p class="text-gray-500">No hay facturas registradas</p>
+        </div>
+
+        <div *ngIf="invoicesList.length > 0" class="bg-white shadow overflow-hidden sm:rounded-md">
+          <ul class="divide-y divide-gray-200">
+            <li *ngFor="let invoice of invoicesList" class="px-6 py-4">
+              <div class="flex items-center justify-between">
+                <div class="flex-1">
+                  <div class="flex items-center">
+                    <p class="text-sm font-medium text-gray-900">{{ invoice.invoiceNumber }}</p>
+                    <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" 
+                          [class]="getStatusColor(invoice.status)">
+                      {{ getStatusText(invoice.status) }}
+                    </span>
+                  </div>
+                  <div class="mt-1 text-sm text-gray-500">
+                    <p>Cliente: {{ invoice.ownerId }}</p>
+                    <p>Fecha: {{ formatDate(invoice.date) }}</p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <span class="text-lg font-bold text-gray-900">{{ formatCurrency(invoice.total) }}</span>
+                  <div class="flex space-x-1">
+                    <button
+                      (click)="generatePaymentLink(invoice.invoiceNumber)"
+                      class="text-blue-600 hover:text-blue-800"
+                      title="Generar link de pago"
+                    >
+                      <i class="fas fa-link"></i>
+                    </button>
+                    <button
+                      (click)="generatePDF(invoice.invoiceNumber)"
+                      class="text-red-600 hover:text-red-800"
+                      title="Generar PDF"
+                    >
+                      <i class="fas fa-file-pdf"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Links de Pago Tab -->
+      <div *ngIf="activeTab === 'payment-links'">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-medium text-gray-900">Links de Pago</h3>
+        </div>
+
+        <div *ngIf="getPaymentLinksArray().length === 0" class="text-center py-8">
+          <i class="fas fa-link text-gray-300 text-4xl mb-4"></i>
+          <p class="text-gray-500">No hay links de pago generados</p>
+        </div>
+
+        <div *ngIf="getPaymentLinksArray().length > 0" class="space-y-4">
+          <div *ngFor="let link of getPaymentLinksArray()" class="bg-white border border-gray-200 rounded-lg p-4">
+            <div class="flex items-center justify-between">
+              <div class="flex-1">
+                <p class="text-sm font-medium text-gray-900">{{ link.description }}</p>
+                <p class="text-sm text-gray-500">Monto: {{ formatCurrency(link.amount) }}</p>
+                <p class="text-sm text-gray-500">Expira: {{ formatDate(link.expiresAt) }}</p>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                      [class]="link.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'">
+                  {{ link.status === 'active' ? 'Activo' : 'Inactivo' }}
+                </span>
+                <button class="text-blue-600 hover:text-blue-800" title="Copiar link">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

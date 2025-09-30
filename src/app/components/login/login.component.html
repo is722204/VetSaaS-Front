@@ -1,0 +1,129 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <!-- Logo y título -->
+    <div class="text-center">
+      <div class="mx-auto h-16 w-16 bg-primary-600 rounded-full flex items-center justify-center">
+        <i class="fas fa-horse-head text-white text-2xl"></i>
+      </div>
+      <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+        VetSaaS
+      </h2>
+      <p class="mt-2 text-sm text-gray-600">
+        Sistema de gestión veterinaria
+      </p>
+    </div>
+
+    <!-- Formulario de login -->
+    <div class="bg-white py-8 px-6 shadow-xl rounded-lg">
+      <form class="space-y-6" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Campo Email -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">
+            Correo electrónico
+          </label>
+          <div class="mt-1 relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-envelope text-gray-400"></i>
+            </div>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              formControlName="email"
+              class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+              placeholder="tu@email.com"
+            />
+          </div>
+          <div *ngIf="getFieldError('email')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('email') }}
+          </div>
+        </div>
+
+        <!-- Campo Contraseña -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">
+            Contraseña
+          </label>
+          <div class="mt-1 relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-lock text-gray-400"></i>
+            </div>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              formControlName="password"
+              class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+              placeholder="••••••••"
+            />
+          </div>
+          <div *ngIf="getFieldError('password')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('password') }}
+          </div>
+        </div>
+
+        <!-- Campo Tenant ID -->
+        <div>
+          <label for="tenantId" class="block text-sm font-medium text-gray-700">
+            ID de Clínica
+          </label>
+          <div class="mt-1 relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-building text-gray-400"></i>
+            </div>
+            <input
+              id="tenantId"
+              name="tenantId"
+              type="text"
+              formControlName="tenantId"
+              class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+              placeholder="clinic-001"
+            />
+          </div>
+          <div *ngIf="getFieldError('tenantId')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('tenantId') }}
+          </div>
+        </div>
+
+        <!-- Mensaje de error -->
+        <div *ngIf="errorMessage" class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
+          <i class="fas fa-exclamation-circle mr-2"></i>
+          {{ errorMessage }}
+        </div>
+
+        <!-- Botón de login -->
+        <div>
+          <button
+            type="submit"
+            [disabled]="isLoading"
+            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+          >
+            <span *ngIf="!isLoading" class="absolute left-0 inset-y-0 flex items-center pl-3">
+              <i class="fas fa-sign-in-alt text-primary-500 group-hover:text-primary-400"></i>
+            </span>
+            <span *ngIf="isLoading" class="absolute left-0 inset-y-0 flex items-center pl-3">
+              <i class="fas fa-spinner fa-spin text-primary-500"></i>
+            </span>
+            {{ isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+          </button>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="text-center">
+          <p class="text-xs text-gray-500">
+            ¿Problemas para acceder? Contacta al administrador
+          </p>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center">
+      <p class="text-xs text-gray-500">
+        © 2024 VetSaaS. Todos los derechos reservados.
+      </p>
+    </div>
+  </div>
+</div>

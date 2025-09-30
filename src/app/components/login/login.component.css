@@ -1,0 +1,30 @@
+/* Estilos específicos para el componente de login */
+.fa-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animación suave para el formulario */
+.bg-white {
+  transition: all 0.3s ease;
+}
+
+.bg-white:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Mejoras para dispositivos móviles */
+@media (max-width: 640px) {
+  .max-w-md {
+    max-width: 100%;
+    margin: 0 1rem;
+  }
+}

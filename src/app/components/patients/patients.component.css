@@ -1,0 +1,53 @@
+/* Estilos específicos para el componente de pacientes */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animaciones para las cards de pacientes */
+.bg-white {
+  transition: all 0.3s ease;
+}
+
+.bg-white:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Mejoras para las imágenes */
+img {
+  transition: transform 0.3s ease;
+}
+
+.bg-white:hover img {
+  transform: scale(1.05);
+}
+
+/* Responsive improvements */
+@media (max-width: 640px) {
+  .grid-cols-1 {
+    gap: 1rem;
+  }
+}
+
+/* Estilos para los badges de sexo */
+.bg-blue-100 {
+  background-color: #dbeafe;
+}
+
+.bg-pink-100 {
+  background-color: #fce7f3;
+}
+
+/* Estilos para el estado de gestación */
+.bg-pink-50 {
+  background-color: #fdf2f8;
+}

@@ -1,0 +1,276 @@
+<div class="space-y-6" *ngIf="!isLoading && patient">
+  <!-- Header con navegación -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center">
+      <button
+        (click)="goBack()"
+        class="mr-4 p-2 text-gray-400 hover:text-gray-600 transition-colors"
+      >
+        <i class="fas fa-arrow-left text-xl"></i>
+      </button>
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">{{ patient.basicInfo.name }}</h1>
+        <p class="text-sm text-gray-500">ID: {{ patient.basicInfo.patientId }}</p>
+      </div>
+    </div>
+    <div class="flex space-x-2">
+      <button
+        class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+      >
+        <i class="fas fa-edit mr-2"></i>
+        Editar
+      </button>
+      <button
+        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700"
+      >
+        <i class="fas fa-plus mr-2"></i>
+        Nueva Cita
+      </button>
+    </div>
+  </div>
+
+  <!-- Información básica del paciente -->
+  <div class="bg-white shadow rounded-lg">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-lg font-medium text-gray-900">Información Básica</h2>
+    </div>
+    <div class="p-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Imagen del paciente -->
+        <div class="flex justify-center lg:justify-start">
+          <img
+            [src]="patient.basicInfo.photoUrl || 'https://via.placeholder.com/300x300?text=Caballo'"
+            [alt]="patient.basicInfo.name"
+            class="w-48 h-48 object-cover rounded-lg shadow-md"
+            (error)="onImageError($event)"
+          />
+        </div>
+
+        <!-- Detalles del paciente -->
+        <div class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm font-medium text-gray-500">Nombre</label>
+              <p class="text-lg text-gray-900">{{ patient.basicInfo.name }}</p>
+            </div>
+            <div>
+              <label class="text-sm font-medium text-gray-500">ID</label>
+              <p class="text-lg text-gray-900">{{ patient.basicInfo.patientId }}</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm font-medium text-gray-500">Edad</label>
+              <p class="text-lg text-gray-900">{{ getPatientAge(patient.basicInfo.birthDate) }}</p>
+            </div>
+            <div>
+              <label class="text-sm font-medium text-gray-500">Sexo</label>
+              <p class="text-lg text-gray-900">
+                <i [class]="patient.basicInfo.sex === 'macho' ? 'fas fa-mars text-blue-600' : 'fas fa-venus text-pink-600'"></i>
+                {{ patient.basicInfo.sex }}
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm font-medium text-gray-500">Raza</label>
+              <p class="text-lg text-gray-900">{{ patient.basicInfo.breed }}</p>
+            </div>
+            <div>
+              <label class="text-sm font-medium text-gray-500">Color</label>
+              <p class="text-lg text-gray-900">{{ patient.basicInfo.color }}</p>
+            </div>
+          </div>
+
+          <!-- Información del dueño -->
+          <div class="border-t pt-4">
+            <h3 class="text-md font-medium text-gray-900 mb-2">Dueño</h3>
+            <div class="space-y-2">
+              <div class="flex items-center">
+                <i class="fas fa-user text-gray-400 mr-2"></i>
+                <span class="text-gray-900">{{ patient.basicInfo.owner.name }}</span>
+              </div>
+              <div class="flex items-center">
+                <i class="fas fa-phone text-gray-400 mr-2"></i>
+                <span class="text-gray-900">{{ patient.basicInfo.owner.phone }}</span>
+              </div>
+              <div class="flex items-center">
+                <i class="fas fa-envelope text-gray-400 mr-2"></i>
+                <span class="text-gray-900">{{ patient.basicInfo.owner.email }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Estado de gestación -->
+          <div *ngIf="patient.pregnancy?.isPregnant" class="border-t pt-4">
+            <h3 class="text-md font-medium text-gray-900 mb-2">Gestación</h3>
+            <div class="bg-pink-50 p-4 rounded-lg">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-pink-800">Progreso</span>
+                <span class="text-sm text-pink-600">{{ patient.pregnancy.pregnancyPercentage }}%</span>
+              </div>
+              <div class="w-full bg-pink-200 rounded-full h-2">
+                <div 
+                  class="bg-pink-500 h-2 rounded-full transition-all duration-300"
+                  [style.width.%]="patient.pregnancy.pregnancyPercentage"
+                ></div>
+              </div>
+              <p class="text-sm text-pink-700 mt-2">
+                Fecha estimada: {{ formatDate(patient.pregnancy.estimatedReliefDate) }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs de información -->
+  <div class="bg-white shadow rounded-lg">
+    <div class="border-b border-gray-200">
+      <nav class="-mb-px flex space-x-8 px-6">
+        <button
+          (click)="setActiveTab('medical-history')"
+          [class]="activeTab === 'medical-history' ? 'border-primary-500 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+          class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+        >
+          <i class="fas fa-stethoscope mr-2"></i>
+          Historial Clínico
+        </button>
+        <button
+          (click)="setActiveTab('preventive-medicine')"
+          [class]="activeTab === 'preventive-medicine' ? 'border-primary-500 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+          class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+        >
+          <i class="fas fa-pills mr-2"></i>
+          Medicina Preventiva
+        </button>
+        <button
+          (click)="setActiveTab('appointments')"
+          [class]="activeTab === 'appointments' ? 'border-primary-500 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+          class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+        >
+          <i class="fas fa-calendar-alt mr-2"></i>
+          Citas
+        </button>
+      </nav>
+    </div>
+
+    <div class="p-6">
+      <!-- Historial Clínico -->
+      <div *ngIf="activeTab === 'medical-history'">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-medium text-gray-900">Historial Clínico</h3>
+          <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-primary-700 bg-primary-100 hover:bg-primary-200">
+            <i class="fas fa-plus mr-2"></i>
+            Nuevo Registro
+          </button>
+        </div>
+        
+        <div *ngIf="getMedicalHistoryArray().length === 0" class="text-center py-8">
+          <i class="fas fa-stethoscope text-gray-300 text-4xl mb-4"></i>
+          <p class="text-gray-500">No hay registros médicos</p>
+        </div>
+
+        <div *ngIf="getMedicalHistoryArray().length > 0" class="space-y-4">
+          <div *ngFor="let record of getMedicalHistoryArray()" class="border border-gray-200 rounded-lg p-4">
+            <div class="flex items-start justify-between">
+              <div class="flex-1">
+                <div class="flex items-center mb-2">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    {{ record.type }}
+                  </span>
+                  <span class="ml-2 text-sm text-gray-500">{{ formatDate(record.date) }}</span>
+                </div>
+                <p class="text-gray-900">{{ record.description }}</p>
+                <div *ngIf="record.images && record.images.length > 0" class="mt-2">
+                  <div class="flex space-x-2">
+                    <img *ngFor="let image of record.images" [src]="image" [alt]="record.description" class="w-16 h-16 object-cover rounded">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Medicina Preventiva -->
+      <div *ngIf="activeTab === 'preventive-medicine'">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-medium text-gray-900">Medicina Preventiva</h3>
+          <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-primary-700 bg-primary-100 hover:bg-primary-200">
+            <i class="fas fa-plus mr-2"></i>
+            Nuevo Medicamento
+          </button>
+        </div>
+        
+        <div *ngIf="getPreventiveMedicineArray().length === 0" class="text-center py-8">
+          <i class="fas fa-pills text-gray-300 text-4xl mb-4"></i>
+          <p class="text-gray-500">No hay medicamentos preventivos registrados</p>
+        </div>
+
+        <div *ngIf="getPreventiveMedicineArray().length > 0" class="space-y-4">
+          <div *ngFor="let medicine of getPreventiveMedicineArray()" class="border border-gray-200 rounded-lg p-4">
+            <div class="flex items-start justify-between">
+              <div class="flex-1">
+                <div class="flex items-center mb-2">
+                  <span class="text-lg font-medium text-gray-900">{{ medicine.product }}</span>
+                  <span class="ml-2 text-sm text-gray-500">{{ medicine.type }}</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span class="text-gray-500">Fecha:</span>
+                    <span class="ml-1 text-gray-900">{{ formatDate(medicine.date) }}</span>
+                  </div>
+                  <div>
+                    <span class="text-gray-500">Próxima dosis:</span>
+                    <span class="ml-1 text-gray-900">{{ formatDate(medicine.nextDose) }}</span>
+                  </div>
+                  <div>
+                    <span class="text-gray-500">Lote:</span>
+                    <span class="ml-1 text-gray-900">{{ medicine.lot }}</span>
+                  </div>
+                </div>
+                <p *ngIf="medicine.notes" class="mt-2 text-sm text-gray-600">{{ medicine.notes }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Citas -->
+      <div *ngIf="activeTab === 'appointments'">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-medium text-gray-900">Citas Programadas</h3>
+          <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-primary-700 bg-primary-100 hover:bg-primary-200">
+            <i class="fas fa-plus mr-2"></i>
+            Nueva Cita
+          </button>
+        </div>
+        
+        <div class="text-center py-8">
+          <i class="fas fa-calendar-alt text-gray-300 text-4xl mb-4"></i>
+          <p class="text-gray-500">No hay citas programadas</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading state -->
+<div *ngIf="isLoading" class="flex justify-center items-center py-12">
+  <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+</div>
+
+<!-- Error state -->
+<div *ngIf="!isLoading && !patient" class="text-center py-12">
+  <i class="fas fa-exclamation-triangle text-gray-300 text-4xl mb-4"></i>
+  <h3 class="text-lg font-medium text-gray-900 mb-2">Paciente no encontrado</h3>
+  <p class="text-gray-500 mb-4">El paciente que buscas no existe o ha sido eliminado</p>
+  <button (click)="goBack()" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700">
+    <i class="fas fa-arrow-left mr-2"></i>
+    Volver a Pacientes
+  </button>
+</div>

@@ -1,0 +1,76 @@
+/* Estilos para el layout principal */
+.sidebar-transition {
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Animaciones suaves para los enlaces del sidebar */
+nav a {
+  transition: all 0.2s ease;
+}
+
+nav a:hover {
+  transform: translateX(2px);
+  background-color: #f3f4f6;
+}
+
+/* Mejoras para el header */
+.bg-white {
+  backdrop-filter: blur(10px);
+}
+
+/* Estilos para el botón de logout */
+button:hover {
+  transform: translateY(-1px);
+  transition: transform 0.2s ease;
+}
+
+/* Estilos para el sidebar fijo */
+.h-screen {
+  height: 100vh;
+}
+
+/* Mejoras para el contenido principal */
+main {
+  min-height: calc(100vh - 4rem);
+}
+
+/* Estilos para el overlay del sidebar móvil */
+.fixed.inset-0 {
+  z-index: 50;
+}
+
+/* Responsive improvements */
+@media (max-width: 1024px) {
+  .lg\:flex {
+    display: none !important;
+  }
+}
+
+/* Estilos para las cards del dashboard */
+.bg-white {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Mejoras para los iconos */
+.fas {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Estilos para el estado activo del sidebar */
+nav a.bg-gray-100 {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+/* Animaciones para el sidebar móvil */
+@media (max-width: 1024px) {
+  .fixed.inset-0 > div:last-child {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .fixed.inset-0[style*="display: block"] > div:last-child {
+    transform: translateX(0);
+  }
+}
