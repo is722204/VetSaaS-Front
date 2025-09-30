@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PatientService } from '../../../services/patient.service';
+import { ModalService } from '../../../services/modal.service';
 import { Patient } from '../../../models/patient.model';
 
 @Component({
@@ -16,7 +17,8 @@ export class PatientDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private patientService: PatientService
+    private patientService: PatientService,
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {
@@ -93,6 +95,27 @@ export class PatientDetailComponent implements OnInit {
     const patientId = this.route.snapshot.paramMap.get('id');
     if (patientId) {
       this.router.navigate(['/patients', patientId, 'edit']);
+    }
+  }
+
+  onAddMedicalRecord(): void {
+    const patientId = this.route.snapshot.paramMap.get('id');
+    if (patientId && this.patient) {
+      this.modalService.openModal('medical-record', patientId, this.patient.basicInfo.name);
+    }
+  }
+
+  onAddPreventiveMedicine(): void {
+    const patientId = this.route.snapshot.paramMap.get('id');
+    if (patientId && this.patient) {
+      this.modalService.openModal('preventive-medicine', patientId, this.patient.basicInfo.name);
+    }
+  }
+
+  onAddAppointment(): void {
+    const patientId = this.route.snapshot.paramMap.get('id');
+    if (patientId && this.patient) {
+      this.modalService.openModal('appointment', patientId, this.patient.basicInfo.name);
     }
   }
 }

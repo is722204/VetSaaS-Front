@@ -24,6 +24,7 @@
             Editar
           </button>
           <button
+            (click)="onAddAppointment()"
             class="hidden sm:inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200"
           >
             <i class="fas fa-plus mr-2"></i>
@@ -38,6 +39,7 @@
             <i class="fas fa-edit text-lg"></i>
           </button>
           <button
+            (click)="onAddAppointment()"
             class="sm:hidden p-2 text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg transition-all duration-200"
             title="Nueva Cita"
           >
@@ -199,7 +201,7 @@
           <div *ngIf="activeTab === 'medical-history'">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
               <h3 class="text-lg font-semibold text-gray-900">Historial Clínico</h3>
-              <button class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+              <button (click)="onAddMedicalRecord()" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
                 <i class="fas fa-plus mr-2"></i>
                 Nuevo Registro
               </button>
@@ -211,7 +213,7 @@
               </div>
               <h4 class="text-lg font-medium text-gray-900 mb-2">No hay registros médicos</h4>
               <p class="text-gray-500 mb-6">Comienza agregando el primer registro médico para este paciente</p>
-              <button class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+              <button (click)="onAddMedicalRecord()" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
                 <i class="fas fa-plus mr-2"></i>
                 Agregar Registro
               </button>
@@ -245,7 +247,7 @@
           <div *ngIf="activeTab === 'preventive-medicine'">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
               <h3 class="text-lg font-semibold text-gray-900">Medicina Preventiva</h3>
-              <button class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+              <button (click)="onAddPreventiveMedicine()" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
                 <i class="fas fa-plus mr-2"></i>
                 Nuevo Medicamento
               </button>
@@ -257,7 +259,7 @@
               </div>
               <h4 class="text-lg font-medium text-gray-900 mb-2">No hay medicamentos preventivos</h4>
               <p class="text-gray-500 mb-6">Comienza agregando el primer medicamento preventivo para este paciente</p>
-              <button class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+              <button (click)="onAddPreventiveMedicine()" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
                 <i class="fas fa-plus mr-2"></i>
                 Agregar Medicamento
               </button>
@@ -303,7 +305,7 @@
           <div *ngIf="activeTab === 'appointments'">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
               <h3 class="text-lg font-semibold text-gray-900">Citas Programadas</h3>
-              <button class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+              <button (click)="onAddAppointment()" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
                 <i class="fas fa-plus mr-2"></i>
                 Nueva Cita
               </button>
@@ -315,7 +317,7 @@
               </div>
               <h4 class="text-lg font-medium text-gray-900 mb-2">No hay citas programadas</h4>
               <p class="text-gray-500 mb-6">Programa la primera cita para este paciente</p>
-              <button class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
+              <button (click)="onAddAppointment()" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200">
                 <i class="fas fa-plus mr-2"></i>
                 Programar Cita
               </button>

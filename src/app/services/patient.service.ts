@@ -29,15 +29,19 @@ export class PatientService {
     return this.apiService.delete<void>(`/patients/${patientId}`);
   }
 
-  addMedicalRecord(patientId: string, record: any): Observable<any> {
+  addMedicalRecord(patientId: string, record: FormData | any): Observable<any> {
     return this.apiService.post(`/patients/${patientId}/medical-history`, record);
   }
 
-  addPreventiveMedicine(patientId: string, medicine: any): Observable<any> {
+  addPreventiveMedicine(patientId: string, medicine: FormData | any): Observable<any> {
     return this.apiService.post(`/patients/${patientId}/preventive-medicine`, medicine);
   }
 
   updatePregnancy(patientId: string, pregnancy: any): Observable<any> {
     return this.apiService.put(`/patients/${patientId}/pregnancy`, pregnancy);
+  }
+
+  addAppointment(patientId: string, appointment: any): Observable<any> {
+    return this.apiService.post(`/patients/${patientId}/appointments`, appointment);
   }
 }

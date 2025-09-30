@@ -1,0 +1,160 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white border-b border-gray-200 shadow-sm">
+    <div class="px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center">
+          <button
+            (click)="onCancel()"
+            class="mr-4 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200"
+          >
+            <i class="fas fa-arrow-left text-lg"></i>
+          </button>
+          <div>
+            <h1 class="text-lg font-semibold text-gray-900">Nuevo Registro Médico</h1>
+            <p class="text-sm text-gray-500" *ngIf="patientName">Paciente: {{ patientName }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulario -->
+  <div class="px-4 sm:px-6 lg:px-8 py-6">
+    <div class="max-w-2xl mx-auto">
+      <form [formGroup]="medicalRecordForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Información Básica -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Información del Registro</h3>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Fecha *</label>
+              <input
+                type="date"
+                id="date"
+                formControlName="date"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
+                [class.border-red-500]="getFieldError('date')"
+              />
+              <p class="text-red-500 text-xs mt-1" *ngIf="getFieldError('date')">{{ getFieldError('date') }}</p>
+            </div>
+
+            <div>
+              <label for="type" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Consulta *</label>
+              <select
+                id="type"
+                formControlName="type"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
+                [class.border-red-500]="getFieldError('type')"
+              >
+                <option value="">Seleccionar tipo</option>
+                <option value="consulta">Consulta General</option>
+                <option value="emergencia">Emergencia</option>
+                <option value="cirugia">Cirugía</option>
+                <option value="revision">Revisión</option>
+                <option value="vacunacion">Vacunación</option>
+                <option value="desparasitacion">Desparasitación</option>
+              </select>
+              <p class="text-red-500 text-xs mt-1" *ngIf="getFieldError('type')">{{ getFieldError('type') }}</p>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <label for="veterinarian" class="block text-sm font-medium text-gray-700 mb-1">Veterinario *</label>
+            <input
+              type="text"
+              id="veterinarian"
+              formControlName="veterinarian"
+              placeholder="Nombre del veterinario"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
+              [class.border-red-500]="getFieldError('veterinarian')"
+            />
+            <p class="text-red-500 text-xs mt-1" *ngIf="getFieldError('veterinarian')">{{ getFieldError('veterinarian') }}</p>
+          </div>
+        </div>
+
+        <!-- Diagnóstico y Tratamiento -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Diagnóstico y Tratamiento</h3>
+          
+          <div class="space-y-4">
+            <div>
+              <label for="diagnosis" class="block text-sm font-medium text-gray-700 mb-1">Diagnóstico *</label>
+              <textarea
+                id="diagnosis"
+                formControlName="diagnosis"
+                rows="3"
+                placeholder="Describe el diagnóstico..."
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 resize-none"
+                [class.border-red-500]="getFieldError('diagnosis')"
+              ></textarea>
+              <p class="text-red-500 text-xs mt-1" *ngIf="getFieldError('diagnosis')">{{ getFieldError('diagnosis') }}</p>
+            </div>
+
+            <div>
+              <label for="treatment" class="block text-sm font-medium text-gray-700 mb-1">Tratamiento *</label>
+              <textarea
+                id="treatment"
+                formControlName="treatment"
+                rows="3"
+                placeholder="Describe el tratamiento aplicado..."
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 resize-none"
+                [class.border-red-500]="getFieldError('treatment')"
+              ></textarea>
+              <p class="text-red-500 text-xs mt-1" *ngIf="getFieldError('treatment')">{{ getFieldError('treatment') }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Información Adicional -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Información Adicional</h3>
+          
+          <div class="space-y-4">
+            <div>
+              <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Notas Adicionales</label>
+              <textarea
+                id="notes"
+                formControlName="notes"
+                rows="3"
+                placeholder="Notas adicionales, observaciones, recomendaciones..."
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 resize-none"
+              ></textarea>
+            </div>
+
+            <div>
+              <label for="followUpDate" class="block text-sm font-medium text-gray-700 mb-1">Fecha de Seguimiento</label>
+              <input
+                type="date"
+                id="followUpDate"
+                formControlName="followUpDate"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
+          <button
+            type="button"
+            (click)="onCancel()"
+            class="w-full sm:w-auto px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            [disabled]="isLoading"
+            class="w-full sm:w-auto px-6 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+          >
+            <i class="fas fa-save mr-2" *ngIf="!isLoading"></i>
+            <i class="fas fa-spinner fa-spin mr-2" *ngIf="isLoading"></i>
+            {{ isLoading ? 'Guardando...' : 'Guardar Registro' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

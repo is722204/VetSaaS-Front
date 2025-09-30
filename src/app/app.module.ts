@@ -13,6 +13,13 @@ import { PatientDetailComponent } from './components/patients/patient-detail/pat
 import { PatientFormComponent } from './components/patients/patient-form/patient-form.component';
 import { PatientEditComponent } from './components/patients/patient-edit/patient-edit.component';
 import { BillingComponent } from './components/billing/billing.component';
+import { MedicalRecordFormComponent } from './components/patients/medical-record-form/medical-record-form.component';
+import { PreventiveMedicineFormComponent } from './components/patients/preventive-medicine-form/preventive-medicine-form.component';
+import { AppointmentFormComponent } from './components/patients/appointment-form/appointment-form.component';
+import { ModalComponent } from './components/shared/modal/modal.component';
+import { MedicalRecordModalComponent } from './components/patients/medical-record-modal/medical-record-modal.component';
+import { PreventiveMedicineModalComponent } from './components/patients/preventive-medicine-modal/preventive-medicine-modal.component';
+import { AppointmentModalComponent } from './components/patients/appointment-modal/appointment-modal.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +31,14 @@ import { BillingComponent } from './components/billing/billing.component';
     PatientDetailComponent,
     PatientFormComponent,
     PatientEditComponent,
-    BillingComponent
+    BillingComponent,
+    MedicalRecordFormComponent,
+    PreventiveMedicineFormComponent,
+    AppointmentFormComponent,
+    ModalComponent,
+    MedicalRecordModalComponent,
+    PreventiveMedicineModalComponent,
+    AppointmentModalComponent
   ],
   imports: [
     BrowserModule,

@@ -7,6 +7,9 @@ import { PatientsComponent } from './components/patients/patients.component';
 import { PatientDetailComponent } from './components/patients/patient-detail/patient-detail.component';
 import { PatientFormComponent } from './components/patients/patient-form/patient-form.component';
 import { PatientEditComponent } from './components/patients/patient-edit/patient-edit.component';
+import { MedicalRecordFormComponent } from './components/patients/medical-record-form/medical-record-form.component';
+import { PreventiveMedicineFormComponent } from './components/patients/preventive-medicine-form/preventive-medicine-form.component';
+import { AppointmentFormComponent } from './components/patients/appointment-form/appointment-form.component';
 import { BillingComponent } from './components/billing/billing.component';
 import { AuthGuard } from './guards/auth.guard';
 
@@ -44,6 +47,18 @@ const routes: Routes = [
       {
         path: 'patients/:id/edit',
         component: PatientEditComponent
+      },
+      {
+        path: 'patients/:id/medical-record/new',
+        component: MedicalRecordFormComponent
+      },
+      {
+        path: 'patients/:id/preventive-medicine/new',
+        component: PreventiveMedicineFormComponent
+      },
+      {
+        path: 'patients/:id/appointment/new',
+        component: AppointmentFormComponent
       },
       {
         path: 'billing',

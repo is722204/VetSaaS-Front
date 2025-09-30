@@ -1,0 +1,48 @@
+<form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()" class="space-y-4">
+  <!-- Fecha -->
+  <div>
+    <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Fecha *</label>
+    <input
+      type="date"
+      id="date"
+      formControlName="date"
+      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200"
+      [class.border-red-500]="getFieldError('date')"
+    />
+    <p class="text-red-500 text-xs mt-1" *ngIf="getFieldError('date')">{{ getFieldError('date') }}</p>
+  </div>
+
+  <!-- Descripción -->
+  <div>
+    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Descripción *</label>
+    <textarea
+      id="description"
+      formControlName="description"
+      rows="3"
+      placeholder="Describe la cita programada..."
+      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 resize-none"
+      [class.border-red-500]="getFieldError('description')"
+    ></textarea>
+    <p class="text-red-500 text-xs mt-1" *ngIf="getFieldError('description')">{{ getFieldError('description') }}</p>
+  </div>
+
+  <!-- Botones -->
+  <div class="flex gap-3 pt-4">
+    <button
+      type="button"
+      (click)="onCancel()"
+      class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200"
+    >
+      Cancelar
+    </button>
+    <button
+      type="submit"
+      [disabled]="isLoading"
+      class="flex-1 px-4 py-2 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+    >
+      <i class="fas fa-calendar-plus mr-2" *ngIf="!isLoading"></i>
+      <i class="fas fa-spinner fa-spin mr-2" *ngIf="isLoading"></i>
+      {{ isLoading ? 'Programando...' : 'Programar' }}
+    </button>
+  </div>
+</form>

@@ -1,0 +1,103 @@
+/* Animaciones para el modal */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Asegurar que el modal esté por encima de todo */
+.fixed.inset-0.z-50 {
+  z-index: 9999;
+}
+
+/* Estilos para el contenido del modal - App nativa */
+.relative.bg-white.rounded-t-2xl {
+  max-height: 85vh;
+  overflow-y: auto;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive adjustments para app nativa */
+@media (max-width: 640px) {
+  .relative.bg-white.rounded-t-2xl {
+    max-height: 90vh;
+    border-radius: 20px 20px 0 0;
+  }
+}
+
+@media (min-width: 641px) {
+  .relative.bg-white.rounded-t-2xl {
+    max-width: 500px;
+    margin: 0 auto;
+    border-radius: 20px 20px 0 0;
+  }
+}
+
+/* Handle indicator */
+.flex.justify-center.pt-3.pb-1 {
+  padding-top: 12px;
+  padding-bottom: 4px;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.flex.justify-center.pt-3.pb-1.cursor-pointer {
+  cursor: grab;
+}
+
+.flex.justify-center.pt-3.pb-1.cursor-pointer:active {
+  cursor: grabbing;
+}
+
+.w-10.h-1.bg-gray-300.rounded-full {
+  background-color: #d1d5db;
+  transition: background-color 0.2s ease;
+}
+
+/* Mejoras para el arrastre */
+.relative.bg-white.rounded-t-2xl {
+  transition: transform 0.2s ease-out;
+}
+
+/* Cuando se está arrastrando */
+.relative.bg-white.rounded-t-2xl.dragging {
+  transition: none;
+}
+
+/* Mejoras para el header del modal */
+.flex.items-center.justify-between.px-4.py-3 {
+  padding: 12px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff;
+  border-radius: 20px 20px 0 0;
+}
+
+/* Mejoras para el contenido */
+.p-4 {
+  padding: 20px;
+}
+
+/* Scroll suave */
+.overflow-y-auto {
+  scroll-behavior: smooth;
+}
+
+/* Mejoras visuales para app nativa */
+.relative.bg-white.rounded-t-2xl {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+}

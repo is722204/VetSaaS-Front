@@ -1,0 +1,79 @@
+<!-- Modal Backdrop -->
+<div 
+  *ngIf="isOpen" 
+  class="fixed inset-0 z-50 overflow-y-auto"
+  (click)="onBackdropClick($event)"
+>
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
+  
+  <!-- Modal Content -->
+  <div class="relative min-h-screen flex items-end justify-center text-center">
+    <div 
+      class="relative bg-white rounded-t-2xl shadow-xl transform transition-all w-full"
+      [class.animate-slide-up]="isOpen"
+    >
+      <!-- Handle indicator -->
+      <div 
+        class="flex justify-center pt-3 pb-1 cursor-pointer"
+        (touchstart)="onHandleTouchStart($event)"
+        (touchmove)="onHandleTouchMove($event)"
+        (touchend)="onHandleTouchEnd($event)"
+      >
+        <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
+      </div>
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-900">
+          <span *ngIf="modalData?.type === 'medical-record'">Nuevo Registro Médico</span>
+          <span *ngIf="modalData?.type === 'preventive-medicine'">Nueva Medicina Preventiva</span>
+          <span *ngIf="modalData?.type === 'appointment'">Nueva Cita</span>
+        </h3>
+        <button 
+          (click)="closeModal()"
+          class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+        >
+          <i class="fas fa-times text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div class="p-4">
+        <p class="text-sm text-gray-500 mb-4" *ngIf="modalData?.patientName">
+          Paciente: {{ modalData?.patientName }}
+        </p>
+        
+        <!-- Dynamic Form Content -->
+        <div [ngSwitch]="modalData?.type">
+          <!-- Medical Record Form -->
+          <div *ngSwitchCase="'medical-record'">
+            <app-medical-record-modal 
+              [patientId]="modalData?.patientId || ''"
+              [patientName]="modalData?.patientName || ''"
+              (close)="closeModal()"
+            ></app-medical-record-modal>
+          </div>
+
+          <!-- Preventive Medicine Form -->
+          <div *ngSwitchCase="'preventive-medicine'">
+            <app-preventive-medicine-modal 
+              [patientId]="modalData?.patientId || ''"
+              [patientName]="modalData?.patientName || ''"
+              (close)="closeModal()"
+            ></app-preventive-medicine-modal>
+          </div>
+
+          <!-- Appointment Form -->
+          <div *ngSwitchCase="'appointment'">
+            <app-appointment-modal 
+              [patientId]="modalData?.patientId || ''"
+              [patientName]="modalData?.patientName || ''"
+              (close)="closeModal()"
+            ></app-appointment-modal>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
