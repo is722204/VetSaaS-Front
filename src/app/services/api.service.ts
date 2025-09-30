@@ -18,12 +18,24 @@ export class ApiService {
     });
   }
 
+  private getHeadersForFormData(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+      // No incluir Content-Type para FormData, el navegador lo maneja automáticamente
+    });
+  }
+
   // Métodos genéricos para CRUD
   get<T>(endpoint: string): Observable<T> {
     return this.http.get<T>(`${this.baseUrl}${endpoint}`, { headers: this.getHeaders() });
   }
 
   post<T>(endpoint: string, data: any): Observable<T> {
+    // Si es FormData, usar headers especiales
+    if (data instanceof FormData) {
+      return this.http.post<T>(`${this.baseUrl}${endpoint}`, data, { headers: this.getHeadersForFormData() });
+    }
     return this.http.post<T>(`${this.baseUrl}${endpoint}`, data, { headers: this.getHeaders() });
   }
 

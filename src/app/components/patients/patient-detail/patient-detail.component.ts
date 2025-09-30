@@ -102,6 +102,12 @@ export class PatientDetailComponent implements OnInit {
     const patientId = this.route.snapshot.paramMap.get('id');
     if (patientId && this.patient) {
       this.modalService.openModal('medical-record', patientId, this.patient.basicInfo.name);
+      // Suscribirse a cambios del modal para refrescar datos
+      this.modalService.modal$.subscribe(modal => {
+        if (!modal.isOpen && this.patient) {
+          this.loadPatient(patientId);
+        }
+      });
     }
   }
 
@@ -109,6 +115,12 @@ export class PatientDetailComponent implements OnInit {
     const patientId = this.route.snapshot.paramMap.get('id');
     if (patientId && this.patient) {
       this.modalService.openModal('preventive-medicine', patientId, this.patient.basicInfo.name);
+      // Suscribirse a cambios del modal para refrescar datos
+      this.modalService.modal$.subscribe(modal => {
+        if (!modal.isOpen && this.patient) {
+          this.loadPatient(patientId);
+        }
+      });
     }
   }
 
@@ -116,6 +128,12 @@ export class PatientDetailComponent implements OnInit {
     const patientId = this.route.snapshot.paramMap.get('id');
     if (patientId && this.patient) {
       this.modalService.openModal('appointment', patientId, this.patient.basicInfo.name);
+      // Suscribirse a cambios del modal para refrescar datos
+      this.modalService.modal$.subscribe(modal => {
+        if (!modal.isOpen && this.patient) {
+          this.loadPatient(patientId);
+        }
+      });
     }
   }
 }
