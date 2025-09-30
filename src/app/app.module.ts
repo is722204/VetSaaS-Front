@@ -10,6 +10,7 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { PatientsComponent } from './components/patients/patients.component';
 import { PatientDetailComponent } from './components/patients/patient-detail/patient-detail.component';
+import { PatientFormComponent } from './components/patients/patient-form/patient-form.component';
 import { BillingComponent } from './components/billing/billing.component';
 
 @NgModule({
@@ -20,6 +21,7 @@ import { BillingComponent } from './components/billing/billing.component';
     DashboardComponent,
     PatientsComponent,
     PatientDetailComponent,
+    PatientFormComponent,
     BillingComponent
   ],
   imports: [

@@ -78,4 +78,8 @@ export class PatientsComponent implements OnInit {
   onImageError(event: any): void {
     event.target.src = 'https://via.placeholder.com/300x200?text=Caballo';
   }
+
+  onNewPatientClick(): void {
+    this.router.navigate(['/patients/new']);
+  }
 }
