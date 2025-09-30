@@ -3,6 +3,7 @@ import { BillingService } from '../../services/billing.service';
 import { PatientService } from '../../services/patient.service';
 import { AppointmentService } from '../../services/appointment.service';
 import { ApiService } from '../../services/api.service';
+import { ModalService } from '../../services/modal.service';
 
 interface DashboardStats {
   totalPatients: number;
@@ -64,7 +65,8 @@ export class DashboardComponent implements OnInit {
     private billingService: BillingService,
     private patientService: PatientService,
     private appointmentService: AppointmentService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {
@@ -295,7 +297,7 @@ export class DashboardComponent implements OnInit {
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('es-ES', {
       style: 'currency',
-      currency: 'EUR'
+      currency: 'MXN'
     }).format(amount);
   }
 
@@ -370,5 +372,49 @@ export class DashboardComponent implements OnInit {
 
   refreshDashboard(): void {
     this.loadDashboardData();
+  }
+
+  // Métodos adicionales para el dashboard mejorado
+  getCurrentDateTime(): string {
+    return new Date().toLocaleString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  getTodayAppointments(): number {
+    const today = new Date();
+    return this.weeklyAppointments.filter(appointment => {
+      const appointmentDate = new Date(appointment.date);
+      return this.isSameDay(appointmentDate, today);
+    }).length;
+  }
+
+  getPregnantNearDelivery(): number {
+    return this.pregnancyList.filter(pregnancy => pregnancy.daysUntil <= 30).length;
+  }
+
+  getMaxBreedCount(): number {
+    return this.breedStats.length > 0 ? Math.max(...this.breedStats.map(b => b.count)) : 1;
+  }
+
+  // Método para abrir modal de detalles de cita
+  onAppointmentClick(appointment: any): void {
+    this.modalService.openModal('appointment-detail', '', '', appointment);
+  }
+
+  // Método para mostrar todas las citas de un día
+  onDayAppointmentsClick(appointments: any[]): void {
+    if (appointments.length > 0) {
+      // Obtener la fecha del primer appointment para mostrar en el modal
+      const date = appointments[0].date;
+      this.modalService.openModal('day-appointments', '', '', { 
+        appointments: appointments, 
+        date: date 
+      });
+    }
   }
 }

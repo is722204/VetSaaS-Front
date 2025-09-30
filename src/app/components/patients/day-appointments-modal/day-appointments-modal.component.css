@@ -1,4 +1,4 @@
-/* Estilos minimalistas para el modal de detalles de cita */
+/* Estilos minimalistas para el modal de citas del día */
 .whitespace-pre-wrap {
   white-space: pre-wrap;
 }
@@ -27,7 +27,7 @@
   background: #d1d5db;
 }
 
-/* Transiciones suaves para las tarjetas */
+/* Transiciones suaves para las tarjetas de citas */
 .bg-gray-50 {
   transition: all 0.15s ease;
 }
@@ -37,13 +37,23 @@
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
+/* Efecto de clic */
+.bg-gray-50:active {
+  transform: scale(0.98);
+}
+
 /* Responsive para móvil */
 @media (max-width: 640px) {
   .text-lg {
     font-size: 1rem;
   }
   
-  .space-y-6 > * + * {
-    margin-top: 1rem;
+  .space-y-3 > * + * {
+    margin-top: 0.75rem;
+  }
+  
+  /* Texto más pequeño en móvil */
+  .text-sm {
+    font-size: 0.8rem;
   }
 }

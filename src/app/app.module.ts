@@ -23,6 +23,7 @@ import { AppointmentModalComponent } from './components/patients/appointment-mod
 import { MedicalRecordDetailModalComponent } from './components/patients/medical-record-detail-modal/medical-record-detail-modal.component';
 import { PreventiveMedicineDetailModalComponent } from './components/patients/preventive-medicine-detail-modal/preventive-medicine-detail-modal.component';
 import { AppointmentDetailModalComponent } from './components/patients/appointment-detail-modal/appointment-detail-modal.component';
+import { DayAppointmentsModalComponent } from './components/patients/day-appointments-modal/day-appointments-modal.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { AppointmentDetailModalComponent } from './components/patients/appointme
     AppointmentModalComponent,
     MedicalRecordDetailModalComponent,
     PreventiveMedicineDetailModalComponent,
-    AppointmentDetailModalComponent
+    AppointmentDetailModalComponent,
+    DayAppointmentsModalComponent
   ],
   imports: [
     BrowserModule,

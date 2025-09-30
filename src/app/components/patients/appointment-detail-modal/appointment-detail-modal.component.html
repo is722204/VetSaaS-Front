@@ -1,173 +1,56 @@
 <div class="bg-white rounded-t-xl sm:rounded-t-2xl shadow-xl max-h-[90vh] overflow-hidden">
   <!-- Header del modal -->
-  <div class="sticky top-0 bg-white border-b border-gray-200 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 z-10">
+  <div class="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-4 z-10">
     <div class="flex items-center justify-between">
-      <div class="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
-        <div class="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-          <i class="fas fa-calendar-check text-purple-600 text-sm sm:text-base"></i>
+      <div class="flex items-center space-x-3 min-w-0 flex-1">
+        <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+          <i class="fas fa-calendar-check text-blue-600 text-base"></i>
         </div>
         <div class="min-w-0 flex-1">
-          <h3 class="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 truncate">Cita Médica</h3>
-          <p class="text-xs sm:text-sm text-gray-500 truncate">{{ formatDate(appointment.date) }}</p>
+          <h3 class="text-lg font-semibold text-gray-900 truncate">Detalles de la Cita</h3>
         </div>
       </div>
-      <div class="flex items-center space-x-1 sm:space-x-2 flex-shrink-0 ml-2">
-        <span class="inline-flex items-center px-2 sm:px-2.5 py-0.5 rounded-full text-xs font-medium" 
-              [class]="getAppointmentStatusClass(appointment.status)">
-          <i [class]="getAppointmentStatusIcon(appointment.status)" class="mr-1 text-xs"></i>
-          <span class="hidden sm:inline">{{ getAppointmentStatusText(appointment.status) }}</span>
-        </span>
-        <button 
-          (click)="closeModal()"
-          class="p-1.5 sm:p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-        >
-          <i class="fas fa-times text-base sm:text-lg"></i>
-        </button>
-      </div>
+      <button 
+        (click)="closeModal()"
+        class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+      >
+        <i class="fas fa-times text-lg"></i>
+      </button>
     </div>
   </div>
 
   <!-- Contenido del modal -->
   <div class="overflow-y-auto max-h-[calc(90vh-80px)]">
-    <div class="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6">
-      <!-- Información principal -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="bg-gray-50 rounded-lg p-4">
-          <h5 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
-            <i class="fas fa-calendar mr-2"></i>
-            Fecha y Hora
-          </h5>
-          <p class="text-gray-900 font-medium">{{ formatDate(appointment.date) }}</p>
-        </div>
-        
-        <div class="bg-gray-50 rounded-lg p-4">
-          <h5 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
-            <i class="fas fa-clock mr-2"></i>
-            Duración
-          </h5>
-          <p class="text-gray-900 font-medium">{{ appointment.duration || 'No especificada' }}</p>
-        </div>
+    <div class="p-4 sm:p-6 space-y-6">
+      <!-- Nombre del animal -->
+      <div class="bg-gray-50 rounded-xl p-4">
+        <h4 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
+          <i class="fas fa-horse text-gray-500 mr-2"></i>
+          Animal
+        </h4>
+        <p class="text-lg font-semibold text-gray-900">{{ appointment.patientName || 'Sin nombre' }}</p>
       </div>
 
-      <!-- Prioridad y tipo -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="bg-gray-50 rounded-lg p-4">
-          <h5 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
-            <i class="fas fa-exclamation-circle mr-2"></i>
-            Prioridad
-          </h5>
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" 
-                [class]="getPriorityClass(appointment.priority)">
-            {{ getPriorityText(appointment.priority) }}
-          </span>
-        </div>
-        
-        <div class="bg-gray-50 rounded-lg p-4">
-          <h5 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
-            <i class="fas fa-tag mr-2"></i>
-            Tipo de Cita
-          </h5>
-          <p class="text-gray-900 font-medium">{{ appointment.type || 'Consulta general' }}</p>
-        </div>
+      <!-- Fecha y hora -->
+      <div class="bg-gray-50 rounded-xl p-4">
+        <h4 class="text-sm font-medium text-gray-700 mb-2 flex items-center">
+          <i class="fas fa-calendar text-gray-500 mr-2"></i>
+          Fecha y Hora
+        </h4>
+        <p class="text-lg font-semibold text-gray-900">{{ formatDate(appointment.date) }}</p>
+        <p class="text-sm text-gray-600 mt-1">{{ appointment.time || 'Hora no especificada' }}</p>
       </div>
 
-      <!-- Descripción de la cita -->
-      <div *ngIf="appointment.description">
+      <!-- Detalle -->
+      <div class="bg-gray-50 rounded-xl p-4">
         <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-          <i class="fas fa-file-medical mr-2"></i>
-          Descripción
+          <i class="fas fa-file-medical text-gray-500 mr-2"></i>
+          Detalle
         </h4>
-        <div class="bg-gray-50 rounded-lg p-4">
-          <p class="text-gray-900 leading-relaxed whitespace-pre-wrap">{{ appointment.description }}</p>
-        </div>
-      </div>
-
-      <!-- Motivo de la consulta -->
-      <div *ngIf="appointment.reason">
-        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-          <i class="fas fa-stethoscope mr-2"></i>
-          Motivo de la Consulta
-        </h4>
-        <div class="bg-blue-50 rounded-lg p-4">
-          <p class="text-gray-900 leading-relaxed whitespace-pre-wrap">{{ appointment.reason }}</p>
-        </div>
-      </div>
-
-      <!-- Veterinario asignado -->
-      <div *ngIf="appointment.veterinarian">
-        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-          <i class="fas fa-user-md mr-2"></i>
-          Veterinario Asignado
-        </h4>
-        <div class="bg-gray-50 rounded-lg p-4">
-          <p class="text-gray-900 font-medium">{{ appointment.veterinarian }}</p>
-        </div>
-      </div>
-
-      <!-- Ubicación -->
-      <div *ngIf="appointment.location">
-        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-          <i class="fas fa-map-marker-alt mr-2"></i>
-          Ubicación
-        </h4>
-        <div class="bg-gray-50 rounded-lg p-4">
-          <p class="text-gray-900 font-medium">{{ appointment.location }}</p>
-        </div>
-      </div>
-
-      <!-- Notas de la cita -->
-      <div *ngIf="appointment.notes">
-        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-          <i class="fas fa-clipboard-list mr-2"></i>
-          Notas de la Cita
-        </h4>
-        <div class="bg-yellow-50 rounded-lg p-4">
-          <p class="text-gray-900 leading-relaxed whitespace-pre-wrap">{{ appointment.notes }}</p>
-        </div>
-      </div>
-
-      <!-- Resultados o seguimiento -->
-      <div *ngIf="appointment.results">
-        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-          <i class="fas fa-clipboard-check mr-2"></i>
-          Resultados
-        </h4>
-        <div class="bg-green-50 rounded-lg p-4">
-          <p class="text-gray-900 leading-relaxed whitespace-pre-wrap">{{ appointment.results }}</p>
-        </div>
-      </div>
-
-      <!-- Próxima cita recomendada -->
-      <div *ngIf="appointment.nextAppointment">
-        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-          <i class="fas fa-calendar-plus mr-2"></i>
-          Próxima Cita Recomendada
-        </h4>
-        <div class="bg-purple-50 rounded-lg p-4">
-          <p class="text-gray-900 font-medium">{{ formatDate(appointment.nextAppointment) }}</p>
-        </div>
-      </div>
-
-      <!-- Archivos adjuntos -->
-      <div *ngIf="appointment.attachments && appointment.attachments.length > 0" class="space-y-3">
-        <h4 class="text-sm font-medium text-gray-700 flex items-center">
-          <i class="fas fa-paperclip mr-2"></i>
-          Archivos Adjuntos
-        </h4>
-        <div class="space-y-2">
-          <div *ngFor="let attachment of appointment.attachments" 
-               class="flex items-center justify-between bg-gray-50 rounded-lg p-3">
-            <div class="flex items-center space-x-3">
-              <i class="fas fa-file text-gray-400"></i>
-              <span class="text-sm text-gray-900">{{ attachment.name }}</span>
-            </div>
-            <button 
-              (click)="openAttachment(attachment.url)"
-              class="text-primary-600 hover:text-primary-700 text-sm font-medium"
-            >
-              Ver
-            </button>
-          </div>
+        <div class="bg-white rounded-lg p-4 border border-gray-200">
+          <p class="text-gray-900 leading-relaxed whitespace-pre-wrap">
+            {{ appointment.description || 'No hay detalles disponibles' }}
+          </p>
         </div>
       </div>
     </div>
@@ -175,10 +58,10 @@
 
   <!-- Footer del modal -->
   <div class="sticky bottom-0 bg-white border-t border-gray-200 px-6 py-4">
-    <div class="flex justify-end space-x-3">
+    <div class="flex justify-end">
       <button 
         (click)="closeModal()"
-        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200"
+        class="px-6 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
       >
         Cerrar
       </button>

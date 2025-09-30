@@ -117,6 +117,16 @@
             (close)="closeModal()"
           ></app-appointment-detail-modal>
         </div>
+
+        <!-- Day Appointments -->
+        <div *ngSwitchCase="'day-appointments'">
+          <app-day-appointments-modal 
+            [appointments]="modalData?.data?.appointments || []"
+            [date]="modalData?.data?.date || ''"
+            (close)="closeModal()"
+            (appointmentClick)="onDayAppointmentClick($event)"
+          ></app-day-appointments-modal>
+        </div>
       </div>
     </div>
   </div>

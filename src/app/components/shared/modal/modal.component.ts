@@ -85,4 +85,10 @@ export class ModalComponent implements OnInit, OnDestroy {
       this.closeModal();
     }
   }
+
+  onDayAppointmentClick(appointment: any): void {
+    // Cerrar el modal de citas del día y abrir el modal de detalles de la cita específica
+    this.closeModal();
+    this.modalService.openModal('appointment-detail', '', '', appointment);
+  }
 }
