@@ -13,6 +13,8 @@ export class PatientFormComponent implements OnInit {
   patientForm: FormGroup;
   isSubmitting = false;
   errorMessage = '';
+  selectedImage: File | null = null;
+  imagePreviewUrl: string | ArrayBuffer | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -57,28 +59,60 @@ export class PatientFormComponent implements OnInit {
 
       const formValue = this.patientForm.value;
       
-      // Preparar los datos del paciente
-      const patientData: Partial<Patient> = {
-        basicInfo: {
-          ...formValue.basicInfo,
-          createdAt: new Date().toISOString()
-        },
-        medicalHistory: {},
-        preventiveMedicine: {},
-        pregnancy: formValue.pregnancy
-      };
+      // Si hay imagen, usar FormData
+      if (this.selectedImage) {
+        const formData = new FormData();
+        formData.append('name', formValue.basicInfo.name);
+        formData.append('patientId', formValue.basicInfo.patientId);
+        formData.append('birthDate', formValue.basicInfo.birthDate);
+        formData.append('sex', formValue.basicInfo.sex);
+        formData.append('color', formValue.basicInfo.color);
+        formData.append('breed', formValue.basicInfo.breed);
+        formData.append('ownerName', formValue.basicInfo.owner.name);
+        formData.append('ownerPhone', formValue.basicInfo.owner.phone);
+        formData.append('ownerEmail', formValue.basicInfo.owner.email);
+        formData.append('isPregnant', formValue.pregnancy.isPregnant);
+        formData.append('pregnancyPercentage', formValue.pregnancy.pregnancyPercentage);
+        formData.append('estimatedReliefDate', formValue.pregnancy.estimatedReliefDate);
+        formData.append('ultrasoundDate', formValue.pregnancy.ultrasoundDate);
+        formData.append('notes', formValue.pregnancy.notes);
+        formData.append('image', this.selectedImage);
 
-      this.patientService.createPatient(patientData).subscribe({
-        next: (response) => {
-          this.isSubmitting = false;
-          this.router.navigate(['/patients']);
-        },
-        error: (error) => {
-          this.isSubmitting = false;
-          this.errorMessage = 'Error al crear el paciente. Por favor, inténtalo de nuevo.';
-          console.error('Error creando paciente:', error);
-        }
-      });
+        this.patientService.createPatientWithImage(formData).subscribe({
+          next: (response: any) => {
+            this.isSubmitting = false;
+            this.router.navigate(['/patients']);
+          },
+          error: (error: any) => {
+            this.isSubmitting = false;
+            this.errorMessage = 'Error al crear el paciente. Por favor, inténtalo de nuevo.';
+            console.error('Error creando paciente:', error);
+          }
+        });
+      } else {
+        // Sin imagen, usar JSON normal
+        const patientData: Partial<Patient> = {
+          basicInfo: {
+            ...formValue.basicInfo,
+            createdAt: new Date().toISOString()
+          },
+          medicalHistory: {},
+          preventiveMedicine: {},
+          pregnancy: formValue.pregnancy
+        };
+
+        this.patientService.createPatient(patientData).subscribe({
+          next: (response) => {
+            this.isSubmitting = false;
+            this.router.navigate(['/patients']);
+          },
+          error: (error) => {
+            this.isSubmitting = false;
+            this.errorMessage = 'Error al crear el paciente. Por favor, inténtalo de nuevo.';
+            console.error('Error creando paciente:', error);
+          }
+        });
+      }
     } else {
       this.markFormGroupTouched(this.patientForm);
     }
@@ -133,6 +167,30 @@ export class PatientFormComponent implements OnInit {
       pregnancyGroup?.get('estimatedReliefDate')?.setValue('');
       pregnancyGroup?.get('ultrasoundDate')?.setValue('');
       pregnancyGroup?.get('notes')?.setValue('');
+    }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedImage = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreviewUrl = reader.result;
+      };
+      reader.readAsDataURL(this.selectedImage);
+    } else {
+      this.selectedImage = null;
+      this.imagePreviewUrl = null;
+    }
+  }
+
+  removeImage(): void {
+    this.selectedImage = null;
+    this.imagePreviewUrl = null;
+    const fileInput = document.getElementById('patientImageUpload') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
     }
   }
 }
