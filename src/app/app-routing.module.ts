@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LandingComponent } from './components/landing/landing.component';
 import { LoginComponent } from './components/login/login.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -14,17 +15,22 @@ import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   {
+    path: '',
+    component: LandingComponent,
+    pathMatch: 'full'
+  },
+  {
     path: 'login',
     component: LoginComponent
   },
   {
-    path: '',
+    path: 'app',
     component: LayoutComponent,
     canActivate: [AuthGuard],
     children: [
       {
         path: '',
-        redirectTo: '/dashboard',
+        redirectTo: '/app/dashboard',
         pathMatch: 'full'
       },
       {
@@ -63,7 +69,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/dashboard'
+    redirectTo: '/'
   }
 ];
 

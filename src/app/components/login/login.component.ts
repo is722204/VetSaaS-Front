@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -12,11 +13,13 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   isLoading = false;
   errorMessage = '';
+  currentYear = new Date().getFullYear();
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -28,8 +31,12 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     // Si ya está autenticado, redirigir al dashboard
     if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/app/dashboard']);
     }
+  }
+
+  goBack(): void {
+    this.router.navigate(['/']);
   }
 
   onSubmit(): void {
@@ -40,7 +47,7 @@ export class LoginComponent implements OnInit {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
           this.authService.setAuthState(response);
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/app/dashboard']);
         },
         error: (error) => {
           this.isLoading = false;

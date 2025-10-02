@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LandingComponent } from './components/landing/landing.component';
 import { LoginComponent } from './components/login/login.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -27,6 +28,7 @@ import { DayAppointmentsModalComponent } from './components/patients/day-appoint
 @NgModule({
   declarations: [
     AppComponent,
+    LandingComponent,
     LoginComponent,
     LayoutComponent,
     DashboardComponent,

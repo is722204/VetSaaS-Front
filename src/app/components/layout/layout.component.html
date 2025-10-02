@@ -22,18 +22,18 @@
         <nav class="mt-5 px-2 space-y-1">
         <a
           href="#"
-          (click)="navigateTo('/dashboard'); $event.preventDefault(); toggleSidebar()"
-          [class]="isActiveRoute('/dashboard') ? 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-900 bg-gray-100' : 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50'"
+          (click)="navigateTo('/app/dashboard'); $event.preventDefault(); toggleSidebar()"
+          [class]="isActiveRoute('/app/dashboard') ? 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-900 bg-gray-100' : 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50'"
         >
-          <i class="fas fa-tachometer-alt mr-4" [class]="isActiveRoute('/dashboard') ? 'text-gray-500' : 'text-gray-400'"></i>
+          <i class="fas fa-tachometer-alt mr-4" [class]="isActiveRoute('/app/dashboard') ? 'text-gray-500' : 'text-gray-400'"></i>
           Dashboard
         </a>
         <a
           href="#"
-          (click)="navigateTo('/patients'); $event.preventDefault(); toggleSidebar()"
-          [class]="isActiveRoute('/patients') ? 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-900 bg-gray-100' : 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50'"
+          (click)="navigateTo('/app/patients'); $event.preventDefault(); toggleSidebar()"
+          [class]="isActiveRoute('/app/patients') ? 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-900 bg-gray-100' : 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50'"
         >
-          <i class="fas fa-horse mr-4" [class]="isActiveRoute('/patients') ? 'text-gray-500' : 'text-gray-400'"></i>
+          <i class="fas fa-horse mr-4" [class]="isActiveRoute('/app/patients') ? 'text-gray-500' : 'text-gray-400'"></i>
           Pacientes
         </a>
         </nav>
@@ -76,18 +76,18 @@
       <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
         <a
           href="#"
-          (click)="navigateTo('/dashboard'); $event.preventDefault()"
-          [class]="isActiveRoute('/dashboard') ? 'group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-900 bg-gray-100' : 'group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50'"
+          (click)="navigateTo('/app/dashboard'); $event.preventDefault()"
+          [class]="isActiveRoute('/app/dashboard') ? 'group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-900 bg-gray-100' : 'group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50'"
         >
-          <i class="fas fa-tachometer-alt mr-3" [class]="isActiveRoute('/dashboard') ? 'text-gray-500' : 'text-gray-400'"></i>
+          <i class="fas fa-tachometer-alt mr-3" [class]="isActiveRoute('/app/dashboard') ? 'text-gray-500' : 'text-gray-400'"></i>
           Dashboard
         </a>
         <a
           href="#"
-          (click)="navigateTo('/patients'); $event.preventDefault()"
-          [class]="isActiveRoute('/patients') ? 'group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-900 bg-gray-100' : 'group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50'"
+          (click)="navigateTo('/app/patients'); $event.preventDefault()"
+          [class]="isActiveRoute('/app/patients') ? 'group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-900 bg-gray-100' : 'group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50'"
         >
-          <i class="fas fa-horse mr-3" [class]="isActiveRoute('/patients') ? 'text-gray-500' : 'text-gray-400'"></i>
+          <i class="fas fa-horse mr-3" [class]="isActiveRoute('/app/patients') ? 'text-gray-500' : 'text-gray-400'"></i>
           Pacientes
         </a>
       </nav>
