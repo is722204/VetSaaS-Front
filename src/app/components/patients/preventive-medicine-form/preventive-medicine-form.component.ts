@@ -83,7 +83,7 @@ export class PreventiveMedicineFormComponent implements OnInit {
       this.patientService.addPreventiveMedicine(this.patientId, medicineData).subscribe({
         next: () => {
           this.isLoading = false;
-          this.router.navigate(['/patients', this.patientId]);
+          this.router.navigate(['/app/patients', this.patientId]);
         },
         error: (error) => {
           console.error('Error agregando medicina preventiva:', error);
@@ -97,9 +97,9 @@ export class PreventiveMedicineFormComponent implements OnInit {
 
   onCancel(): void {
     if (this.patientId) {
-      this.router.navigate(['/patients', this.patientId]);
+      this.router.navigate(['/app/patients', this.patientId]);
     } else {
-      this.router.navigate(['/patients']);
+      this.router.navigate(['/app/patients']);
     }
   }
 }

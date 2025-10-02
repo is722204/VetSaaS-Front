@@ -48,7 +48,7 @@ export class PatientDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/patients']);
+    this.router.navigate(['/app/patients']);
   }
 
   getPatientAge(birthDate: string): string {
@@ -125,7 +125,7 @@ export class PatientDetailComponent implements OnInit {
   onEditClick(): void {
     const patientId = this.route.snapshot.paramMap.get('id');
     if (patientId) {
-      this.router.navigate(['/patients', patientId, 'edit']);
+      this.router.navigate(['/app/patients', patientId, 'edit']);
     }
   }
 

@@ -72,7 +72,7 @@ export class PatientsComponent implements OnInit {
   }
 
   onPatientClick(patientId: string): void {
-    this.router.navigate(['/patients', patientId]);
+    this.router.navigate(['/app/patients', patientId]);
   }
 
   getPatientAge(birthDate: string): string {
@@ -101,11 +101,11 @@ export class PatientsComponent implements OnInit {
   }
 
   onNewPatientClick(): void {
-    this.router.navigate(['/patients/new']);
+    this.router.navigate(['/app/patients/new']);
   }
 
   onEditPatient(patientId: string): void {
-    this.router.navigate(['/patients', patientId, 'edit']);
+    this.router.navigate(['/app/patients', patientId, 'edit']);
   }
 
   clearFilters(): void {

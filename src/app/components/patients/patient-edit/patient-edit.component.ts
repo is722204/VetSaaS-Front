@@ -160,7 +160,7 @@ export class PatientEditComponent implements OnInit {
         this.patientService.updatePatientWithImage(this.patientId, formData).subscribe({
           next: (response: any) => {
             this.isSubmitting = false;
-            this.router.navigate(['/patients', this.patientId]);
+            this.router.navigate(['/app/patients', this.patientId]);
           },
           error: (error: any) => {
             this.isSubmitting = false;
@@ -184,7 +184,7 @@ export class PatientEditComponent implements OnInit {
         this.patientService.updatePatient(this.patientId, patientData).subscribe({
           next: (response) => {
             this.isSubmitting = false;
-            this.router.navigate(['/patients', this.patientId]);
+            this.router.navigate(['/app/patients', this.patientId]);
           },
           error: (error) => {
             this.isSubmitting = false;
@@ -199,7 +199,7 @@ export class PatientEditComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/patients', this.patientId]);
+    this.router.navigate(['/app/patients', this.patientId]);
   }
 
   private markFormGroupTouched(formGroup: FormGroup): void {

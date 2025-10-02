@@ -83,7 +83,7 @@ export class AppointmentFormComponent implements OnInit {
       this.patientService.addAppointment(this.patientId, appointmentData).subscribe({
         next: () => {
           this.isLoading = false;
-          this.router.navigate(['/patients', this.patientId]);
+          this.router.navigate(['/app/patients', this.patientId]);
         },
         error: (error) => {
           console.error('Error programando cita:', error);
@@ -97,9 +97,9 @@ export class AppointmentFormComponent implements OnInit {
 
   onCancel(): void {
     if (this.patientId) {
-      this.router.navigate(['/patients', this.patientId]);
+      this.router.navigate(['/app/patients', this.patientId]);
     } else {
-      this.router.navigate(['/patients']);
+      this.router.navigate(['/app/patients']);
     }
   }
 }

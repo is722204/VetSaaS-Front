@@ -101,7 +101,7 @@ export class PatientFormComponent implements OnInit {
         this.patientService.createPatientWithImage(formData).subscribe({
           next: (response: any) => {
             this.isSubmitting = false;
-            this.router.navigate(['/patients']);
+            this.router.navigate(['/app/patients']);
           },
           error: (error: any) => {
             this.isSubmitting = false;
@@ -124,7 +124,7 @@ export class PatientFormComponent implements OnInit {
         this.patientService.createPatient(patientData).subscribe({
           next: (response) => {
             this.isSubmitting = false;
-            this.router.navigate(['/patients']);
+            this.router.navigate(['/app/patients']);
           },
           error: (error) => {
             this.isSubmitting = false;
@@ -139,7 +139,7 @@ export class PatientFormComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['/patients']);
+    this.router.navigate(['/app/patients']);
   }
 
   private markFormGroupTouched(formGroup: FormGroup): void {
