@@ -11,6 +11,7 @@ import { PatientEditComponent } from './components/patients/patient-edit/patient
 import { MedicalRecordFormComponent } from './components/patients/medical-record-form/medical-record-form.component';
 import { PreventiveMedicineFormComponent } from './components/patients/preventive-medicine-form/preventive-medicine-form.component';
 import { AppointmentFormComponent } from './components/patients/appointment-form/appointment-form.component';
+import { PreventiveConsultationComponent } from './components/preventive-consultation/preventive-consultation.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
@@ -22,6 +23,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'preventiva/:tenantId',
+    component: PreventiveConsultationComponent
   },
   {
     path: 'app',
