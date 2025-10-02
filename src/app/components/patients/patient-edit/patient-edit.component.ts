@@ -13,11 +13,13 @@ export class PatientEditComponent implements OnInit {
   patientForm: FormGroup;
   isSubmitting = false;
   isLoading = true;
+  isDeleting = false;
   errorMessage = '';
   patientId: string = '';
   selectedImage: File | null = null;
   imagePreviewUrl: string | ArrayBuffer | null = null;
   currentImageUrl: string = '';
+  showDeleteConfirmation = false;
   
   // Propiedades calculadas para la gestación
   calculatedPregnancyPercentage = 0;
@@ -354,5 +356,33 @@ export class PatientEditComponent implements OnInit {
 
   onImageError(event: any): void {
     event.target.src = 'https://via.placeholder.com/300x200?text=Caballo';
+  }
+
+  // Métodos para eliminación
+  showDeleteModal(): void {
+    this.showDeleteConfirmation = true;
+  }
+
+  hideDeleteModal(): void {
+    this.showDeleteConfirmation = false;
+  }
+
+  confirmDelete(): void {
+    if (!this.patientId) return;
+
+    this.isDeleting = true;
+    this.errorMessage = '';
+
+    this.patientService.deletePatient(this.patientId).subscribe({
+      next: () => {
+        // Redirigir a la lista de pacientes después de eliminar
+        this.router.navigate(['/app/patients']);
+      },
+      error: (error) => {
+        this.isDeleting = false;
+        this.errorMessage = 'Error al eliminar el paciente. Inténtalo de nuevo.';
+        console.error('Error eliminando paciente:', error);
+      }
+    });
   }
 }
