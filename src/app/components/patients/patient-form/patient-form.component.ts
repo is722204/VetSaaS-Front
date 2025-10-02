@@ -15,6 +15,12 @@ export class PatientFormComponent implements OnInit {
   errorMessage = '';
   selectedImage: File | null = null;
   imagePreviewUrl: string | ArrayBuffer | null = null;
+  
+  // Propiedades calculadas para la gestación
+  calculatedPregnancyPercentage = 0;
+  pregnancyDays = 0;
+  estimatedReliefDate = '';
+  daysUntilRelief = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -44,6 +50,7 @@ export class PatientFormComponent implements OnInit {
       }),
       pregnancy: this.fb.group({
         isPregnant: [false],
+        conceptionDate: [''],
         pregnancyPercentage: [0, [Validators.min(0), Validators.max(100)]],
         estimatedReliefDate: [''],
         ultrasoundDate: [''],
@@ -59,6 +66,18 @@ export class PatientFormComponent implements OnInit {
 
       const formValue = this.patientForm.value;
       
+      // Si no es hembra, asegurar que no hay datos de gestación
+      if (formValue.basicInfo.sex !== 'hembra') {
+        formValue.pregnancy = {
+          isPregnant: false,
+          conceptionDate: '',
+          pregnancyPercentage: 0,
+          estimatedReliefDate: '',
+          ultrasoundDate: '',
+          notes: ''
+        };
+      }
+      
       // Si hay imagen, usar FormData
       if (this.selectedImage) {
         const formData = new FormData();
@@ -72,6 +91,7 @@ export class PatientFormComponent implements OnInit {
         formData.append('ownerPhone', formValue.basicInfo.owner.phone);
         formData.append('ownerEmail', formValue.basicInfo.owner.email);
         formData.append('isPregnant', formValue.pregnancy.isPregnant);
+        formData.append('conceptionDate', formValue.pregnancy.conceptionDate);
         formData.append('pregnancyPercentage', formValue.pregnancy.pregnancyPercentage);
         formData.append('estimatedReliefDate', formValue.pregnancy.estimatedReliefDate);
         formData.append('ultrasoundDate', formValue.pregnancy.ultrasoundDate);
@@ -158,16 +178,78 @@ export class PatientFormComponent implements OnInit {
     return '';
   }
 
+  onSexChange(): void {
+    const sex = this.patientForm.get('basicInfo.sex')?.value;
+    const pregnancyGroup = this.patientForm.get('pregnancy');
+    
+    // Si no es hembra, limpiar todos los datos de gestación
+    if (sex !== 'hembra') {
+      pregnancyGroup?.get('isPregnant')?.setValue(false);
+      pregnancyGroup?.get('conceptionDate')?.setValue('');
+      pregnancyGroup?.get('pregnancyPercentage')?.setValue(0);
+      pregnancyGroup?.get('estimatedReliefDate')?.setValue('');
+      pregnancyGroup?.get('ultrasoundDate')?.setValue('');
+      pregnancyGroup?.get('notes')?.setValue('');
+      this.resetPregnancyCalculations();
+    }
+  }
+
   onPregnancyChange(): void {
     const pregnancyGroup = this.patientForm.get('pregnancy');
     const isPregnant = pregnancyGroup?.get('isPregnant')?.value;
     
     if (!isPregnant) {
+      pregnancyGroup?.get('conceptionDate')?.setValue('');
       pregnancyGroup?.get('pregnancyPercentage')?.setValue(0);
       pregnancyGroup?.get('estimatedReliefDate')?.setValue('');
       pregnancyGroup?.get('ultrasoundDate')?.setValue('');
       pregnancyGroup?.get('notes')?.setValue('');
+      this.resetPregnancyCalculations();
     }
+  }
+
+  onConceptionDateChange(): void {
+    this.calculatePregnancyData();
+  }
+
+  private calculatePregnancyData(): void {
+    const conceptionDate = this.patientForm.get('pregnancy.conceptionDate')?.value;
+    
+    if (!conceptionDate) {
+      this.resetPregnancyCalculations();
+      return;
+    }
+
+    const conception = new Date(conceptionDate);
+    const today = new Date();
+    
+    // Calcular días de gestación
+    const timeDiff = today.getTime() - conception.getTime();
+    this.pregnancyDays = Math.floor(timeDiff / (1000 * 3600 * 24));
+    
+    // Calcular porcentaje (gestación de caballos: ~340 días)
+    const totalPregnancyDays = 340;
+    this.calculatedPregnancyPercentage = Math.min(Math.max((this.pregnancyDays / totalPregnancyDays) * 100, 0), 100);
+    
+    // Calcular fecha estimada de parto (11 meses = ~330 días)
+    const estimatedRelief = new Date(conception);
+    estimatedRelief.setDate(estimatedRelief.getDate() + 330);
+    this.estimatedReliefDate = estimatedRelief.toISOString().split('T')[0];
+    
+    // Calcular días restantes
+    const reliefTimeDiff = estimatedRelief.getTime() - today.getTime();
+    this.daysUntilRelief = Math.ceil(reliefTimeDiff / (1000 * 3600 * 24));
+    
+    // Actualizar el formulario con los valores calculados (porcentaje como entero)
+    this.patientForm.get('pregnancy.pregnancyPercentage')?.setValue(Math.round(this.calculatedPregnancyPercentage));
+    this.patientForm.get('pregnancy.estimatedReliefDate')?.setValue(this.estimatedReliefDate);
+  }
+
+  private resetPregnancyCalculations(): void {
+    this.calculatedPregnancyPercentage = 0;
+    this.pregnancyDays = 0;
+    this.estimatedReliefDate = '';
+    this.daysUntilRelief = 0;
   }
 
   onFileSelected(event: Event): void {

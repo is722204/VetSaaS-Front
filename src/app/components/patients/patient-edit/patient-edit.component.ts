@@ -119,6 +119,18 @@ export class PatientEditComponent implements OnInit {
 
       const formValue = this.patientForm.value;
       
+      // Si no es hembra, asegurar que no hay datos de gestación
+      if (formValue.basicInfo.sex !== 'hembra') {
+        formValue.pregnancy = {
+          isPregnant: false,
+          conceptionDate: '',
+          pregnancyPercentage: 0,
+          estimatedReliefDate: '',
+          ultrasoundDate: '',
+          notes: ''
+        };
+      }
+      
       // Preparar los datos del paciente para actualización
       const patientData: Partial<Patient> = {
         basicInfo: {
@@ -184,6 +196,22 @@ export class PatientEditComponent implements OnInit {
       }
     }
     return '';
+  }
+
+  onSexChange(): void {
+    const sex = this.patientForm.get('basicInfo.sex')?.value;
+    const pregnancyGroup = this.patientForm.get('pregnancy');
+    
+    // Si no es hembra, limpiar todos los datos de gestación
+    if (sex !== 'hembra') {
+      pregnancyGroup?.get('isPregnant')?.setValue(false);
+      pregnancyGroup?.get('conceptionDate')?.setValue('');
+      pregnancyGroup?.get('pregnancyPercentage')?.setValue(0);
+      pregnancyGroup?.get('estimatedReliefDate')?.setValue('');
+      pregnancyGroup?.get('ultrasoundDate')?.setValue('');
+      pregnancyGroup?.get('notes')?.setValue('');
+      this.resetPregnancyCalculations();
+    }
   }
 
   onPregnancyChange(): void {
