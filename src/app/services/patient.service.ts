@@ -29,6 +29,10 @@ export class PatientService {
     return this.apiService.put<Patient>(`/patients/${patientId}`, patient);
   }
 
+  updatePatientWithImage(patientId: string, patientData: FormData): Observable<Patient> {
+    return this.apiService.put<Patient>(`/patients/${patientId}/with-image`, patientData);
+  }
+
   deletePatient(patientId: string): Observable<void> {
     return this.apiService.delete<void>(`/patients/${patientId}`);
   }

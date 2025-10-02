@@ -15,6 +15,9 @@ export class PatientEditComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
   patientId: string = '';
+  selectedImage: File | null = null;
+  imagePreviewUrl: string | ArrayBuffer | null = null;
+  currentImageUrl: string = '';
   
   // Propiedades calculadas para la gestación
   calculatedPregnancyPercentage = 0;
@@ -106,6 +109,9 @@ export class PatientEditComponent implements OnInit {
       }
     });
 
+    // Guardar la URL de imagen actual
+    this.currentImageUrl = patient.basicInfo.photoUrl || '';
+
     // Calcular datos de gestación si está preñada
     if (patient.pregnancy?.isPregnant && patient.pregnancy?.conceptionDate) {
       this.calculatePregnancyData();
@@ -131,28 +137,62 @@ export class PatientEditComponent implements OnInit {
         };
       }
       
-      // Preparar los datos del paciente para actualización
-      const patientData: Partial<Patient> = {
-        basicInfo: {
-          ...formValue.basicInfo,
-          createdAt: this.patientForm.get('basicInfo.createdAt')?.value || new Date().toISOString()
-        },
-        medicalHistory: this.patientForm.get('medicalHistory')?.value || {},
-        preventiveMedicine: this.patientForm.get('preventiveMedicine')?.value || {},
-        pregnancy: formValue.pregnancy
-      };
+      // Si hay una nueva imagen seleccionada, usar FormData
+      if (this.selectedImage) {
+        const formData = new FormData();
+        formData.append('name', formValue.basicInfo.name);
+        formData.append('patientId', formValue.basicInfo.patientId);
+        formData.append('birthDate', formValue.basicInfo.birthDate);
+        formData.append('sex', formValue.basicInfo.sex);
+        formData.append('color', formValue.basicInfo.color);
+        formData.append('breed', formValue.basicInfo.breed);
+        formData.append('ownerName', formValue.basicInfo.owner.name);
+        formData.append('ownerPhone', formValue.basicInfo.owner.phone);
+        formData.append('ownerEmail', formValue.basicInfo.owner.email);
+        formData.append('isPregnant', formValue.pregnancy.isPregnant);
+        formData.append('conceptionDate', formValue.pregnancy.conceptionDate);
+        formData.append('pregnancyPercentage', formValue.pregnancy.pregnancyPercentage);
+        formData.append('estimatedReliefDate', formValue.pregnancy.estimatedReliefDate);
+        formData.append('ultrasoundDate', formValue.pregnancy.ultrasoundDate);
+        formData.append('notes', formValue.pregnancy.notes);
+        formData.append('image', this.selectedImage);
 
-      this.patientService.updatePatient(this.patientId, patientData).subscribe({
-        next: (response) => {
-          this.isSubmitting = false;
-          this.router.navigate(['/patients', this.patientId]);
-        },
-        error: (error) => {
-          this.isSubmitting = false;
-          this.errorMessage = 'Error al actualizar el paciente. Por favor, inténtalo de nuevo.';
-          console.error('Error actualizando paciente:', error);
-        }
-      });
+        this.patientService.updatePatientWithImage(this.patientId, formData).subscribe({
+          next: (response: any) => {
+            this.isSubmitting = false;
+            this.router.navigate(['/patients', this.patientId]);
+          },
+          error: (error: any) => {
+            this.isSubmitting = false;
+            this.errorMessage = 'Error al actualizar el paciente. Por favor, inténtalo de nuevo.';
+            console.error('Error actualizando paciente:', error);
+          }
+        });
+      } else {
+        // Sin nueva imagen, usar JSON normal
+        const patientData: Partial<Patient> = {
+          basicInfo: {
+            ...formValue.basicInfo,
+            photoUrl: this.currentImageUrl, // Mantener la imagen actual si no hay nueva
+            createdAt: this.patientForm.get('basicInfo.createdAt')?.value || new Date().toISOString()
+          },
+          medicalHistory: this.patientForm.get('medicalHistory')?.value || {},
+          preventiveMedicine: this.patientForm.get('preventiveMedicine')?.value || {},
+          pregnancy: formValue.pregnancy
+        };
+
+        this.patientService.updatePatient(this.patientId, patientData).subscribe({
+          next: (response) => {
+            this.isSubmitting = false;
+            this.router.navigate(['/patients', this.patientId]);
+          },
+          error: (error) => {
+            this.isSubmitting = false;
+            this.errorMessage = 'Error al actualizar el paciente. Por favor, inténtalo de nuevo.';
+            console.error('Error actualizando paciente:', error);
+          }
+        });
+      }
     } else {
       this.markFormGroupTouched(this.patientForm);
     }
@@ -284,5 +324,35 @@ export class PatientEditComponent implements OnInit {
     this.pregnancyDays = 0;
     this.estimatedReliefDate = '';
     this.daysUntilRelief = 0;
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedImage = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreviewUrl = reader.result;
+      };
+      reader.readAsDataURL(this.selectedImage);
+    } else {
+      this.selectedImage = null;
+      this.imagePreviewUrl = null;
+    }
+  }
+
+  removeImage(): void {
+    this.selectedImage = null;
+    this.imagePreviewUrl = null;
+    this.currentImageUrl = '';
+    this.patientForm.get('basicInfo.photoUrl')?.setValue('');
+    const fileInput = document.getElementById('patientImageUpload') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  }
+
+  onImageError(event: any): void {
+    event.target.src = 'https://via.placeholder.com/300x200?text=Caballo';
   }
 }

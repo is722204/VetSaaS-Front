@@ -40,6 +40,10 @@ export class ApiService {
   }
 
   put<T>(endpoint: string, data: any): Observable<T> {
+    // Si es FormData, usar headers especiales
+    if (data instanceof FormData) {
+      return this.http.put<T>(`${this.baseUrl}${endpoint}`, data, { headers: this.getHeadersForFormData() });
+    }
     return this.http.put<T>(`${this.baseUrl}${endpoint}`, data, { headers: this.getHeaders() });
   }
 
