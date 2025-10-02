@@ -13,6 +13,9 @@ export class PatientsComponent implements OnInit {
   patientsList: Patient[] = [];
   isLoading = true;
   searchTerm = '';
+  viewMode: 'cards' | 'table' = 'cards';
+  selectedSex = '';
+  selectedPregnancyStatus = '';
 
   constructor(
     private patientService: PatientService,
@@ -39,15 +42,33 @@ export class PatientsComponent implements OnInit {
   }
 
   get filteredPatients(): Patient[] {
-    if (!this.searchTerm) {
-      return this.patientsList;
+    let filtered = this.patientsList;
+
+    // Filtro por búsqueda
+    if (this.searchTerm) {
+      filtered = filtered.filter(patient =>
+        patient.basicInfo.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        patient.basicInfo.patientId.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        patient.basicInfo.owner.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        patient.basicInfo.breed.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
     }
-    
-    return this.patientsList.filter(patient =>
-      patient.basicInfo.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      patient.basicInfo.patientId.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      patient.basicInfo.owner.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+
+    // Filtro por sexo
+    if (this.selectedSex) {
+      filtered = filtered.filter(patient => patient.basicInfo.sex === this.selectedSex);
+    }
+
+    // Filtro por estado de gestación
+    if (this.selectedPregnancyStatus) {
+      if (this.selectedPregnancyStatus === 'pregnant') {
+        filtered = filtered.filter(patient => patient.pregnancy?.isPregnant === true);
+      } else if (this.selectedPregnancyStatus === 'not-pregnant') {
+        filtered = filtered.filter(patient => !patient.pregnancy?.isPregnant);
+      }
+    }
+
+    return filtered;
   }
 
   onPatientClick(patientId: string): void {
@@ -81,5 +102,55 @@ export class PatientsComponent implements OnInit {
 
   onNewPatientClick(): void {
     this.router.navigate(['/patients/new']);
+  }
+
+  onEditPatient(patientId: string): void {
+    this.router.navigate(['/patients', patientId, 'edit']);
+  }
+
+  clearFilters(): void {
+    this.searchTerm = '';
+    this.selectedSex = '';
+    this.selectedPregnancyStatus = '';
+  }
+
+  // Métodos de estadísticas
+  getMaleCount(): number {
+    return this.patientsList.filter(patient => patient.basicInfo.sex === 'macho').length;
+  }
+
+  getFemaleCount(): number {
+    return this.patientsList.filter(patient => patient.basicInfo.sex === 'hembra').length;
+  }
+
+  getPregnantCount(): number {
+    return this.patientsList.filter(patient => patient.pregnancy?.isPregnant === true).length;
+  }
+
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
+
+  // Métodos de porcentajes para las estadísticas
+  getMalePercentage(): number {
+    if (this.patientsList.length === 0) return 0;
+    return Math.round((this.getMaleCount() / this.patientsList.length) * 100);
+  }
+
+  getFemalePercentage(): number {
+    if (this.patientsList.length === 0) return 0;
+    return Math.round((this.getFemaleCount() / this.patientsList.length) * 100);
+  }
+
+  getPregnantPercentage(): number {
+    const femaleCount = this.getFemaleCount();
+    if (femaleCount === 0) return 0;
+    return Math.round((this.getPregnantCount() / femaleCount) * 100);
   }
 }

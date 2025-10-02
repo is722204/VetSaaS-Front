@@ -1,151 +1,474 @@
-<div class="space-y-6">
-  <!-- Header -->
-  <div class="md:flex md:items-center md:justify-between">
-    <div class="flex-1 min-w-0">
-      <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
-        <i class="fas fa-horse text-primary-600 mr-2"></i>
-        Pacientes
-      </h2>
-      <p class="mt-1 text-sm text-gray-500">
-        Gestiona todos los pacientes de la clínica
-      </p>
-    </div>
-    <div class="mt-4 flex md:mt-0 md:ml-4">
-      <button
-        type="button"
-        (click)="onNewPatientClick()"
-        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-      >
-        <i class="fas fa-plus mr-2"></i>
-        Nuevo Paciente
-      </button>
-    </div>
-  </div>
-
-  <!-- Barra de búsqueda -->
-  <div class="bg-white shadow rounded-lg p-6">
-    <div class="relative">
-      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <i class="fas fa-search text-gray-400"></i>
-      </div>
-      <input
-        type="text"
-        [(ngModel)]="searchTerm"
-        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-        placeholder="Buscar por nombre, ID o dueño..."
-      />
-    </div>
-  </div>
-
-  <!-- Loading state -->
-  <div *ngIf="isLoading" class="flex justify-center items-center py-12">
-    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-  </div>
-
-  <!-- Grid de pacientes -->
-  <div *ngIf="!isLoading" class="space-y-6">
-    <!-- Mensaje cuando no hay pacientes -->
-    <div *ngIf="filteredPatients.length === 0 && !searchTerm" class="text-center py-12">
-      <i class="fas fa-horse text-gray-300 text-6xl mb-4"></i>
-      <h3 class="text-lg font-medium text-gray-900 mb-2">No hay pacientes registrados</h3>
-      <p class="text-gray-500 mb-4">Comienza agregando el primer paciente a la clínica</p>
-      <button
-        type="button"
-        (click)="onNewPatientClick()"
-        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700"
-      >
-        <i class="fas fa-plus mr-2"></i>
-        Agregar Paciente
-      </button>
-    </div>
-
-    <!-- Mensaje cuando no hay resultados de búsqueda -->
-    <div *ngIf="filteredPatients.length === 0 && searchTerm" class="text-center py-12">
-      <i class="fas fa-search text-gray-300 text-6xl mb-4"></i>
-      <h3 class="text-lg font-medium text-gray-900 mb-2">No se encontraron resultados</h3>
-      <p class="text-gray-500">Intenta con otros términos de búsqueda</p>
-    </div>
-
-    <!-- Grid de pacientes -->
-    <div *ngIf="filteredPatients.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      <div
-        *ngFor="let patient of filteredPatients"
-        (click)="onPatientClick(patient.basicInfo.patientId)"
-        class="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
-      >
-        <!-- Imagen del paciente -->
-        <div class="relative">
-          <img
-            [src]="patient.basicInfo.photoUrl || 'https://via.placeholder.com/300x200?text=Caballo'"
-            [alt]="patient.basicInfo.name"
-            class="w-full h-48 object-cover rounded-t-lg"
-            (error)="onImageError($event)"
-          />
-          <!-- Badge de sexo -->
-          <div class="absolute top-2 right-2">
-            <span
-              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-              [class]="patient.basicInfo.sex === 'macho' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'"
+<div class="min-h-screen bg-gray-50">
+  <!-- Header estilo Dashboard -->
+  <div class="bg-white border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+      <div class="flex items-center justify-between h-14 sm:h-16">
+        <div class="flex items-center">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+            <i class="fas fa-horse text-white text-sm sm:text-base"></i>
+          </div>
+          <div class="ml-3 sm:ml-4">
+            <h1 class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Pacientes</h1>
+            <p class="text-xs sm:text-sm text-gray-500 hidden sm:block">{{ patientsList.length }} pacientes registrados</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-2 sm:space-x-3">
+          <!-- Switch de Vista -->
+          <div class="flex bg-gray-100 rounded-lg p-0.5">
+            <button
+              (click)="viewMode = 'cards'"
+              [class]="viewMode === 'cards' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500'"
+              class="px-2 sm:px-3 py-1.5 sm:py-2 rounded-md transition-all duration-200 text-xs sm:text-sm"
             >
-              <i [class]="getSexIcon(patient.basicInfo.sex) + ' mr-1'"></i>
-              {{ patient.basicInfo.sex }}
-            </span>
+              <i class="fas fa-grid-2x2 text-xs sm:text-sm"></i>
+            </button>
+            <button
+              (click)="viewMode = 'table'"
+              [class]="viewMode === 'table' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500'"
+              class="px-2 sm:px-3 py-1.5 sm:py-2 rounded-md transition-all duration-200 text-xs sm:text-sm"
+            >
+              <i class="fas fa-list text-xs sm:text-sm"></i>
+            </button>
+          </div>
+          
+          <!-- Botón Nuevo -->
+          <button
+            type="button"
+            (click)="onNewPatientClick()"
+            class="inline-flex items-center px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-200 rounded-lg text-xs sm:text-sm font-medium text-gray-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+          >
+            <i class="fas fa-plus text-xs sm:text-sm"></i>
+            <span class="hidden sm:inline ml-1.5 sm:ml-2">Nuevo</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6">
+    <!-- Loading state -->
+    <div *ngIf="isLoading" class="flex justify-center items-center py-8 sm:py-12">
+      <div class="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-blue-500"></div>
+    </div>
+
+    <div *ngIf="!isLoading" class="space-y-4 sm:space-y-6 lg:space-y-8">
+      <!-- Cards de estadísticas estilo Dashboard -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        <!-- Total de Pacientes -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 hover:shadow-md transition-all duration-200">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <p class="text-xs sm:text-sm font-medium text-gray-500 mb-1">Total</p>
+              <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">{{ patientsList.length }}</p>
+              <p class="text-xs text-blue-600 mt-1">
+                <i class="fas fa-horse mr-1"></i>
+                Pacientes
+              </p>
+            </div>
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-50 rounded-xl flex items-center justify-center">
+              <i class="fas fa-horse text-blue-500 text-sm sm:text-base"></i>
+            </div>
           </div>
         </div>
 
-        <!-- Información del paciente -->
-        <div class="p-4">
-          <div class="flex items-center justify-between mb-2">
-            <h3 class="text-lg font-semibold text-gray-900 truncate">
-              {{ patient.basicInfo.name }}
-            </h3>
-            <span class="text-sm text-gray-500">
-              {{ patient.basicInfo.patientId }}
-            </span>
-          </div>
-
-          <div class="space-y-2">
-            <!-- Dueño -->
-            <div class="flex items-center text-sm text-gray-600">
-              <i class="fas fa-user mr-2 text-gray-400"></i>
-              <span class="truncate">{{ patient.basicInfo.owner.name }}</span>
+        <!-- Machos -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 hover:shadow-md transition-all duration-200">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <p class="text-xs sm:text-sm font-medium text-gray-500 mb-1">Machos</p>
+              <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">{{ getMaleCount() }}</p>
+              <p class="text-xs text-blue-600 mt-1">
+                <i class="fas fa-mars mr-1"></i>
+                {{ getMalePercentage() }}%
+              </p>
             </div>
-
-            <!-- Edad -->
-            <div class="flex items-center text-sm text-gray-600">
-              <i class="fas fa-birthday-cake mr-2 text-gray-400"></i>
-              <span>{{ getPatientAge(patient.basicInfo.birthDate) }}</span>
-            </div>
-
-            <!-- Raza -->
-            <div class="flex items-center text-sm text-gray-600">
-              <i class="fas fa-tag mr-2 text-gray-400"></i>
-              <span class="truncate">{{ patient.basicInfo.breed }}</span>
-            </div>
-
-            <!-- Color -->
-            <div class="flex items-center text-sm text-gray-600">
-              <i class="fas fa-palette mr-2 text-gray-400"></i>
-              <span>{{ patient.basicInfo.color }}</span>
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-50 rounded-xl flex items-center justify-center">
+              <i class="fas fa-mars text-blue-500 text-sm sm:text-base"></i>
             </div>
           </div>
+        </div>
 
-          <!-- Estado de gestación si aplica -->
-          <div *ngIf="patient.pregnancy?.isPregnant" class="mt-3 p-2 bg-pink-50 rounded-md">
-            <div class="flex items-center text-sm text-pink-700">
-              <i class="fas fa-baby mr-2"></i>
-              <span>Gestación: {{ patient.pregnancy.pregnancyPercentage }}%</span>
+        <!-- Hembras -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 hover:shadow-md transition-all duration-200">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <p class="text-xs sm:text-sm font-medium text-gray-500 mb-1">Hembras</p>
+              <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">{{ getFemaleCount() }}</p>
+              <p class="text-xs text-pink-600 mt-1">
+                <i class="fas fa-venus mr-1"></i>
+                {{ getFemalePercentage() }}%
+              </p>
+            </div>
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-pink-50 rounded-xl flex items-center justify-center">
+              <i class="fas fa-venus text-pink-500 text-sm sm:text-base"></i>
             </div>
           </div>
+        </div>
 
-          <!-- Botón de acción -->
-          <div class="mt-4">
-            <button
-              class="w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 transition-colors duration-200 text-sm font-medium"
+        <!-- Preñadas -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 hover:shadow-md transition-all duration-200">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <p class="text-xs sm:text-sm font-medium text-gray-500 mb-1">Gestación</p>
+              <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">{{ getPregnantCount() }}</p>
+              <p class="text-xs text-green-600 mt-1">
+                <i class="fas fa-baby mr-1"></i>
+                {{ getPregnantPercentage() }}%
+              </p>
+            </div>
+            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-50 rounded-xl flex items-center justify-center">
+              <i class="fas fa-baby text-green-500 text-sm sm:text-base"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtros estilo Dashboard -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <!-- Búsqueda -->
+          <div class="sm:col-span-2">
+            <input
+              type="text"
+              [(ngModel)]="searchTerm"
+              class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-200 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+              placeholder="Buscar paciente..."
+            />
+          </div>
+
+          <!-- Filtro Sexo -->
+          <div>
+            <select
+              [(ngModel)]="selectedSex"
+              class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
             >
-              <i class="fas fa-eye mr-2"></i>
-              Ver Detalles
-            </button>
+              <option value="">Todos los sexos</option>
+              <option value="macho">Machos</option>
+              <option value="hembra">Hembras</option>
+            </select>
+          </div>
+
+          <!-- Filtro Gestación -->
+          <div>
+            <select
+              [(ngModel)]="selectedPregnancyStatus"
+              class="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+            >
+              <option value="">Estado gestación</option>
+              <option value="pregnant">Preñadas</option>
+              <option value="not-pregnant">No preñadas</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estados Vacíos -->
+      <!-- Sin pacientes -->
+      <div *ngIf="patientsList.length === 0" class="bg-white rounded-2xl border border-gray-100 p-8 sm:p-12 text-center">
+        <i class="fas fa-horse text-gray-300 text-4xl sm:text-6xl mb-4"></i>
+        <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Sin pacientes</h3>
+        <p class="text-gray-500 mb-6 sm:mb-8">Agrega el primer paciente para comenzar</p>
+        <button
+          type="button"
+          (click)="onNewPatientClick()"
+          class="inline-flex items-center px-4 sm:px-6 py-2.5 sm:py-3 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+        >
+          <i class="fas fa-plus mr-2"></i>
+          Agregar Paciente
+        </button>
+      </div>
+
+      <!-- Sin resultados -->
+      <div *ngIf="patientsList.length > 0 && filteredPatients.length === 0" class="bg-white rounded-2xl border border-gray-100 p-8 sm:p-12 text-center">
+        <i class="fas fa-search text-gray-300 text-4xl sm:text-6xl mb-4"></i>
+        <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Sin resultados</h3>
+        <p class="text-gray-500 mb-6">Ajusta los filtros de búsqueda</p>
+        <button
+          type="button"
+          (click)="clearFilters()"
+          class="text-blue-600 hover:text-blue-800 text-sm font-medium underline transition-colors duration-200"
+        >
+          Limpiar filtros
+        </button>
+      </div>
+
+      <!-- Vista de Tarjetas estilo Dashboard -->
+      <div *ngIf="filteredPatients.length > 0 && viewMode === 'cards'">
+        <div class="flex items-center justify-between mb-4 sm:mb-6">
+          <div class="text-xs sm:text-sm text-gray-500">
+            Mostrando {{ filteredPatients.length }} de {{ patientsList.length }} pacientes
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          <div
+            *ngFor="let patient of filteredPatients"
+            class="bg-white rounded-2xl border border-gray-100 hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden"
+            (click)="onPatientClick(patient.basicInfo.patientId)"
+          >
+            <!-- Imagen -->
+            <div class="relative aspect-[4/3] overflow-hidden">
+              <img
+                [src]="patient.basicInfo.photoUrl || 'https://via.placeholder.com/400x300/f8f9fa/6c757d?text=🐴'"
+                [alt]="patient.basicInfo.name"
+                class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                (error)="onImageError($event)"
+              />
+              
+              <!-- Badges -->
+              <div class="absolute top-3 right-3 flex flex-col gap-2">
+                <span
+                  class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                  [class]="patient.basicInfo.sex === 'macho' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'"
+                >
+                  <i [class]="getSexIcon(patient.basicInfo.sex) + ' mr-1'"></i>
+                  {{ patient.basicInfo.sex | titlecase }}
+                </span>
+                
+                <span
+                  *ngIf="patient.pregnancy?.isPregnant"
+                  class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                >
+                  <i class="fas fa-baby mr-1"></i>
+                  {{ patient.pregnancy.pregnancyPercentage }}%
+                </span>
+              </div>
+            </div>
+
+            <!-- Contenido -->
+            <div class="p-4 sm:p-6">
+              <div class="mb-3 sm:mb-4">
+                <h3 class="font-semibold text-gray-900 mb-1 text-sm sm:text-base">
+                  {{ patient.basicInfo.name }}
+                </h3>
+                <p class="text-xs text-gray-500 font-mono">{{ patient.basicInfo.patientId }}</p>
+              </div>
+
+              <div class="space-y-2 text-xs sm:text-sm text-gray-600">
+                <div class="flex items-center">
+                  <i class="fas fa-user text-gray-400 mr-2 w-3"></i>
+                  <span class="truncate">{{ patient.basicInfo.owner.name }}</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-birthday-cake text-gray-400 mr-2 w-3"></i>
+                  <span>{{ getPatientAge(patient.basicInfo.birthDate) }}</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-tag text-gray-400 mr-2 w-3"></i>
+                  <span class="truncate">{{ patient.basicInfo.breed }}</span>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-palette text-gray-400 mr-2 w-3"></i>
+                  <span>{{ patient.basicInfo.color }}</span>
+                </div>
+              </div>
+
+              <!-- Gestación -->
+              <div *ngIf="patient.pregnancy?.isPregnant" class="mt-4 pt-4 border-t border-gray-100">
+                <div class="flex items-center justify-between text-xs text-green-600 mb-2">
+                  <span class="font-medium">Gestación</span>
+                  <span class="font-bold">{{ patient.pregnancy.pregnancyPercentage }}%</span>
+                </div>
+                <div class="w-full bg-green-100 rounded-full h-1.5">
+                  <div
+                    class="bg-green-500 h-1.5 rounded-full transition-all duration-500"
+                    [style.width.%]="patient.pregnancy.pregnancyPercentage"
+                  ></div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2" *ngIf="patient.pregnancy.estimatedReliefDate">
+                  <i class="fas fa-calendar mr-1"></i>
+                  Parto: {{ formatDate(patient.pregnancy.estimatedReliefDate) }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vista de Tabla/Lista estilo Dashboard -->
+      <div *ngIf="filteredPatients.length > 0 && viewMode === 'table'">
+        <div class="flex items-center justify-between mb-4 sm:mb-6">
+          <div class="text-xs sm:text-sm text-gray-500">
+            {{ filteredPatients.length }} pacientes encontrados
+          </div>
+        </div>
+
+        <!-- Vista de tabla en desktop -->
+        <div class="hidden lg:block bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr class="text-left">
+                  <th class="px-6 py-4 text-xs font-medium text-gray-500 uppercase tracking-wide">Paciente</th>
+                  <th class="px-6 py-4 text-xs font-medium text-gray-500 uppercase tracking-wide">Propietario</th>
+                  <th class="px-6 py-4 text-xs font-medium text-gray-500 uppercase tracking-wide">Detalles</th>
+                  <th class="px-6 py-4 text-xs font-medium text-gray-500 uppercase tracking-wide">Estado</th>
+                  <th class="px-6 py-4 text-xs font-medium text-gray-500 uppercase tracking-wide text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr
+                  *ngFor="let patient of filteredPatients"
+                  class="hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
+                  (click)="onPatientClick(patient.basicInfo.patientId)"
+                >
+                  <!-- Paciente -->
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <img
+                        class="w-10 h-10 rounded-full object-cover border border-gray-200"
+                        [src]="patient.basicInfo.photoUrl || 'https://via.placeholder.com/100x100/f8f9fa/6c757d?text=🐴'"
+                        [alt]="patient.basicInfo.name"
+                        (error)="onImageError($event)"
+                      />
+                      <div>
+                        <div class="font-medium text-gray-900 text-sm">{{ patient.basicInfo.name }}</div>
+                        <div class="text-xs text-gray-500 font-mono">{{ patient.basicInfo.patientId }}</div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- Propietario -->
+                  <td class="px-6 py-4">
+                    <div class="text-sm text-gray-900">{{ patient.basicInfo.owner.name }}</div>
+                    <div class="text-xs text-gray-500">{{ patient.basicInfo.owner.phone }}</div>
+                  </td>
+
+                  <!-- Detalles -->
+                  <td class="px-6 py-4">
+                    <div class="text-sm text-gray-900">{{ getPatientAge(patient.basicInfo.birthDate) }}</div>
+                    <div class="text-xs text-gray-500">{{ patient.basicInfo.breed }} • {{ patient.basicInfo.color }}</div>
+                  </td>
+
+                  <!-- Estado -->
+                  <td class="px-6 py-4">
+                    <div class="flex flex-col gap-1">
+                      <span
+                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium w-fit"
+                        [class]="patient.basicInfo.sex === 'macho' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'"
+                      >
+                        <i [class]="getSexIcon(patient.basicInfo.sex) + ' mr-1'"></i>
+                        {{ patient.basicInfo.sex | titlecase }}
+                      </span>
+                      <span
+                        *ngIf="patient.pregnancy?.isPregnant"
+                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 w-fit"
+                      >
+                        <i class="fas fa-baby mr-1"></i>
+                        Gestación {{ patient.pregnancy.pregnancyPercentage }}%
+                      </span>
+                    </div>
+                  </td>
+
+                  <!-- Acciones -->
+                  <td class="px-6 py-4 text-right">
+                    <div class="flex items-center justify-end gap-1">
+                      <button
+                        (click)="onPatientClick(patient.basicInfo.patientId); $event.stopPropagation()"
+                        class="p-2 text-gray-400 hover:text-blue-600 transition-colors duration-200 rounded-lg hover:bg-blue-50"
+                        title="Ver detalles"
+                      >
+                        <i class="fas fa-eye text-xs"></i>
+                      </button>
+                      <button
+                        (click)="onEditPatient(patient.basicInfo.patientId); $event.stopPropagation()"
+                        class="p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200 rounded-lg hover:bg-gray-50"
+                        title="Editar"
+                      >
+                        <i class="fas fa-edit text-xs"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Vista de lista en mobile/tablet -->
+        <div class="lg:hidden space-y-3">
+          <div
+            *ngFor="let patient of filteredPatients"
+            class="bg-white rounded-2xl border border-gray-100 p-4 cursor-pointer hover:shadow-md transition-all duration-200"
+            (click)="onPatientClick(patient.basicInfo.patientId)"
+          >
+            <div class="flex items-start gap-3">
+              <!-- Avatar -->
+              <img
+                class="w-12 h-12 rounded-full object-cover border border-gray-200 flex-shrink-0"
+                [src]="patient.basicInfo.photoUrl || 'https://via.placeholder.com/100x100/f8f9fa/6c757d?text=🐴'"
+                [alt]="patient.basicInfo.name"
+                (error)="onImageError($event)"
+              />
+              
+              <!-- Información -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between mb-2">
+                  <div class="flex-1 min-w-0">
+                    <h3 class="font-medium text-gray-900 text-sm truncate">{{ patient.basicInfo.name }}</h3>
+                    <p class="text-xs text-gray-500 font-mono">{{ patient.basicInfo.patientId }}</p>
+                  </div>
+                  
+                  <!-- Estados -->
+                  <div class="flex flex-col gap-1 ml-2">
+                    <span
+                      class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                      [class]="patient.basicInfo.sex === 'macho' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'"
+                    >
+                      <i [class]="getSexIcon(patient.basicInfo.sex) + ' mr-1'"></i>
+                      {{ patient.basicInfo.sex | titlecase }}
+                    </span>
+                    <span
+                      *ngIf="patient.pregnancy?.isPregnant"
+                      class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                    >
+                      <i class="fas fa-baby mr-1"></i>
+                      {{ patient.pregnancy.pregnancyPercentage }}%
+                    </span>
+                  </div>
+                </div>
+                
+                <!-- Detalles -->
+                <div class="space-y-1 text-xs text-gray-600">
+                  <div class="flex items-center">
+                    <i class="fas fa-user text-gray-400 mr-2 w-3"></i>
+                    <span class="truncate">{{ patient.basicInfo.owner.name }}</span>
+                  </div>
+                  <div class="flex items-center">
+                    <i class="fas fa-birthday-cake text-gray-400 mr-2 w-3"></i>
+                    <span>{{ getPatientAge(patient.basicInfo.birthDate) }} • {{ patient.basicInfo.breed }}</span>
+                  </div>
+                  <div class="flex items-center">
+                    <i class="fas fa-palette text-gray-400 mr-2 w-3"></i>
+                    <span>{{ patient.basicInfo.color }}</span>
+                  </div>
+                  <div *ngIf="patient.pregnancy?.isPregnant" class="flex items-center text-green-600">
+                    <i class="fas fa-baby text-green-500 mr-2 w-3"></i>
+                    <span>Gestación {{ patient.pregnancy.pregnancyPercentage }}% - Parto: {{ formatDate(patient.pregnancy.estimatedReliefDate) }}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Acciones -->
+              <div class="flex flex-col gap-1 ml-2">
+                <button
+                  (click)="onPatientClick(patient.basicInfo.patientId); $event.stopPropagation()"
+                  class="p-2 text-gray-400 hover:text-blue-600 transition-colors duration-200 rounded-lg hover:bg-blue-50"
+                  title="Ver"
+                >
+                  <i class="fas fa-eye text-xs"></i>
+                </button>
+                <button
+                  (click)="onEditPatient(patient.basicInfo.patientId); $event.stopPropagation()"
+                  class="p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200 rounded-lg hover:bg-gray-50"
+                  title="Editar"
+                >
+                  <i class="fas fa-edit text-xs"></i>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
