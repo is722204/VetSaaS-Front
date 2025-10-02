@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PreventiveConsultationService, PreventiveConsultationData, PreventiveMedicine, TenantInfo } from '../../services/preventive-consultation.service';
+import { parseDate, formatDate, calculateAge } from '../../utils/date.utils';
 
 @Component({
   selector: 'app-preventive-consultation',
@@ -92,34 +93,16 @@ export class PreventiveConsultationComponent implements OnInit {
     
     return Object.entries(this.patientData.preventiveMedicine)
       .map(([id, data]) => ({ id, data }))
-      .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+      .sort((a, b) => parseDate(b.data.date).getTime() - parseDate(a.data.date).getTime());
   }
 
   formatDate(dateString: string): string {
-    if (!dateString) return 'No especificada';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    return formatDate(dateString);
   }
 
   calculateAge(): string {
     if (!this.patientData?.basicInfo.birthDate) return 'No especificada';
-    
-    const birthDate = new Date(this.patientData.basicInfo.birthDate);
-    const today = new Date();
-    const diffTime = Math.abs(today.getTime() - birthDate.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays < 365) {
-      const months = Math.floor(diffDays / 30);
-      return months > 0 ? `${months} ${months === 1 ? 'mes' : 'meses'}` : `${diffDays} días`;
-    } else {
-      const years = Math.floor(diffDays / 365);
-      return `${years} ${years === 1 ? 'año' : 'años'}`;
-    }
+    return calculateAge(this.patientData.basicInfo.birthDate);
   }
 
   resetSearch(): void {

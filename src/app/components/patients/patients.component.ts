@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PatientService } from '../../services/patient.service';
 import { Patient } from '../../models/patient.model';
+import { parseDate, formatDate } from '../../utils/date.utils';
 
 @Component({
   selector: 'app-patients',
@@ -128,13 +129,7 @@ export class PatientsComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    return formatDate(dateString);
   }
 
   // Métodos de porcentajes para las estadísticas
