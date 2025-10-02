@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PatientService } from '../../../services/patient.service';
 import { ModalService } from '../../../services/modal.service';
 import { Patient } from '../../../models/patient.model';
+import { parseDate, formatDate, calculateAge, daysDifference } from '../../../utils/date.utils';
 
 @Component({
   selector: 'app-patient-detail',
@@ -51,24 +52,11 @@ export class PatientDetailComponent implements OnInit {
   }
 
   getPatientAge(birthDate: string): string {
-    const birth = new Date(birthDate);
-    const today = new Date();
-    const age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-      return `${age - 1} años`;
-    }
-    
-    return `${age} años`;
+    return calculateAge(birthDate);
   }
 
   formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    return formatDate(dateString);
   }
 
   getMedicalHistoryArray(): any[] {
@@ -207,12 +195,7 @@ export class PatientDetailComponent implements OnInit {
       return 0;
     }
 
-    const conception = new Date(this.patient.pregnancy.conceptionDate);
-    const today = new Date();
-    
-    // Calcular días de gestación
-    const timeDiff = today.getTime() - conception.getTime();
-    const pregnancyDays = Math.floor(timeDiff / (1000 * 3600 * 24));
+    const pregnancyDays = daysDifference(this.patient.pregnancy.conceptionDate);
     
     // Calcular porcentaje (gestación de caballos: ~340 días)
     const totalPregnancyDays = 340;
@@ -226,11 +209,7 @@ export class PatientDetailComponent implements OnInit {
       return 0;
     }
 
-    const conception = new Date(this.patient.pregnancy.conceptionDate);
-    const today = new Date();
-    
-    const timeDiff = today.getTime() - conception.getTime();
-    return Math.floor(timeDiff / (1000 * 3600 * 24));
+    return daysDifference(this.patient.pregnancy.conceptionDate);
   }
 
   getEstimatedReliefDate(): string {
@@ -238,7 +217,7 @@ export class PatientDetailComponent implements OnInit {
       return '';
     }
 
-    const conception = new Date(this.patient.pregnancy.conceptionDate);
+    const conception = parseDate(this.patient.pregnancy.conceptionDate);
     const estimatedRelief = new Date(conception);
     estimatedRelief.setDate(estimatedRelief.getDate() + 330); // 11 meses = ~330 días
     
@@ -250,7 +229,7 @@ export class PatientDetailComponent implements OnInit {
       return 0;
     }
 
-    const conception = new Date(this.patient.pregnancy.conceptionDate);
+    const conception = parseDate(this.patient.pregnancy.conceptionDate);
     const estimatedRelief = new Date(conception);
     estimatedRelief.setDate(estimatedRelief.getDate() + 330);
     

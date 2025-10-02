@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { formatDate } from '../../../utils/date.utils';
 
 @Component({
   selector: 'app-day-appointments-modal',
@@ -28,11 +29,7 @@ export class DayAppointmentsModalComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    return formatDate(dateString);
   }
 
   formatTime(timeString: string): string {

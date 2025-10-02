@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { formatDate } from '../../../utils/date.utils';
 
 @Component({
   selector: 'app-preventive-medicine-detail-modal',
@@ -19,13 +20,7 @@ export class PreventiveMedicineDetailModalComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    return formatDate(dateString);
   }
 
   openImageModal(imageUrl: string): void {

@@ -4,6 +4,7 @@ import { PatientService } from '../../services/patient.service';
 import { AppointmentService } from '../../services/appointment.service';
 import { ApiService } from '../../services/api.service';
 import { ModalService } from '../../services/modal.service';
+import { parseDate, formatDate, formatDateShort, calculateAge, daysDifference } from '../../utils/date.utils';
 
 interface DashboardStats {
   totalPatients: number;
@@ -147,12 +148,11 @@ export class DashboardComponent implements OnInit {
   }
 
   private calculatePregnancyData(conceptionDate: string): any {
-    const conception = new Date(conceptionDate);
+    const conception = parseDate(conceptionDate);
     const today = new Date();
     
-    // Calcular días de gestación
-    const timeDiff = today.getTime() - conception.getTime();
-    const pregnancyDays = Math.floor(timeDiff / (1000 * 3600 * 24));
+    // Calcular días de gestación usando la utilidad
+    const pregnancyDays = daysDifference(conceptionDate);
     
     // Calcular porcentaje (gestación de caballos: ~340 días)
     const totalPregnancyDays = 340;
@@ -235,7 +235,7 @@ export class DashboardComponent implements OnInit {
       
       // Filtrar citas para este día
       const dayAppointments = this.weeklyAppointments.filter(appointment => {
-        const appointmentDate = new Date(appointment.date);
+        const appointmentDate = parseDate(appointment.date);
         return this.isSameDay(appointmentDate, date);
       });
       
@@ -308,10 +308,11 @@ export class DashboardComponent implements OnInit {
       
       // Ordenar por fecha de creación y tomar los 5 más recientes
       this.recentPatients = patients
-        .sort((a: any, b: any) => 
-          new Date(b.basicInfo?.createdAt || 0).getTime() - 
-          new Date(a.basicInfo?.createdAt || 0).getTime()
-        )
+        .sort((a: any, b: any) => {
+          const dateA = a.basicInfo?.createdAt ? parseDate(a.basicInfo.createdAt).getTime() : 0;
+          const dateB = b.basicInfo?.createdAt ? parseDate(b.basicInfo.createdAt).getTime() : 0;
+          return dateB - dateA;
+        })
         .slice(0, 5)
         .map((patient: any) => ({
           id: patient.basicInfo?.patientId,
@@ -350,24 +351,16 @@ export class DashboardComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('es-ES');
+    return formatDate(dateString);
   }
 
   formatDateTime(dateString: string): string {
-    return new Date(dateString).toLocaleString('es-ES');
+    const date = parseDate(dateString);
+    return date.toLocaleString('es-ES');
   }
 
   getPatientAge(birthDate: string): string {
-    const birth = new Date(birthDate);
-    const today = new Date();
-    const age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-      return `${age - 1} años`;
-    }
-
-    return `${age} años`;
+    return calculateAge(birthDate);
   }
 
   refreshDashboard(): void {
@@ -388,7 +381,7 @@ export class DashboardComponent implements OnInit {
   getTodayAppointments(): number {
     const today = new Date();
     return this.weeklyAppointments.filter(appointment => {
-      const appointmentDate = new Date(appointment.date);
+      const appointmentDate = parseDate(appointment.date);
       return this.isSameDay(appointmentDate, today);
     }).length;
   }
