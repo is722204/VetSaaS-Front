@@ -51,8 +51,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   navigateTo(route: string): void {
     this.router.navigate([route]);
-    // Cerrar sidebar en móvil después de navegar
-    if (window.innerWidth < 768) {
+    // Cerrar sidebar en móvil después de navegar (lg breakpoint es 1024px)
+    if (window.innerWidth < 1024) {
       this.sidebarOpen = false;
     }
   }
