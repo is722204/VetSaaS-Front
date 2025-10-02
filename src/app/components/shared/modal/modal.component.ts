@@ -91,4 +91,22 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.closeModal();
     this.modalService.openModal('appointment-detail', '', '', appointment);
   }
+
+  onRecordDeleted(): void {
+    // Cerrar el modal y emitir evento para que el componente padre actualice los datos
+    this.closeModal();
+    // El componente padre debe suscribirse a los cambios del modal para refrescar los datos
+  }
+
+  onMedicineDeleted(): void {
+    // Cerrar el modal y emitir evento para que el componente padre actualice los datos
+    this.closeModal();
+    // El componente padre debe suscribirse a los cambios del modal para refrescar los datos
+  }
+
+  onAppointmentDeleted(): void {
+    // Cerrar el modal y emitir evento para que el componente padre actualice los datos
+    this.closeModal();
+    // El componente padre debe suscribirse a los cambios del modal para refrescar los datos
+  }
 }

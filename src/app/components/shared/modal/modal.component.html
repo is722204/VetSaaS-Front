@@ -98,7 +98,9 @@
         <div *ngSwitchCase="'medical-record-detail'">
           <app-medical-record-detail-modal 
             [record]="modalData?.data"
+            [patientId]="modalData?.patientId || ''"
             (close)="closeModal()"
+            (recordDeleted)="onRecordDeleted()"
           ></app-medical-record-detail-modal>
         </div>
 
@@ -106,7 +108,9 @@
         <div *ngSwitchCase="'preventive-medicine-detail'">
           <app-preventive-medicine-detail-modal 
             [medicine]="modalData?.data"
+            [patientId]="modalData?.patientId || ''"
             (close)="closeModal()"
+            (medicineDeleted)="onMedicineDeleted()"
           ></app-preventive-medicine-detail-modal>
         </div>
 
@@ -114,7 +118,9 @@
         <div *ngSwitchCase="'appointment-detail'">
           <app-appointment-detail-modal 
             [appointment]="modalData?.data"
+            [patientId]="modalData?.patientId || ''"
             (close)="closeModal()"
+            (appointmentDeleted)="onAppointmentDeleted()"
           ></app-appointment-detail-modal>
         </div>
 

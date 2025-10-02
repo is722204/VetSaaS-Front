@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { formatDate } from '../../../utils/date.utils';
+import { PatientService } from '../../../services/patient.service';
 
 @Component({
   selector: 'app-preventive-medicine-detail-modal',
@@ -8,9 +9,14 @@ import { formatDate } from '../../../utils/date.utils';
 })
 export class PreventiveMedicineDetailModalComponent implements OnInit {
   @Input() medicine: any;
+  @Input() patientId: string = '';
   @Output() close = new EventEmitter<void>();
+  @Output() medicineDeleted = new EventEmitter<void>();
 
-  constructor() { }
+  showDeleteModal = false;
+  isDeleting = false;
+
+  constructor(private patientService: PatientService) { }
 
   ngOnInit(): void {
   }
@@ -61,5 +67,38 @@ export class PreventiveMedicineDetailModalComponent implements OnInit {
       default:
         return 'bg-gray-100 text-gray-600';
     }
+  }
+
+  showDeleteConfirmation(): void {
+    this.showDeleteModal = true;
+  }
+
+  hideDeleteConfirmation(): void {
+    this.showDeleteModal = false;
+  }
+
+  confirmDelete(): void {
+    if (!this.patientId || !this.medicine?.id) {
+      console.error('PatientId o MedicineId no disponible');
+      return;
+    }
+
+    this.isDeleting = true;
+    
+    this.patientService.deletePreventiveMedicine(this.patientId, this.medicine.id).subscribe({
+      next: (response) => {
+        console.log('Medicina preventiva eliminada exitosamente');
+        this.isDeleting = false;
+        this.showDeleteModal = false;
+        this.medicineDeleted.emit(); // Emitir evento para actualizar la lista
+        this.closeModal(); // Cerrar el modal
+      },
+      error: (error) => {
+        console.error('Error eliminando medicina preventiva:', error);
+        this.isDeleting = false;
+        // Aquí podrías mostrar un mensaje de error al usuario
+        alert('Error al eliminar la medicina preventiva. Por favor, inténtalo de nuevo.');
+      }
+    });
   }
 }

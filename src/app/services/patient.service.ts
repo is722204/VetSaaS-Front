@@ -52,4 +52,16 @@ export class PatientService {
   addAppointment(patientId: string, appointment: any): Observable<any> {
     return this.apiService.post(`/patients/${patientId}/appointments`, appointment);
   }
+
+  deleteMedicalRecord(patientId: string, recordId: string): Observable<any> {
+    return this.apiService.delete(`/patients/${patientId}/medical-history/${recordId}`);
+  }
+
+  deletePreventiveMedicine(patientId: string, medicineId: string): Observable<any> {
+    return this.apiService.delete(`/patients/${patientId}/preventive-medicine/${medicineId}`);
+  }
+
+  deleteAppointment(patientId: string, appointmentId: string): Observable<any> {
+    return this.apiService.delete(`/patients/${patientId}/appointments/${appointmentId}`);
+  }
 }
