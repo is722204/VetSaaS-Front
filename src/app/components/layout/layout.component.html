@@ -138,7 +138,15 @@
             <!-- Información de la clínica -->
             <div class="flex items-center">
               <div class="flex-shrink-0">
-                <div class="h-8 w-8 rounded-lg flex items-center justify-center" 
+                <!-- Logo del tenant si está disponible -->
+                <div *ngIf="authState?.tenant?.companyInfo?.logoUrl" class="h-8 w-8 rounded-lg overflow-hidden border border-gray-200">
+                  <img [src]="authState?.tenant?.companyInfo?.logoUrl" 
+                       [alt]="authState?.tenant?.companyInfo?.name" 
+                       class="w-full h-full object-cover">
+                </div>
+                <!-- Icono por defecto si no hay logo -->
+                <div *ngIf="!authState?.tenant?.companyInfo?.logoUrl" 
+                     class="h-8 w-8 rounded-lg flex items-center justify-center" 
                      [style.background-color]="authState?.tenant?.companyInfo?.primaryColor || '#3b82f6'">
                   <i class="fas fa-building text-white"></i>
                 </div>
