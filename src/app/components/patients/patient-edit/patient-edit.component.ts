@@ -56,7 +56,7 @@ export class PatientEditComponent implements OnInit {
       }),
       pregnancy: this.fb.group({
         isPregnant: [false],
-        conceptionDate: ['', Validators.required],
+        conceptionDate: [''],
         pregnancyPercentage: [0, [Validators.min(0), Validators.max(100)]],
         estimatedReliefDate: [''],
         ultrasoundDate: [''],
@@ -201,6 +201,7 @@ export class PatientEditComponent implements OnInit {
   onSexChange(): void {
     const sex = this.patientForm.get('basicInfo.sex')?.value;
     const pregnancyGroup = this.patientForm.get('pregnancy');
+    const conceptionDateControl = pregnancyGroup?.get('conceptionDate');
     
     // Si no es hembra, limpiar todos los datos de gestación
     if (sex !== 'hembra') {
@@ -211,14 +212,24 @@ export class PatientEditComponent implements OnInit {
       pregnancyGroup?.get('ultrasoundDate')?.setValue('');
       pregnancyGroup?.get('notes')?.setValue('');
       this.resetPregnancyCalculations();
+      
+      // Quitar validación del campo de fecha de concepción
+      conceptionDateControl?.clearValidators();
+      conceptionDateControl?.updateValueAndValidity();
     }
   }
 
   onPregnancyChange(): void {
     const pregnancyGroup = this.patientForm.get('pregnancy');
     const isPregnant = pregnancyGroup?.get('isPregnant')?.value;
+    const conceptionDateControl = pregnancyGroup?.get('conceptionDate');
     
-    if (!isPregnant) {
+    if (isPregnant) {
+      // Si está preñada, hacer el campo de fecha de concepción requerido
+      conceptionDateControl?.setValidators([Validators.required]);
+    } else {
+      // Si no está preñada, quitar la validación y limpiar campos
+      conceptionDateControl?.clearValidators();
       pregnancyGroup?.get('conceptionDate')?.setValue('');
       pregnancyGroup?.get('pregnancyPercentage')?.setValue(0);
       pregnancyGroup?.get('estimatedReliefDate')?.setValue('');
@@ -226,6 +237,9 @@ export class PatientEditComponent implements OnInit {
       pregnancyGroup?.get('notes')?.setValue('');
       this.resetPregnancyCalculations();
     }
+    
+    // Actualizar la validación
+    conceptionDateControl?.updateValueAndValidity();
   }
 
   onConceptionDateChange(): void {
