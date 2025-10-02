@@ -2,6 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface TenantInfo {
+  companyInfo: {
+    name: string;
+    address: string;
+    phone: string;
+    email: string;
+    primaryColor: string;
+    logoUrl: string;
+  };
+}
+
 export interface PreventiveConsultationData {
   basicInfo: {
     name: string;
@@ -28,7 +39,7 @@ export interface PreventiveMedicine {
   date: string;
   nextDose: string;
   lot: string;
-  image?: string;
+  imageUrl?: string;
   notes?: string;
 }
 
@@ -39,6 +50,10 @@ export class PreventiveConsultationService {
   private apiUrl = 'http://localhost:3000/api';
 
   constructor(private http: HttpClient) { }
+
+  getTenantInfo(tenantId: string): Observable<TenantInfo> {
+    return this.http.get<TenantInfo>(`${this.apiUrl}/public/tenant/${tenantId}`);
+  }
 
   getPreventiveData(tenantId: string, patientId: string): Observable<PreventiveConsultationData> {
     return this.http.get<PreventiveConsultationData>(`${this.apiUrl}/public/preventiva/${tenantId}/${patientId}`);

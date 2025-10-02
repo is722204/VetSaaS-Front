@@ -1,20 +1,32 @@
 <div class="min-h-screen bg-gray-50">
-  <!-- Header minimalista -->
-  <div class="bg-white border-b border-gray-100">
+  <!-- Header personalizado con información del tenant -->
+  <div class="bg-white border-b border-gray-100 shadow-sm">
     <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
-      <div class="flex items-center justify-between h-14 sm:h-16">
+      <div class="flex items-center justify-between h-16 sm:h-20">
         <div class="flex items-center">
-          <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center">
-            <i class="fas fa-shield-alt text-white text-sm sm:text-base"></i>
+          <!-- Logo del tenant o icono por defecto -->
+          <div class="flex-shrink-0">
+            <div *ngIf="tenantInfo?.companyInfo?.logoUrl" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden border border-gray-200">
+              <img [src]="tenantInfo?.companyInfo?.logoUrl" [alt]="tenantInfo?.companyInfo?.name" class="w-full h-full object-cover">
+            </div>
+            <div *ngIf="!tenantInfo?.companyInfo?.logoUrl" 
+                 class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center"
+                 [style.background]="'linear-gradient(135deg, ' + (tenantInfo?.companyInfo?.primaryColor || '#3b82f6') + ', ' + (tenantInfo?.companyInfo?.primaryColor || '#3b82f6') + '99)'">
+              <i class="fas fa-shield-alt text-white text-lg sm:text-xl"></i>
+            </div>
           </div>
+          
           <div class="ml-3 sm:ml-4">
-            <h1 class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Consulta Preventiva</h1>
-            <p class="text-xs sm:text-sm text-gray-500 hidden sm:block">Historial de medicina preventiva</p>
+            <h1 class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
+              {{ tenantInfo?.companyInfo?.name || 'Clínica Veterinaria' }}
+            </h1>
+            <p class="text-xs sm:text-sm text-gray-500">Consulta de Medicina Preventiva</p>
           </div>
         </div>
-        <div class="flex items-center space-x-2 sm:space-x-3">
-          <div class="text-xs sm:text-sm text-gray-500 hidden sm:block">
-            <i class="fas fa-stethoscope mr-1"></i>
+        
+        <div class="flex items-center space-x-2 sm:space-x-4">
+          <div class="text-xs sm:text-sm text-gray-500 hidden md:block">
+            <i class="fas fa-shield-alt mr-1" [style.color]="tenantInfo?.companyInfo?.primaryColor || '#3b82f6'"></i>
             Consulta pública
           </div>
         </div>
@@ -23,41 +35,107 @@
   </div>
 
   <!-- Contenido principal -->
-  <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6">
-    <!-- Formulario de búsqueda -->
-    <div class="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 mb-4 sm:mb-6 hover:shadow-md transition-all duration-200">
-      <div class="text-center mb-4 sm:mb-6">
-        <div class="flex items-center justify-center mb-3">
-          <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mr-3">
-            <i class="fas fa-search text-white text-lg"></i>
+  <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8">
+    
+    <!-- Error del tenant -->
+    <div *ngIf="tenantErrorMessage" class="mb-6 bg-red-50 border border-red-200 rounded-2xl p-4 sm:p-6">
+      <div class="flex items-center">
+        <i class="fas fa-exclamation-triangle text-red-500 mr-3 text-lg"></i>
+        <div>
+          <h3 class="text-sm font-semibold text-red-800">Error</h3>
+          <p class="text-xs sm:text-sm text-red-700">{{ tenantErrorMessage }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading del tenant -->
+    <div *ngIf="isLoadingTenant" class="mb-6 bg-blue-50 border border-blue-200 rounded-2xl p-4 sm:p-6">
+      <div class="flex items-center">
+        <div class="animate-spin rounded-full h-5 w-5 border-b-2 mr-3" [style.border-color]="tenantInfo?.companyInfo?.primaryColor || '#3b82f6'"></div>
+        <p class="text-sm text-blue-700">Cargando información de la clínica...</p>
+      </div>
+    </div>
+
+    <!-- Información de la clínica -->
+    <div *ngIf="tenantInfo && !isLoadingTenant" class="mb-6 bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 shadow-sm">
+      <div class="text-center">
+        <div class="flex items-center justify-center mb-4">
+          <div *ngIf="tenantInfo?.companyInfo?.logoUrl" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 mr-4"
+               [style.border-color]="tenantInfo?.companyInfo?.primaryColor">
+            <img [src]="tenantInfo?.companyInfo?.logoUrl" [alt]="tenantInfo?.companyInfo?.name" class="w-full h-full object-cover">
           </div>
-          <div>
-            <h2 class="text-lg sm:text-xl font-semibold text-gray-900">Buscar Animal</h2>
-            <p class="text-xs sm:text-sm text-gray-500">Ingresa el ID proporcionado por tu veterinario</p>
+          <div *ngIf="!tenantInfo?.companyInfo?.logoUrl" 
+               class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center mr-4 border-2"
+               [style.background]="'linear-gradient(135deg, ' + (tenantInfo?.companyInfo?.primaryColor || '#3b82f6') + ', ' + (tenantInfo?.companyInfo?.primaryColor || '#3b82f6') + '99)'"
+               [style.border-color]="tenantInfo?.companyInfo?.primaryColor || '#3b82f6'">
+            <i class="fas fa-clinic-medical text-white text-2xl sm:text-3xl"></i>
+          </div>
+          <div class="text-left">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">{{ tenantInfo?.companyInfo?.name }}</h2>
+            <div class="space-y-1 text-xs sm:text-sm text-gray-600">
+              <div *ngIf="tenantInfo?.companyInfo?.address" class="flex items-center">
+                <i class="fas fa-map-marker-alt mr-2 w-4" [style.color]="tenantInfo?.companyInfo?.primaryColor"></i>
+                <span>{{ tenantInfo?.companyInfo?.address }}</span>
+              </div>
+              <div *ngIf="tenantInfo?.companyInfo?.phone" class="flex items-center">
+                <i class="fas fa-phone mr-2 w-4" [style.color]="tenantInfo?.companyInfo?.primaryColor"></i>
+                <span>{{ tenantInfo?.companyInfo?.phone }}</span>
+              </div>
+              <div *ngIf="tenantInfo?.companyInfo?.email" class="flex items-center">
+                <i class="fas fa-envelope mr-2 w-4" [style.color]="tenantInfo?.companyInfo?.primaryColor"></i>
+                <span>{{ tenantInfo?.companyInfo?.email }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      
-      <div class="max-w-md mx-auto">
-        <div class="flex space-x-3">
-          <div class="flex-1">
-            <input
-              type="text"
-              [(ngModel)]="searchPatientId"
-              (keypress)="onKeyPress($event)"
-              placeholder="Ej: EQ-001, DOG-123, etc."
-              class="w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center text-sm sm:text-base font-medium transition-all duration-200"
-              [disabled]="isLoading"
-            />
+    </div>
+
+    <!-- Formulario de búsqueda mejorado -->
+    <div class="bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 mb-6 shadow-lg hover:shadow-xl transition-all duration-300">
+      <div class="text-center mb-6 sm:mb-8">
+        <div class="flex flex-col items-center mb-4">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center mb-4 shadow-lg"
+               [style.background]="'linear-gradient(135deg, ' + (tenantInfo?.companyInfo?.primaryColor || '#3b82f6') + ', ' + (tenantInfo?.companyInfo?.primaryColor || '#8b5cf6') + ')'">
+            <i class="fas fa-search text-white text-2xl sm:text-3xl"></i>
           </div>
-          <button
-            (click)="onSearch()"
-            [disabled]="isLoading"
-            class="px-4 sm:px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
-          >
-            <i class="fas fa-search text-sm" *ngIf="!isLoading"></i>
-            <i class="fas fa-spinner fa-spin text-sm" *ngIf="isLoading"></i>
-          </button>
+          <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Consulta tu Mascota</h2>
+          <p class="text-sm sm:text-base text-gray-600 max-w-md">
+            Ingresa el <strong>ID de tu mascota</strong> que te proporcionó el veterinario para consultar su historial de medicina preventiva
+          </p>
+        </div>
+      </div>
+      
+      <div class="max-w-lg mx-auto">
+        <div class="relative">
+          <div class="flex space-x-3">
+            <div class="flex-1 relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <i class="fas fa-paw text-gray-400"></i>
+              </div>
+              <input
+                type="text"
+                [(ngModel)]="searchPatientId"
+                (keypress)="onKeyPress($event)"
+                placeholder="Ej: EQ-001, DOG-123, CAT-456..."
+                class="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl shadow-sm focus:outline-none focus:ring-4 focus:border-transparent text-center text-base font-medium transition-all duration-200 hover:border-gray-300"
+                [style.focus:ring-color]="(tenantInfo?.companyInfo?.primaryColor || '#3b82f6') + '40'"
+                [style.focus:border-color]="tenantInfo?.companyInfo?.primaryColor || '#3b82f6'"
+                [disabled]="isLoading"
+              />
+            </div>
+            <button
+              (click)="onSearch()"
+              [disabled]="isLoading || !searchPatientId.trim()"
+              class="px-6 sm:px-8 py-4 text-white rounded-2xl font-semibold focus:outline-none focus:ring-4 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 shadow-lg"
+              [style.background]="'linear-gradient(135deg, ' + (tenantInfo?.companyInfo?.primaryColor || '#3b82f6') + ', ' + (tenantInfo?.companyInfo?.primaryColor || '#8b5cf6') + ')'"
+              [style.focus:ring-color]="(tenantInfo?.companyInfo?.primaryColor || '#3b82f6') + '40'"
+            >
+              <i class="fas fa-search text-lg" *ngIf="!isLoading"></i>
+              <i class="fas fa-spinner fa-spin text-lg" *ngIf="isLoading"></i>
+              <span class="ml-2 hidden sm:inline">Buscar</span>
+            </button>
+          </div>
         </div>
         
         <!-- Error message -->
@@ -65,6 +143,46 @@
           <div class="flex items-center">
             <i class="fas fa-exclamation-circle text-red-500 mr-2 text-sm"></i>
             <span class="text-xs sm:text-sm text-red-700">{{ errorMessage }}</span>
+          </div>
+        </div>
+        
+        <!-- Información adicional (solo se muestra cuando no se ha encontrado el animal) -->
+        <div *ngIf="!patientData" class="mt-8 text-center">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto">
+            <div class="bg-blue-50 rounded-2xl p-4 border border-blue-100">
+              <div class="flex flex-col items-center">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center mb-3"
+                     [style.background]="(tenantInfo?.companyInfo?.primaryColor || '#3b82f6') + '20'">
+                  <i class="fas fa-shield-alt text-lg" [style.color]="tenantInfo?.companyInfo?.primaryColor || '#3b82f6'"></i>
+                </div>
+                <h3 class="font-semibold text-gray-900 mb-1">Medicina Preventiva</h3>
+                <p class="text-xs text-gray-600 text-center">Consulta vacunas, desparasitaciones y tratamientos preventivos</p>
+              </div>
+            </div>
+            
+            <div class="bg-pink-50 rounded-2xl p-4 border border-pink-100">
+              <div class="flex flex-col items-center">
+                <div class="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center mb-3">
+                  <i class="fas fa-baby text-pink-600 text-lg"></i>
+                </div>
+                <h3 class="font-semibold text-gray-900 mb-1">Información de Gestación</h3>
+                <p class="text-xs text-gray-600 text-center">Seguimiento del embarazo y fechas importantes</p>
+              </div>
+            </div>
+            
+            <div class="bg-green-50 rounded-2xl p-4 border border-green-100">
+              <div class="flex flex-col items-center">
+                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-3">
+                  <i class="fas fa-calendar-check text-green-600 text-lg"></i>
+                </div>
+                <h3 class="font-semibold text-gray-900 mb-1">Historial Completo</h3>
+                <p class="text-xs text-gray-600 text-center">Acceso 24/7 al historial médico de tu mascota</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-6 text-xs text-gray-500">
+            <p>¿No tienes el ID de tu mascota? Contacta a tu veterinario</p>
           </div>
         </div>
       </div>
@@ -117,31 +235,31 @@
             <!-- Basic info -->
             <div class="flex-1 text-center md:text-left">
               <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-3">{{ patientData.basicInfo.name }}</h3>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
-                <div class="flex items-center justify-center md:justify-start p-2 bg-gray-50 rounded-xl">
-                  <i class="fas fa-hashtag text-blue-500 mr-2"></i>
-                  <span class="font-medium text-gray-600">ID:</span>
-                  <span class="ml-1 font-semibold text-gray-900">{{ patientData.basicInfo.patientId }}</span>
+              <div class="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 text-xs sm:text-sm">
+                <div class="flex flex-col items-center p-2 sm:p-3 bg-blue-50 rounded-xl border border-blue-100">
+                  <i class="fas fa-hashtag text-blue-500 text-lg mb-1"></i>
+                  <span class="font-medium text-blue-600 text-xs">ID</span>
+                  <span class="font-bold text-gray-900 text-sm truncate w-full text-center">{{ patientData.basicInfo.patientId }}</span>
                 </div>
-                <div class="flex items-center justify-center md:justify-start p-2 bg-gray-50 rounded-xl">
-                  <i class="fas fa-birthday-cake text-purple-500 mr-2"></i>
-                  <span class="font-medium text-gray-600">Edad:</span>
-                  <span class="ml-1 font-semibold text-gray-900">{{ calculateAge() }}</span>
+                <div class="flex flex-col items-center p-2 sm:p-3 bg-purple-50 rounded-xl border border-purple-100">
+                  <i class="fas fa-birthday-cake text-purple-500 text-lg mb-1"></i>
+                  <span class="font-medium text-purple-600 text-xs">Edad</span>
+                  <span class="font-bold text-gray-900 text-sm text-center">{{ calculateAge() }}</span>
                 </div>
-                <div class="flex items-center justify-center md:justify-start p-2 bg-gray-50 rounded-xl">
-                  <i class="fas fa-venus-mars text-pink-500 mr-2"></i>
-                  <span class="font-medium text-gray-600">Sexo:</span>
-                  <span class="ml-1 font-semibold text-gray-900 capitalize">{{ patientData.basicInfo.sex }}</span>
+                <div class="flex flex-col items-center p-2 sm:p-3 bg-pink-50 rounded-xl border border-pink-100">
+                  <i class="fas fa-venus-mars text-pink-500 text-lg mb-1"></i>
+                  <span class="font-medium text-pink-600 text-xs">Sexo</span>
+                  <span class="font-bold text-gray-900 text-sm capitalize text-center">{{ patientData.basicInfo.sex }}</span>
                 </div>
-                <div class="flex items-center justify-center md:justify-start p-2 bg-gray-50 rounded-xl">
-                  <i class="fas fa-palette text-orange-500 mr-2"></i>
-                  <span class="font-medium text-gray-600">Color:</span>
-                  <span class="ml-1 font-semibold text-gray-900">{{ patientData.basicInfo.color }}</span>
+                <div class="flex flex-col items-center p-2 sm:p-3 bg-orange-50 rounded-xl border border-orange-100">
+                  <i class="fas fa-palette text-orange-500 text-lg mb-1"></i>
+                  <span class="font-medium text-orange-600 text-xs">Color</span>
+                  <span class="font-bold text-gray-900 text-sm truncate w-full text-center">{{ patientData.basicInfo.color }}</span>
                 </div>
-                <div class="flex items-center justify-center md:justify-start p-2 bg-gray-50 rounded-xl sm:col-span-2">
-                  <i class="fas fa-dna text-green-500 mr-2"></i>
-                  <span class="font-medium text-gray-600">Raza:</span>
-                  <span class="ml-1 font-semibold text-gray-900">{{ patientData.basicInfo.breed }}</span>
+                <div class="flex flex-col items-center p-2 sm:p-3 bg-green-50 rounded-xl border border-green-100 col-span-2 lg:col-span-1">
+                  <i class="fas fa-dna text-green-500 text-lg mb-1"></i>
+                  <span class="font-medium text-green-600 text-xs">Raza</span>
+                  <span class="font-bold text-gray-900 text-sm truncate w-full text-center">{{ patientData.basicInfo.breed }}</span>
                 </div>
               </div>
             </div>
@@ -160,27 +278,27 @@
         </div>
         
         <div class="p-4 sm:p-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="bg-pink-50 rounded-2xl p-4 border border-pink-100">
-              <div class="flex items-center mb-3">
-                <i class="fas fa-percentage text-pink-500 mr-2 text-lg"></i>
-                <span class="text-sm font-semibold text-gray-900">Porcentaje de gestación</span>
+              <div class="flex flex-col items-center text-center mb-3">
+                <i class="fas fa-percentage text-pink-500 text-2xl mb-2"></i>
+                <span class="text-xs sm:text-sm font-semibold text-gray-900">Porcentaje de gestación</span>
               </div>
-              <div class="text-2xl sm:text-3xl font-bold text-pink-600 mb-2">{{ patientData.pregnancy.pregnancyPercentage }}%</div>
-              <div class="w-full bg-pink-200 rounded-full h-2">
+              <div class="text-2xl sm:text-3xl font-bold text-pink-600 mb-3 text-center">{{ patientData.pregnancy.pregnancyPercentage }}%</div>
+              <div class="w-full bg-pink-200 rounded-full h-3">
                 <div 
-                  class="bg-gradient-to-r from-pink-500 to-rose-500 h-2 rounded-full transition-all duration-300"
+                  class="bg-gradient-to-r from-pink-500 to-rose-500 h-3 rounded-full transition-all duration-300"
                   [style.width.%]="patientData.pregnancy.pregnancyPercentage"
                 ></div>
               </div>
             </div>
             
             <div class="bg-purple-50 rounded-2xl p-4 border border-purple-100">
-              <div class="flex items-center mb-3">
-                <i class="fas fa-calendar-alt text-purple-500 mr-2 text-lg"></i>
-                <span class="text-sm font-semibold text-gray-900">Fecha estimada de parto</span>
+              <div class="flex flex-col items-center text-center mb-3">
+                <i class="fas fa-calendar-alt text-purple-500 text-2xl mb-2"></i>
+                <span class="text-xs sm:text-sm font-semibold text-gray-900">Fecha estimada de parto</span>
               </div>
-              <div class="text-lg font-semibold text-purple-600">
+              <div class="text-base sm:text-lg font-semibold text-purple-600 text-center">
                 {{ formatDate(patientData.pregnancy.estimatedReliefDate) }}
               </div>
             </div>
@@ -241,29 +359,23 @@
                     </span>
                   </div>
                   
-                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs sm:text-sm">
-                    <div class="flex items-center p-3 bg-green-50 rounded-xl border border-green-100">
-                      <i class="fas fa-calendar text-green-500 mr-2"></i>
-                      <div>
-                        <span class="font-medium text-green-600">Aplicado</span>
-                        <p class="font-semibold text-gray-900">{{ formatDate(medicine.data.date) }}</p>
-                      </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 text-xs sm:text-sm">
+                    <div class="flex flex-col items-center text-center p-3 bg-green-50 rounded-xl border border-green-100">
+                      <i class="fas fa-calendar text-green-500 text-lg mb-2"></i>
+                      <span class="font-medium text-green-600 text-xs">Aplicado</span>
+                      <p class="font-semibold text-gray-900 text-sm">{{ formatDate(medicine.data.date) }}</p>
                     </div>
                     
-                    <div class="flex items-center p-3 bg-orange-50 rounded-xl border border-orange-100">
-                      <i class="fas fa-clock text-orange-500 mr-2"></i>
-                      <div>
-                        <span class="font-medium text-orange-600">Próxima dosis</span>
-                        <p class="font-semibold text-gray-900">{{ formatDate(medicine.data.nextDose) }}</p>
-                      </div>
+                    <div class="flex flex-col items-center text-center p-3 bg-orange-50 rounded-xl border border-orange-100">
+                      <i class="fas fa-clock text-orange-500 text-lg mb-2"></i>
+                      <span class="font-medium text-orange-600 text-xs">Próxima dosis</span>
+                      <p class="font-semibold text-gray-900 text-sm">{{ formatDate(medicine.data.nextDose) }}</p>
                     </div>
                     
-                    <div *ngIf="medicine.data.lot" class="flex items-center p-3 bg-purple-50 rounded-xl border border-purple-100">
-                      <i class="fas fa-barcode text-purple-500 mr-2"></i>
-                      <div>
-                        <span class="font-medium text-purple-600">Lote</span>
-                        <p class="font-semibold text-gray-900">{{ medicine.data.lot }}</p>
-                      </div>
+                    <div *ngIf="medicine.data.lot" class="flex flex-col items-center text-center p-3 bg-purple-50 rounded-xl border border-purple-100 sm:col-span-2 xl:col-span-1">
+                      <i class="fas fa-barcode text-purple-500 text-lg mb-2"></i>
+                      <span class="font-medium text-purple-600 text-xs">Lote</span>
+                      <p class="font-semibold text-gray-900 text-sm">{{ medicine.data.lot }}</p>
                     </div>
                   </div>
                   
@@ -278,10 +390,10 @@
                   </div>
                 </div>
                 
-                <div *ngIf="medicine.data.image" class="mt-4 lg:mt-0 lg:ml-6 flex-shrink-0">
+                <div *ngIf="medicine.data.imageUrl" class="mt-4 lg:mt-0 lg:ml-6 flex-shrink-0">
                   <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border border-gray-200">
                     <img 
-                      [src]="medicine.data.image" 
+                      [src]="medicine.data.imageUrl" 
                       [alt]="medicine.data.type"
                       class="w-full h-full object-cover"
                     />

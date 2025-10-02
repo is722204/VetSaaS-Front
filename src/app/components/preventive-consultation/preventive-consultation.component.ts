@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PreventiveConsultationService, PreventiveConsultationData, PreventiveMedicine } from '../../services/preventive-consultation.service';
+import { PreventiveConsultationService, PreventiveConsultationData, PreventiveMedicine, TenantInfo } from '../../services/preventive-consultation.service';
 
 @Component({
   selector: 'app-preventive-consultation',
@@ -12,8 +12,11 @@ export class PreventiveConsultationComponent implements OnInit {
   patientId: string = '';
   searchPatientId: string = '';
   patientData: PreventiveConsultationData | null = null;
+  tenantInfo: TenantInfo | null = null;
   isLoading: boolean = false;
+  isLoadingTenant: boolean = false;
   errorMessage: string = '';
+  tenantErrorMessage: string = '';
   isSearched: boolean = false;
 
   constructor(
@@ -25,7 +28,29 @@ export class PreventiveConsultationComponent implements OnInit {
     // Obtener el tenantId de la ruta
     this.route.params.subscribe(params => {
       this.tenantId = params['tenantId'];
+      this.loadTenantInfo();
     });
+  }
+
+  loadTenantInfo(): void {
+    this.isLoadingTenant = true;
+    this.tenantErrorMessage = '';
+
+    this.preventiveService.getTenantInfo(this.tenantId)
+      .subscribe({
+        next: (data) => {
+          this.tenantInfo = data;
+          this.isLoadingTenant = false;
+        },
+        error: (error) => {
+          this.isLoadingTenant = false;
+          if (error.status === 404) {
+            this.tenantErrorMessage = 'Clínica no encontrada';
+          } else {
+            this.tenantErrorMessage = 'Error al cargar información de la clínica';
+          }
+        }
+      });
   }
 
   onSearch(): void {
