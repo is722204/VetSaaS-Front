@@ -60,30 +60,30 @@
     <div *ngIf="tenantInfo && !isLoadingTenant" class="mb-6 bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 shadow-sm">
       <div class="text-center">
         <div class="flex items-center justify-center mb-4">
-          <div *ngIf="tenantInfo?.companyInfo?.logoUrl" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 mr-4"
-               [style.border-color]="tenantInfo?.companyInfo?.primaryColor">
-            <img [src]="tenantInfo?.companyInfo?.logoUrl" [alt]="tenantInfo?.companyInfo?.name" class="w-full h-full object-cover">
+          <div *ngIf="tenantInfo.companyInfo.logoUrl" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 mr-4"
+               [style.border-color]="tenantInfo.companyInfo.primaryColor">
+            <img [src]="tenantInfo.companyInfo.logoUrl" [alt]="tenantInfo.companyInfo.name" class="w-full h-full object-cover">
           </div>
-          <div *ngIf="!tenantInfo?.companyInfo?.logoUrl" 
+          <div *ngIf="!tenantInfo.companyInfo.logoUrl" 
                class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center mr-4 border-2"
-               [style.background]="'linear-gradient(135deg, ' + (tenantInfo?.companyInfo?.primaryColor || '#3b82f6') + ', ' + (tenantInfo?.companyInfo?.primaryColor || '#3b82f6') + '99)'"
-               [style.border-color]="tenantInfo?.companyInfo?.primaryColor || '#3b82f6'">
+               [style.background]="'linear-gradient(135deg, ' + (tenantInfo.companyInfo.primaryColor || '#3b82f6') + ', ' + (tenantInfo.companyInfo.primaryColor || '#3b82f6') + '99)'"
+               [style.border-color]="tenantInfo.companyInfo.primaryColor || '#3b82f6'">
             <i class="fas fa-clinic-medical text-white text-2xl sm:text-3xl"></i>
           </div>
           <div class="text-left">
-            <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">{{ tenantInfo?.companyInfo?.name }}</h2>
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1">{{ tenantInfo.companyInfo.name }}</h2>
             <div class="space-y-1 text-xs sm:text-sm text-gray-600">
-              <div *ngIf="tenantInfo?.companyInfo?.address" class="flex items-center">
-                <i class="fas fa-map-marker-alt mr-2 w-4" [style.color]="tenantInfo?.companyInfo?.primaryColor"></i>
-                <span>{{ tenantInfo?.companyInfo?.address }}</span>
+              <div *ngIf="tenantInfo.companyInfo.address" class="flex items-center">
+                <i class="fas fa-map-marker-alt mr-2 w-4" [style.color]="tenantInfo.companyInfo.primaryColor"></i>
+                <span>{{ tenantInfo.companyInfo.address }}</span>
               </div>
-              <div *ngIf="tenantInfo?.companyInfo?.phone" class="flex items-center">
-                <i class="fas fa-phone mr-2 w-4" [style.color]="tenantInfo?.companyInfo?.primaryColor"></i>
-                <span>{{ tenantInfo?.companyInfo?.phone }}</span>
+              <div *ngIf="tenantInfo.companyInfo.phone" class="flex items-center">
+                <i class="fas fa-phone mr-2 w-4" [style.color]="tenantInfo.companyInfo.primaryColor"></i>
+                <span>{{ tenantInfo.companyInfo.phone }}</span>
               </div>
-              <div *ngIf="tenantInfo?.companyInfo?.email" class="flex items-center">
-                <i class="fas fa-envelope mr-2 w-4" [style.color]="tenantInfo?.companyInfo?.primaryColor"></i>
-                <span>{{ tenantInfo?.companyInfo?.email }}</span>
+              <div *ngIf="tenantInfo.companyInfo.email" class="flex items-center">
+                <i class="fas fa-envelope mr-2 w-4" [style.color]="tenantInfo.companyInfo.primaryColor"></i>
+                <span>{{ tenantInfo.companyInfo.email }}</span>
               </div>
             </div>
           </div>
