@@ -36,14 +36,6 @@
           <i class="fas fa-horse mr-4" [class]="isActiveRoute('/patients') ? 'text-gray-500' : 'text-gray-400'"></i>
           Pacientes
         </a>
-        <a
-          href="#"
-          (click)="navigateTo('/billing'); $event.preventDefault(); toggleSidebar()"
-          [class]="isActiveRoute('/billing') ? 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-900 bg-gray-100' : 'group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50'"
-        >
-          <i class="fas fa-cash-register mr-4" [class]="isActiveRoute('/billing') ? 'text-gray-500' : 'text-gray-400'"></i>
-          Cuentas
-        </a>
         </nav>
       </div>
       <div class="flex-shrink-0 flex border-t border-gray-200 p-4">
@@ -97,14 +89,6 @@
         >
           <i class="fas fa-horse mr-3" [class]="isActiveRoute('/patients') ? 'text-gray-500' : 'text-gray-400'"></i>
           Pacientes
-        </a>
-        <a
-          href="#"
-          (click)="navigateTo('/billing'); $event.preventDefault()"
-          [class]="isActiveRoute('/billing') ? 'group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-900 bg-gray-100' : 'group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50'"
-        >
-          <i class="fas fa-cash-register mr-3" [class]="isActiveRoute('/billing') ? 'text-gray-500' : 'text-gray-400'"></i>
-          Cuentas
         </a>
       </nav>
 

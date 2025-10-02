@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { BillingService } from '../../services/billing.service';
 import { PatientService } from '../../services/patient.service';
 import { AppointmentService } from '../../services/appointment.service';
 import { ApiService } from '../../services/api.service';
@@ -8,9 +7,7 @@ import { parseDate, formatDate, formatDateShort, calculateAge, daysDifference } 
 
 interface DashboardStats {
   totalPatients: number;
-  totalRevenue: number;
   weeklyAppointments: number;
-  monthlyRevenue?: number;
   newPatientsThisMonth?: number;
   completedAppointments?: number;
 }
@@ -49,7 +46,6 @@ interface CalendarDay {
 export class DashboardComponent implements OnInit {
   stats: DashboardStats = {
     totalPatients: 0,
-    totalRevenue: 0,
     weeklyAppointments: 0
   };
 
@@ -63,7 +59,6 @@ export class DashboardComponent implements OnInit {
   errorMessage = '';
 
   constructor(
-    private billingService: BillingService,
     private patientService: PatientService,
     private appointmentService: AppointmentService,
     private apiService: ApiService,
@@ -78,7 +73,7 @@ export class DashboardComponent implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
     let completedRequests = 0;
-    const totalRequests = 5;
+    const totalRequests = 4;
 
     const checkLoadingComplete = () => {
       completedRequests++;
@@ -86,19 +81,6 @@ export class DashboardComponent implements OnInit {
         this.isLoading = false;
       }
     };
-
-    // Cargar estadísticas
-    this.billingService.getDashboardStats().subscribe({
-      next: (stats) => {
-        this.stats = stats;
-        checkLoadingComplete();
-      },
-      error: (error) => {
-        console.error('Error cargando estadísticas:', error);
-        this.errorMessage = 'Error cargando estadísticas del dashboard';
-        checkLoadingComplete();
-      }
-    });
 
     // Cargar información de gestación
     this.loadPregnancyInfo().then(() => {
@@ -127,6 +109,9 @@ export class DashboardComponent implements OnInit {
       // Obtener todos los pacientes y filtrar los que están preñados
       const response = await this.patientService.getPatients().toPromise() as any;
       const patients = Object.values(response || {});
+      
+      // Calcular estadísticas básicas
+      this.stats.totalPatients = patients.length;
       
       this.pregnancyList = patients
         .filter((patient: any) => patient.pregnancy?.isPregnant && patient.pregnancy?.conceptionDate)
@@ -200,6 +185,10 @@ export class DashboardComponent implements OnInit {
       });
       
       this.weeklyAppointments = allAppointments;
+      
+      // Calcular estadísticas de citas
+      this.stats.weeklyAppointments = allAppointments.length;
+      
       this.generateCalendar();
     } catch (error) {
       console.error('Error cargando citas de la semana:', error);
@@ -294,12 +283,6 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('es-ES', {
-      style: 'currency',
-      currency: 'MXN'
-    }).format(amount);
-  }
 
   private async loadRecentPatients(): Promise<void> {
     try {

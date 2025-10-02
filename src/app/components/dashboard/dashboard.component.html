@@ -52,7 +52,7 @@
     <!-- Contenido principal -->
     <div *ngIf="!isLoading" class="space-y-4 sm:space-y-6 lg:space-y-8">
       <!-- Cards de estadísticas minimalistas -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
         <!-- Total de Pacientes -->
         <div class="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 hover:shadow-md transition-all duration-200">
           <div class="flex items-center justify-between">
@@ -66,23 +66,6 @@
             </div>
             <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-50 rounded-xl flex items-center justify-center">
               <i class="fas fa-horse text-blue-500 text-sm sm:text-base"></i>
-            </div>
-          </div>
-        </div>
-
-        <!-- Ingresos Totales -->
-        <div class="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 hover:shadow-md transition-all duration-200">
-          <div class="flex items-center justify-between">
-            <div class="flex-1">
-              <p class="text-xs sm:text-sm font-medium text-gray-500 mb-1">Ingresos</p>
-              <p class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">{{ formatCurrency(stats.totalRevenue) }}</p>
-              <p class="text-xs text-green-600 mt-1">
-                <i class="fas fa-arrow-up mr-1"></i>
-                +8%
-              </p>
-            </div>
-            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-50 rounded-xl flex items-center justify-center">
-              <i class="fas fa-money-bill text-green-500 text-sm sm:text-base"></i>
             </div>
           </div>
         </div>
