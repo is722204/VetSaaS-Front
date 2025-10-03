@@ -19,6 +19,7 @@ export interface LoginResponse {
       primaryColor: string;
       secondaryColor: string;
       logoUrl: string;
+      doctorName?: string;
     };
   };
 }

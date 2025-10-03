@@ -10,6 +10,7 @@ export interface TenantInfo {
     email: string;
     primaryColor: string;
     logoUrl: string;
+    doctorName?: string;
   };
 }
 

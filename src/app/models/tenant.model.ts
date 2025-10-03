@@ -4,6 +4,7 @@ export interface CompanyInfo {
   secondaryColor: string;
   logoUrl: string;
   createdAt: string;
+  doctorName?: string;
 }
 
 export interface User {
