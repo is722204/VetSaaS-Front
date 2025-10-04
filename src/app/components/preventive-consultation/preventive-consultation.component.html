@@ -104,9 +104,9 @@
                [style.background]="'linear-gradient(135deg, ' + (tenantInfo?.companyInfo?.primaryColor || '#3b82f6') + ', ' + (tenantInfo?.companyInfo?.primaryColor || '#8b5cf6') + ')'">
             <i class="fas fa-search text-white text-2xl sm:text-3xl"></i>
           </div>
-          <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Consulta tu Mascota</h2>
+          <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Consulta tu Caballo</h2>
           <p class="text-sm sm:text-base text-gray-600 max-w-md">
-            Ingresa el <strong>ID de tu mascota</strong> que te proporcionó el médico para consultar su historial de medicina preventiva
+            Ingresa el <strong>ID de tu caballo</strong> que te proporcionó el médico para consultar su historial de medicina preventiva
           </p>
         </div>
       </div>
@@ -301,7 +301,7 @@
             <div class="bg-purple-50 rounded-2xl p-4 border border-purple-100">
               <div class="flex flex-col items-center text-center mb-3">
                 <i class="fas fa-calendar-alt text-purple-500 text-2xl mb-2"></i>
-                <span class="text-xs sm:text-sm font-semibold text-gray-900">Fecha estimada de parto</span>
+                <span class="text-xs sm:text-sm font-semibold text-gray-900">Fecha estimada de parto (+-10 días)</span>
               </div>
               <div class="text-base sm:text-lg font-semibold text-purple-600 text-center">
                 {{ formatDate(patientData.pregnancy.estimatedReliefDate) }}
