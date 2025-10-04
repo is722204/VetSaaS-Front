@@ -19,6 +19,12 @@ export class PreventiveConsultationComponent implements OnInit {
   errorMessage: string = '';
   tenantErrorMessage: string = '';
   isSearched: boolean = false;
+  
+  // Modal de imagen
+  showImageModal: boolean = false;
+  selectedImageUrl: string = '';
+  selectedImageType: 'patient' | 'medicine' = 'patient';
+  selectedMedicineData: any = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -206,5 +212,24 @@ export class PreventiveConsultationComponent implements OnInit {
     } else {
       return 'Próximo al parto';
     }
+  }
+
+  // Métodos para el modal de imagen
+  openImageModal(imageUrl: string, type: 'patient' | 'medicine' = 'patient', medicineData?: any): void {
+    this.selectedImageUrl = imageUrl;
+    this.selectedImageType = type;
+    this.selectedMedicineData = medicineData;
+    this.showImageModal = true;
+  }
+
+  closeImageModal(): void {
+    this.showImageModal = false;
+    this.selectedImageUrl = '';
+    this.selectedImageType = 'patient';
+    this.selectedMedicineData = null;
+  }
+
+  onImageError(event: any): void {
+    event.target.src = 'https://via.placeholder.com/300x200?text=Imagen+no+disponible';
   }
 }

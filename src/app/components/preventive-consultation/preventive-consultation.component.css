@@ -286,3 +286,90 @@ input:focus {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);
 }
+
+/* Estilos para el modal de imagen */
+.image-modal {
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.image-modal-content {
+  animation: slideIn 0.3s ease-out;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.image-modal img {
+  transition: transform 0.3s ease;
+}
+
+.image-modal img:hover {
+  transform: scale(1.02);
+}
+
+.image-modal-close {
+  transition: all 0.2s ease;
+}
+
+.image-modal-close:hover {
+  transform: scale(1.1);
+  background-color: #f3f4f6;
+}
+
+/* Animaciones para el modal */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Efectos hover para la imagen clickeable */
+.image-clickable {
+  transition: all 0.2s ease;
+}
+
+.image-clickable:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.image-clickable:active {
+  transform: scale(0.98);
+}
+
+/* Responsive para el modal */
+@media (max-width: 768px) {
+  .image-modal-content {
+    max-width: 95vw;
+    max-height: 85vh;
+    margin: 1rem;
+  }
+  
+  .image-modal-close {
+    top: -0.5rem;
+    right: -0.5rem;
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .image-modal-content {
+    max-width: 98vw;
+    max-height: 80vh;
+    margin: 0.5rem;
+  }
+}

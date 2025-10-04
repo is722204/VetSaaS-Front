@@ -224,16 +224,20 @@
           <div class="flex flex-col md:flex-row md:items-center md:space-x-6">
             <!-- Photo -->
             <div class="flex-shrink-0 mb-4 md:mb-0">
-              <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-gray-100 mx-auto md:mx-0 border border-gray-200">
+              <div 
+                class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-gray-100 mx-auto md:mx-0 border border-gray-200 cursor-pointer image-clickable"
+                (click)="openImageModal(patientData.basicInfo.photoUrl, 'patient')"
+                *ngIf="patientData.basicInfo.photoUrl"
+              >
                 <img 
-                  *ngIf="patientData.basicInfo.photoUrl" 
                   [src]="patientData.basicInfo.photoUrl" 
                   [alt]="patientData.basicInfo.name"
                   class="w-full h-full object-cover"
+                  (error)="onImageError($event)"
                 />
-                <div *ngIf="!patientData.basicInfo.photoUrl" class="w-full h-full flex items-center justify-center">
-                  <i class="fas fa-paw text-gray-400 text-xl sm:text-2xl"></i>
-                </div>
+              </div>
+              <div *ngIf="!patientData.basicInfo.photoUrl" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden bg-gray-100 mx-auto md:mx-0 border border-gray-200 flex items-center justify-center">
+                <i class="fas fa-paw text-gray-400 text-xl sm:text-2xl"></i>
               </div>
             </div>
             
@@ -417,16 +421,74 @@
                 </div>
                 
                 <div *ngIf="medicine.data.imageUrl" class="mt-4 lg:mt-0 lg:ml-6 flex-shrink-0">
-                  <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border border-gray-200">
+                  <div 
+                    class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border border-gray-200 cursor-pointer image-clickable"
+                    (click)="openImageModal(medicine.data.imageUrl, 'medicine', medicine.data)"
+                  >
                     <img 
                       [src]="medicine.data.imageUrl" 
                       [alt]="medicine.data.type"
                       class="w-full h-full object-cover"
+                      (error)="onImageError($event)"
                     />
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de imagen -->
+<div 
+  *ngIf="showImageModal" 
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 image-modal"
+  (click)="closeImageModal()"
+>
+  <div class="relative image-modal-content" (click)="$event.stopPropagation()">
+    <!-- Botón de cerrar -->
+    <button 
+      (click)="closeImageModal()"
+      class="absolute -top-4 -right-4 z-10 bg-white rounded-full p-2 shadow-lg image-modal-close"
+    >
+      <i class="fas fa-times text-gray-600 text-lg"></i>
+    </button>
+    
+    <!-- Imagen -->
+    <div class="bg-white rounded-lg overflow-hidden shadow-2xl">
+      <img 
+        [src]="selectedImageUrl" 
+        [alt]="selectedImageType === 'patient' ? (patientData?.basicInfo?.name || 'Imagen del paciente') : (selectedMedicineData?.type || 'Imagen de medicina preventiva')"
+        class="w-full h-auto max-h-[80vh] object-contain"
+        (error)="onImageError($event)"
+      />
+      
+      <!-- Información de la imagen -->
+      <div class="p-4 bg-gray-50 border-t">
+        <!-- Información del paciente -->
+        <div *ngIf="selectedImageType === 'patient'">
+          <h3 class="text-lg font-semibold text-gray-900 mb-1">
+            {{ patientData?.basicInfo?.name || 'Paciente' }}
+          </h3>
+          <p class="text-sm text-gray-600">
+            {{ patientData?.basicInfo?.breed || 'Raza no especificada' }} • 
+            {{ patientData?.basicInfo?.color || 'Color no especificado' }}
+          </p>
+        </div>
+        
+        <!-- Información de la medicina preventiva -->
+        <div *ngIf="selectedImageType === 'medicine' && selectedMedicineData">
+          <h3 class="text-lg font-semibold text-gray-900 mb-1">
+            {{ selectedMedicineData.type || 'Medicina Preventiva' }}
+          </h3>
+          
+          <div class="flex items-center text-xs text-gray-500">
+            <i class="fas fa-calendar mr-1"></i>
+            <span>{{ formatDate(selectedMedicineData.date) }}</span>
+            
           </div>
         </div>
       </div>
