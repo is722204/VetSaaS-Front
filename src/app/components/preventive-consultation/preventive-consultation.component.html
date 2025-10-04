@@ -289,11 +289,11 @@
                 <i class="fas fa-percentage text-pink-500 text-2xl mb-2"></i>
                 <span class="text-xs sm:text-sm font-semibold text-gray-900">Porcentaje de gestación</span>
               </div>
-              <div class="text-2xl sm:text-3xl font-bold text-pink-600 mb-3 text-center">{{ patientData.pregnancy.pregnancyPercentage }}%</div>
+              <div class="text-2xl sm:text-3xl font-bold text-pink-600 mb-3 text-center">{{ getPregnancyProgress() }}%</div>
               <div class="w-full bg-pink-200 rounded-full h-3">
                 <div 
                   class="bg-gradient-to-r from-pink-500 to-rose-500 h-3 rounded-full transition-all duration-300"
-                  [style.width.%]="patientData.pregnancy.pregnancyPercentage"
+                  [style.width.%]="getPregnancyProgress()"
                 ></div>
               </div>
             </div>
@@ -304,7 +304,28 @@
                 <span class="text-xs sm:text-sm font-semibold text-gray-900">Fecha estimada de parto (+-10 días)</span>
               </div>
               <div class="text-base sm:text-lg font-semibold text-purple-600 text-center">
-                {{ formatDate(patientData.pregnancy.estimatedReliefDate) }}
+                {{ formatDate(getEstimatedReliefDate()) }}
+              </div>
+            </div>
+          </div>
+          
+          <!-- Información adicional de gestación -->
+          <div class="mt-4 p-4 bg-gradient-to-r from-pink-50 to-rose-50 rounded-2xl border border-pink-100">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="text-center">
+                <div class="flex items-center justify-center mb-2">
+                  <i class="fas fa-clock text-pink-500 mr-2"></i>
+                  <span class="text-sm font-semibold text-gray-900">Días de gestación</span>
+                </div>
+                <div class="text-lg font-bold text-pink-600">{{ getPregnancyDays() }} días</div>
+              </div>
+              
+              <div class="text-center">
+                <div class="flex items-center justify-center mb-2">
+                  <i class="fas fa-info-circle text-pink-500 mr-2"></i>
+                  <span class="text-sm font-semibold text-gray-900">Estado</span>
+                </div>
+                <div class="text-sm font-semibold text-pink-600">{{ getPregnancyStatusText() }}</div>
               </div>
             </div>
           </div>

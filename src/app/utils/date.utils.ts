@@ -88,9 +88,15 @@ export function calculateAge(birthDate: string): string {
  * @returns Número de días de diferencia
  */
 export function daysDifference(startDate: string, endDate?: string): number {
+  if (!startDate) {
+    return 0;
+  }
+
   const start = parseDate(startDate);
   const end = endDate ? parseDate(endDate) : new Date();
   
   const timeDiff = end.getTime() - start.getTime();
-  return Math.floor(timeDiff / (1000 * 3600 * 24));
+  const days = Math.floor(timeDiff / (1000 * 3600 * 24));
+  
+  return days;
 }

@@ -209,17 +209,38 @@ export class PatientDetailComponent implements OnInit {
 
   // Métodos para calcular el progreso de gestación dinámicamente
   getPregnancyProgress(): number {
-    if (!this.patient?.pregnancy?.isPregnant || !this.patient.pregnancy.conceptionDate) {
+    // Verificar que el paciente existe y está preñado
+    if (!this.patient?.pregnancy?.isPregnant) {
       return 0;
     }
 
-    const pregnancyDays = daysDifference(this.patient.pregnancy.conceptionDate);
+    // Verificar que hay fecha de concepción
+    const conceptionDate = this.patient.pregnancy.conceptionDate;
+    if (!conceptionDate) {
+      return 0;
+    }
+
+    // Calcular días de gestación
+    const pregnancyDays = daysDifference(conceptionDate);
+    
+    // Si los días son negativos (fecha futura), retornar 0
+    if (pregnancyDays < 0) {
+      return 0;
+    }
+    
+    // Si no hay días de gestación, retornar 0
+    if (pregnancyDays === 0) {
+      return 0;
+    }
     
     // Calcular porcentaje (gestación de caballos: ~340 días)
     const totalPregnancyDays = 340;
     const percentage = (pregnancyDays / totalPregnancyDays) * 100;
     
-    return Math.min(Math.max(Math.round(percentage), 0), 100);
+    // Asegurar que el porcentaje esté entre 0 y 100
+    const finalPercentage = Math.min(Math.max(Math.round(percentage), 0), 100);
+    
+    return finalPercentage;
   }
 
   getPregnancyDays(): number {

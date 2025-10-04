@@ -29,6 +29,10 @@ const routes: Routes = [
     component: PreventiveConsultationComponent
   },
   {
+    path: 'preventiva/:tenantId/:id_animal',
+    component: PreventiveConsultationComponent
+  },
+  {
     path: 'app',
     component: LayoutComponent,
     canActivate: [AuthGuard],

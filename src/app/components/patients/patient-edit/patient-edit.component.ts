@@ -172,26 +172,38 @@ export class PatientEditComponent implements OnInit {
         });
       } else {
         // Sin nueva imagen, usar JSON normal
-        const patientData: Partial<Patient> = {
-          basicInfo: {
-            ...formValue.basicInfo,
-            photoUrl: this.currentImageUrl, // Mantener la imagen actual si no hay nueva
-            createdAt: this.patientForm.get('basicInfo.createdAt')?.value || new Date().toISOString()
-          },
-          medicalHistory: this.patientForm.get('medicalHistory')?.value || {},
-          preventiveMedicine: this.patientForm.get('preventiveMedicine')?.value || {},
-          pregnancy: formValue.pregnancy
-        };
+        // Primero necesitamos obtener el paciente actual para preservar datos existentes
+        this.patientService.getPatient(this.patientId).subscribe({
+          next: (currentPatient) => {
+            const patientData: Partial<Patient> = {
+              basicInfo: {
+                ...formValue.basicInfo,
+                photoUrl: this.currentImageUrl, // Mantener la imagen actual si no hay nueva
+                createdAt: currentPatient.basicInfo.createdAt // Preservar fecha de creación original
+              },
+              // Preservar datos existentes que no se están editando
+              medicalHistory: currentPatient.medicalHistory || {},
+              preventiveMedicine: currentPatient.preventiveMedicine || {},
+              appointments: currentPatient.appointments || {},
+              pregnancy: formValue.pregnancy
+            };
 
-        this.patientService.updatePatient(this.patientId, patientData).subscribe({
-          next: (response) => {
-            this.isSubmitting = false;
-            this.router.navigate(['/app/patients', this.patientId]);
+            this.patientService.updatePatient(this.patientId, patientData).subscribe({
+              next: (response) => {
+                this.isSubmitting = false;
+                this.router.navigate(['/app/patients', this.patientId]);
+              },
+              error: (error) => {
+                this.isSubmitting = false;
+                this.errorMessage = 'Error al actualizar el paciente. Por favor, inténtalo de nuevo.';
+                console.error('Error actualizando paciente:', error);
+              }
+            });
           },
           error: (error) => {
             this.isSubmitting = false;
-            this.errorMessage = 'Error al actualizar el paciente. Por favor, inténtalo de nuevo.';
-            console.error('Error actualizando paciente:', error);
+            this.errorMessage = 'Error al cargar datos del paciente. Por favor, inténtalo de nuevo.';
+            console.error('Error cargando paciente actual:', error);
           }
         });
       }

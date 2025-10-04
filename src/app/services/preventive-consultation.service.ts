@@ -27,6 +27,7 @@ export interface PreventiveConsultationData {
   preventiveMedicine: { [medicineId: string]: PreventiveMedicine };
   pregnancy: {
     isPregnant: boolean;
+    conceptionDate?: string;
     pregnancyPercentage: number;
     estimatedReliefDate: string;
     ultrasoundDate: string;

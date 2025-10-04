@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PreventiveConsultationService, PreventiveConsultationData, PreventiveMedicine, TenantInfo } from '../../services/preventive-consultation.service';
-import { parseDate, formatDate, calculateAge } from '../../utils/date.utils';
+import { parseDate, formatDate, calculateAge, daysDifference } from '../../utils/date.utils';
 
 @Component({
   selector: 'app-preventive-consultation',
@@ -26,9 +26,11 @@ export class PreventiveConsultationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Obtener el tenantId de la ruta
+    // Obtener el tenantId y id_animal de la ruta
     this.route.params.subscribe(params => {
       this.tenantId = params['tenantId'];
+      this.patientId = params['id_animal'] || '';
+      
       this.loadTenantInfo();
     });
   }
@@ -42,6 +44,12 @@ export class PreventiveConsultationComponent implements OnInit {
         next: (data) => {
           this.tenantInfo = data;
           this.isLoadingTenant = false;
+          
+          // Si hay id_animal en la ruta, hacer la búsqueda automática después de cargar el tenant
+          if (this.patientId) {
+            this.searchPatientId = this.patientId;
+            this.onSearch();
+          }
         },
         error: (error) => {
           this.isLoadingTenant = false;
@@ -110,5 +118,93 @@ export class PreventiveConsultationComponent implements OnInit {
     this.patientData = null;
     this.errorMessage = '';
     this.isSearched = false;
+  }
+
+  // Métodos para calcular el progreso de gestación dinámicamente
+  getPregnancyProgress(): number {
+    // Verificar que el paciente existe y está preñado
+    if (!this.patientData?.pregnancy?.isPregnant) {
+      return 0;
+    }
+
+    // Verificar que hay fecha de concepción
+    const conceptionDate = this.patientData.pregnancy.conceptionDate;
+    if (!conceptionDate) {
+      return 0;
+    }
+
+    // Calcular días de gestación
+    const pregnancyDays = daysDifference(conceptionDate);
+    
+    // Si los días son negativos (fecha futura), retornar 0
+    if (pregnancyDays < 0) {
+      return 0;
+    }
+    
+    // Si no hay días de gestación, retornar 0
+    if (pregnancyDays === 0) {
+      return 0;
+    }
+    
+    // Calcular porcentaje (gestación de caballos: ~340 días)
+    const totalPregnancyDays = 340;
+    const percentage = (pregnancyDays / totalPregnancyDays) * 100;
+    
+    // Asegurar que el porcentaje esté entre 0 y 100
+    const finalPercentage = Math.min(Math.max(Math.round(percentage), 0), 100);
+    
+    return finalPercentage;
+  }
+
+  getPregnancyDays(): number {
+    if (!this.patientData?.pregnancy?.isPregnant || !this.patientData.pregnancy.conceptionDate) {
+      return 0;
+    }
+
+    return daysDifference(this.patientData.pregnancy.conceptionDate);
+  }
+
+  getEstimatedReliefDate(): string {
+    if (!this.patientData?.pregnancy?.isPregnant || !this.patientData.pregnancy.conceptionDate) {
+      return '';
+    }
+
+    const conception = parseDate(this.patientData.pregnancy.conceptionDate);
+    const estimatedRelief = new Date(conception);
+    estimatedRelief.setDate(estimatedRelief.getDate() + 330); // 11 meses = ~330 días
+    
+    return estimatedRelief.toISOString().split('T')[0];
+  }
+
+  getDaysUntilRelief(): number {
+    if (!this.patientData?.pregnancy?.isPregnant || !this.patientData.pregnancy.conceptionDate) {
+      return 0;
+    }
+
+    const conception = parseDate(this.patientData.pregnancy.conceptionDate);
+    const estimatedRelief = new Date(conception);
+    estimatedRelief.setDate(estimatedRelief.getDate() + 330);
+    
+    const today = new Date();
+    const timeDiff = estimatedRelief.getTime() - today.getTime();
+    return Math.ceil(timeDiff / (1000 * 3600 * 24));
+  }
+
+  getPregnancyStatusText(): string {
+    const progress = this.getPregnancyProgress();
+    
+    if (progress === 0) {
+      return 'Inicio de gestación';
+    } else if (progress < 25) {
+      return 'Primer trimestre';
+    } else if (progress < 50) {
+      return 'Segundo trimestre';
+    } else if (progress < 75) {
+      return 'Tercer trimestre';
+    } else if (progress < 90) {
+      return 'Final de gestación';
+    } else {
+      return 'Próximo al parto';
+    }
   }
 }
