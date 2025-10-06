@@ -63,6 +63,14 @@
   <div>
     <label class="block text-sm font-medium text-gray-700 mb-1">Imagen</label>
     
+    <!-- Estado de compresión -->
+    <div *ngIf="isCompressingImage" class="mb-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+      <div class="flex items-center">
+        <i class="fas fa-spinner fa-spin text-blue-500 mr-2"></i>
+        <span class="text-sm text-blue-700">Comprimiendo imagen...</span>
+      </div>
+    </div>
+    
     <!-- Botones de selección -->
     <div class="flex gap-2 mb-2">
       <label class="flex-1 inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-200">
@@ -88,6 +96,17 @@
         >
           <i class="fas fa-times"></i>
         </button>
+      </div>
+      
+      <!-- Estadísticas de compresión -->
+      <div *ngIf="compressionStats" class="mt-2 p-2 bg-green-50 border border-green-200 rounded text-xs text-green-700">
+        <div class="flex items-center justify-between">
+          <span>Imagen comprimida:</span>
+          <span class="font-semibold">{{ compressionStats.compressionRatio }}% reducción</span>
+        </div>
+        <div class="text-xs text-green-600 mt-1">
+          {{ formatFileSize(compressionStats.originalSize) }} → {{ formatFileSize(compressionStats.compressedSize) }}
+        </div>
       </div>
     </div>
   </div>

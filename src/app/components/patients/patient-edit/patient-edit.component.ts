@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PatientService } from '../../../services/patient.service';
 import { Patient } from '../../../models/patient.model';
+import { compressImageForWeb, isValidImageFile, formatFileSize, CompressionResult } from '../../../utils/image-compression.utils';
 
 @Component({
   selector: 'app-patient-edit',
@@ -20,6 +21,8 @@ export class PatientEditComponent implements OnInit {
   imagePreviewUrl: string | ArrayBuffer | null = null;
   currentImageUrl: string = '';
   showDeleteConfirmation = false;
+  isCompressingImage = false;
+  compressionStats: CompressionResult | null = null;
   
   // Propiedades calculadas para la gestación
   calculatedPregnancyPercentage = 0;
@@ -340,18 +343,57 @@ export class PatientEditComponent implements OnInit {
     this.daysUntilRelief = 0;
   }
 
-  onFileSelected(event: Event): void {
+  async onFileSelected(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      this.selectedImage = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreviewUrl = reader.result;
-      };
-      reader.readAsDataURL(this.selectedImage);
+      const file = input.files[0];
+      
+      // Validar que sea una imagen
+      if (!isValidImageFile(file)) {
+        this.errorMessage = 'Por favor selecciona un archivo de imagen válido (JPG, PNG, WebP, GIF)';
+        return;
+      }
+
+      // Validar tamaño (máximo 20MB)
+      if (file.size > 20 * 1024 * 1024) {
+        this.errorMessage = 'La imagen es demasiado grande. Máximo 20MB permitido.';
+        return;
+      }
+
+      this.isCompressingImage = true;
+      this.errorMessage = '';
+
+      try {
+        // Comprimir la imagen
+        this.compressionStats = await compressImageForWeb(file);
+        this.selectedImage = this.compressionStats.compressedFile;
+        
+        // Mostrar vista previa
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.imagePreviewUrl = reader.result;
+        };
+        reader.readAsDataURL(this.selectedImage);
+        
+        console.log('Imagen comprimida:', {
+          originalSize: formatFileSize(this.compressionStats.originalSize),
+          compressedSize: formatFileSize(this.compressionStats.compressedSize),
+          compressionRatio: this.compressionStats.compressionRatio + '%'
+        });
+        
+      } catch (error) {
+        console.error('Error comprimiendo imagen:', error);
+        this.errorMessage = 'Error al procesar la imagen. Inténtalo de nuevo.';
+        this.selectedImage = null;
+        this.imagePreviewUrl = null;
+        this.compressionStats = null;
+      } finally {
+        this.isCompressingImage = false;
+      }
     } else {
       this.selectedImage = null;
       this.imagePreviewUrl = null;
+      this.compressionStats = null;
     }
   }
 
@@ -359,6 +401,7 @@ export class PatientEditComponent implements OnInit {
     this.selectedImage = null;
     this.imagePreviewUrl = null;
     this.currentImageUrl = '';
+    this.compressionStats = null;
     this.patientForm.get('basicInfo.photoUrl')?.setValue('');
     const fileInput = document.getElementById('patientImageUpload') as HTMLInputElement;
     if (fileInput) {
@@ -396,5 +439,10 @@ export class PatientEditComponent implements OnInit {
         console.error('Error eliminando paciente:', error);
       }
     });
+  }
+
+  // Método para formatear el tamaño de archivo (disponible en template)
+  formatFileSize(bytes: number): string {
+    return formatFileSize(bytes);
   }
 }

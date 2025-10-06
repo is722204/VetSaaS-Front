@@ -49,7 +49,7 @@ export interface PreventiveMedicine {
   providedIn: 'root'
 })
 export class PreventiveConsultationService {
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = '/api';
 
   constructor(private http: HttpClient) { }
 

@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PatientService } from '../../../services/patient.service';
+import { compressImageForWeb, isValidImageFile, formatFileSize, CompressionResult } from '../../../utils/image-compression.utils';
 
 @Component({
   selector: 'app-preventive-medicine-modal',
@@ -16,6 +17,8 @@ export class PreventiveMedicineModalComponent implements OnInit {
   isLoading = false;
   selectedImage: File | null = null;
   imagePreview: string | null = null;
+  isCompressingImage = false;
+  compressionStats: CompressionResult | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -35,23 +38,61 @@ export class PreventiveMedicineModalComponent implements OnInit {
     });
   }
 
-  onImageSelected(event: any): void {
+  async onImageSelected(event: any): Promise<void> {
     const file = event.target.files[0];
     if (file) {
-      this.selectedImage = file;
-      
-      // Crear preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.imagePreview = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
+      // Validar que sea una imagen
+      if (!isValidImageFile(file)) {
+        console.error('Por favor selecciona un archivo de imagen válido (JPG, PNG, WebP, GIF)');
+        return;
+      }
+
+      // Validar tamaño (máximo 20MB)
+      if (file.size > 20 * 1024 * 1024) {
+        console.error('La imagen es demasiado grande. Máximo 20MB permitido.');
+        return;
+      }
+
+      this.isCompressingImage = true;
+
+      try {
+        // Comprimir la imagen
+        this.compressionStats = await compressImageForWeb(file);
+        this.selectedImage = this.compressionStats.compressedFile;
+        
+        // Crear preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.imagePreview = e.target?.result as string;
+        };
+        reader.readAsDataURL(this.selectedImage);
+        
+        console.log('Imagen comprimida:', {
+          originalSize: formatFileSize(this.compressionStats.originalSize),
+          compressedSize: formatFileSize(this.compressionStats.compressedSize),
+          compressionRatio: this.compressionStats.compressionRatio + '%'
+        });
+        
+      } catch (error) {
+        console.error('Error comprimiendo imagen:', error);
+        this.selectedImage = null;
+        this.imagePreview = null;
+        this.compressionStats = null;
+      } finally {
+        this.isCompressingImage = false;
+      }
     }
   }
 
   removeImage(): void {
     this.selectedImage = null;
     this.imagePreview = null;
+    this.compressionStats = null;
+  }
+
+  // Método para formatear el tamaño de archivo (disponible en template)
+  formatFileSize(bytes: number): string {
+    return formatFileSize(bytes);
   }
 
   getFieldError(controlName: string): string | null {

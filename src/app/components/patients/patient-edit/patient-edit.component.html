@@ -142,6 +142,14 @@
             Foto del Paciente
           </label>
           
+          <!-- Estado de compresión -->
+          <div *ngIf="isCompressingImage" class="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div class="flex items-center">
+              <i class="fas fa-spinner fa-spin text-blue-500 mr-3"></i>
+              <span class="text-sm text-blue-700">Comprimiendo imagen...</span>
+            </div>
+          </div>
+
           <!-- Vista previa de la imagen actual o nueva -->
           <div *ngIf="imagePreviewUrl || currentImageUrl" class="mb-4">
             <div class="relative inline-block">
@@ -159,6 +167,18 @@
                 <i class="fas fa-times"></i>
               </button>
             </div>
+            
+            <!-- Estadísticas de compresión -->
+            <div *ngIf="compressionStats" class="mt-2 p-2 bg-green-50 border border-green-200 rounded text-xs text-green-700">
+              <div class="flex items-center justify-between">
+                <span>Imagen comprimida:</span>
+                <span class="font-semibold">{{ compressionStats.compressionRatio }}% reducción</span>
+              </div>
+              <div class="text-xs text-green-600 mt-1">
+                {{ formatFileSize(compressionStats.originalSize) }} → {{ formatFileSize(compressionStats.compressedSize) }}
+              </div>
+            </div>
+            
             <p class="text-xs text-gray-500 mt-2" *ngIf="selectedImage">
               Nueva imagen seleccionada
             </p>
