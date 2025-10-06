@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PatientService } from '../../services/patient.service';
 import { Patient } from '../../models/patient.model';
-import { parseDate, formatDate } from '../../utils/date.utils';
+import { parseDate, formatDate, daysDifference } from '../../utils/date.utils';
 
 @Component({
   selector: 'app-patients',
@@ -147,5 +147,27 @@ export class PatientsComponent implements OnInit {
     const femaleCount = this.getFemaleCount();
     if (femaleCount === 0) return 0;
     return Math.round((this.getPregnantCount() / femaleCount) * 100);
+  }
+
+  // Método para calcular el porcentaje de gestación basado en el día de preñamiento
+  calculatePregnancyPercentage(conceptionDate: string): number {
+    if (!conceptionDate) return 0;
+    
+    // Calcular días de gestación usando la utilidad
+    const pregnancyDays = daysDifference(conceptionDate);
+    
+    // Calcular porcentaje (gestación de caballos: ~340 días)
+    const totalPregnancyDays = 340;
+    const percentage = Math.min(Math.max(Math.round((pregnancyDays / totalPregnancyDays) * 100), 0), 100);
+    
+    return percentage;
+  }
+
+  // Método para obtener el porcentaje de gestación de un paciente específico
+  getPatientPregnancyPercentage(patient: Patient): number {
+    if (!patient.pregnancy?.isPregnant || !patient.pregnancy?.conceptionDate) {
+      return 0;
+    }
+    return this.calculatePregnancyPercentage(patient.pregnancy.conceptionDate);
   }
 }
